@@ -100,7 +100,9 @@ Client-only React 19 + TypeScript + Vite. Routing is in-memory (`src/App.tsx`); 
 
 ## How to use
 
-Requires Node.js 20+ (GitHub Actions uses Node 20).
+Requires **Node 20.19+ within 20.x, Node 22.13+ within 22.x, or Node 24+**, matching the locked Vite and ESLint requirements.
+`.nvmrc` selects Node 22 for local development. GitHub Actions uses a current
+release of the Node 20 line.
 
 ```bash
 git clone https://github.com/Nonarkara/sciti.git
