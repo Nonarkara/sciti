@@ -3,7 +3,7 @@ import type { Lang, Tr } from "./types";
 import { tr } from "./text";
 
 const DATE_RE =
-  /佛历\s*\d{4}\s*年(?:\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*日)?)?|\d{4}\s*年\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*日)?(?:\s*\d{1,2}:\d{2})?|\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}(?:,\s*\d{1,2}:\d{2})?|\d{1,2}\s+(?:มกราคม|กุมภาพันธ์|มีนาคม|เมษายน|พฤษภาคม|มิถุนายน|กรกฎาคม|สิงหาคม|กันยายน|ตุลาคม|พฤศจิกายน|ธันวาคม)\s+\d{4}(?:\s+เวลา\s+\d{1,2}:\d{2}(?:\s*น\.)?)?|\d{1,2}:\d{2}\s*ICT/g;
+  /(?:佛历\s*)?\d{4}(?:\s*[、和–—-]\s*\d{4})*\s*年(?:\s*第[一二三四]季度|\s*学年(?:第一学期)?)?(?:\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*日)?)?(?:\s*[至到]\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*日)?)?(?:\s+\d{1,2}:\d{2})?|\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}(?:,\s*\d{1,2}:\d{2})?|\d{1,2}\s+(?:มกราคม|กุมภาพันธ์|มีนาคม|เมษายน|พฤษภาคม|มิถุนายน|กรกฎาคม|สิงหาคม|กันยายน|ตุลาคม|พฤศจิกายน|ธันวาคม)\s+\d{4}(?:\s+เวลา\s+\d{1,2}:\d{2}(?:\s*น\.)?)?|\d{1,2}:\d{2}\s*ICT/g;
 
 function dateNodes(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];

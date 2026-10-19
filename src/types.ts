@@ -64,6 +64,7 @@ export type Observation = {
   stale?: boolean;
   note?: string;
   fetchedAt?: string;
+  stations?: number;
 };
 
 export type Baseline = {

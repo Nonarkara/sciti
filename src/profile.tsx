@@ -2,7 +2,7 @@ import type { Baseline, Lang, Lens, ScoreRow } from "./types";
 import { placeNote } from "./lib/notes.mjs";
 import { DateText, LinkedText } from "./linked";
 import { publisherName } from "./lib/publishers.mjs";
-import { coveragePhrase, depaSentence, figurePhrase, gregorianProse, indicatorLabel, namesFor, outOf100, partSentence, placeName, regions, t, topParts, tr, whenPhrase } from "./text";
+import { airQuietNote, coveragePhrase, depaSentence, figurePhrase, gregorianProse, indicatorLabel, namesFor, newestAirDay, outOf100, partSentence, placeName, regions, t, topParts, tr, whenPhrase } from "./text";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
   const rows = baseline.observations.filter((item) => item.indicatorId === indicatorId && item.placeId === placeId);
@@ -32,6 +32,9 @@ export function Profile({
   const region = regions[place.region];
   const note = placeNote(placeId);
   const anyHere = (id: string) => baseline.observations.some((item) => item.indicatorId === id);
+  const airDay = newestAirDay(baseline.observations);
+  const colon = lang === "zh" ? "：" : ": ";
+  const stop = lang === "zh" ? "。" : ". ";
   return (
     <section id="profile">
       {asPage ? (
@@ -119,25 +122,25 @@ export function Profile({
                   baseline.observations.some(
                     (item) => item.placeId === placeId && (item.indicatorId === "economy.investment" || item.indicatorId === "economy.boi_projects"),
                   );
-                const phrase = figurePhrase(lang, indicator, value, anyHere(indicator.id), inBoi);
+                const phrase = figurePhrase(lang, indicator, value, anyHere(indicator.id), inBoi, airQuietNote(lang, value, airDay));
                 const air = indicator.id === "env.pm25" || indicator.id === "env.aqi";
                 return (
                   <li key={indicator.id}>
                     <a href={hrefFor(`/indicator/${indicator.id}`)}>
                       {indicatorLabel(lang, indicator)}
                     </a>
-                    {": "}
+                    {colon}
                     <DateText text={phrase} />
                     {value ? (
                       <>
-                        {". "}
+                        {stop}
                         {value.publisher ? publisherName(lang, value.publisher) : tr(lang, indicator.sourceName)}
-                        {air ? ". " : <DateText text={`, ${whenPhrase(lang, value.asOf)}. `} />}
+                        {air ? stop : <DateText text={lang === "zh" ? `，${whenPhrase(lang, value.asOf)}。` : `, ${whenPhrase(lang, value.asOf)}. `} />}
                         <a href={value.sourceUrl}>{t(lang, "source")}</a>
                         {value.stale ? ` ${t(lang, "lastGood")}` : ""}
                       </>
                     ) : (
-                      "."
+                      lang === "zh" ? "。" : "."
                     )}
                   </li>
                 );

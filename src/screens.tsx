@@ -4,7 +4,7 @@ import { fillFor } from "./fill";
 import { Profile } from "./profile";
 import { MISSING_SERIES, RECORD_NOTES, SOURCES } from "./lib/sources.mjs";
 import { DateText, LinkedText } from "./linked";
-import { figurePhrase, indicatorLabel, methodParagraphs, num, placeName, t, tr, whenPhrase } from "./text";
+import { airQuietNote, figurePhrase, indicatorLabel, methodParagraphs, newestAirDay, num, placeName, proposedSuffix, t, tr, whenPhrase } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreRow } from "./types";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
@@ -101,8 +101,9 @@ export function CompareScreen({
                 baseline.observations.some(
                   (item) => item.placeId === placeId && (item.indicatorId === "economy.investment" || item.indicatorId === "economy.boi_projects"),
                 );
+              const airDay = newestAirDay(baseline.observations);
               const cell = (value: typeof left, placeId: string) =>
-                figurePhrase(lang, indicator, value, published, indicator.id === "economy.boi_jobs" && inBoi(placeId));
+                figurePhrase(lang, indicator, value, published, indicator.id === "economy.boi_jobs" && inBoi(placeId), airQuietNote(lang, value, airDay));
               return (
                 <tr key={indicator.id}>
                   <td>
@@ -235,14 +236,16 @@ export function MethodsScreen({
         <div>
           <p>{t(lang, "normalisationTitle")}</p>
           {methodParagraphs.map((paragraph) => (
-            <p key={paragraph.en}>{tr(lang, paragraph)}</p>
+            <p key={paragraph.en}>
+              <DateText text={tr(lang, paragraph)} />
+            </p>
           ))}
           <ul className="plain">
             {LENSES.map((item) => (
               <li key={item.id}>
                 <a href={hrefFor(`/methods/${item.id}`)}>
                   {tr(lang, item.name)}
-                  {item.proposed ? ` (${t(lang, "proposed")})` : ""}
+                  {item.proposed ? proposedSuffix(lang) : ""}
                 </a>
               </li>
             ))}
@@ -264,7 +267,8 @@ export function MethodsScreen({
           <p>{t(lang, "notDepa")}</p>
           {SOURCES.map((source) => (
             <p key={source.id}>
-              <a href={source.url}>{tr(lang, source.publisher)}</a>. {tr(lang, source.dataset)}. {tr(lang, source.usedFor)}. {tr(lang, source.licence)}
+              <a href={source.url}>{tr(lang, source.publisher)}</a>
+              <DateText text={`. ${tr(lang, source.dataset)}. ${tr(lang, source.usedFor)}. ${tr(lang, source.licence)}`} />
             </p>
           ))}
           {baseline ? (
@@ -284,7 +288,7 @@ export function MethodsScreen({
         <div>
           <h2>
             {tr(lang, lens.name)}
-            {lens.proposed ? ` (${t(lang, "proposed")})` : ""}
+            {lens.proposed ? proposedSuffix(lang) : ""}
           </h2>
           <p>{tr(lang, lens.question)}</p>
           <p>
@@ -292,12 +296,15 @@ export function MethodsScreen({
           </p>
           <p>{t(lang, "notDepa")}</p>
           {methodParagraphs.map((paragraph) => (
-            <p key={paragraph.en}>{tr(lang, paragraph)}</p>
+            <p key={paragraph.en}>
+              <DateText text={tr(lang, paragraph)} />
+            </p>
           ))}
           <ul className="plain">
             {lens.components.map((component) => (
               <li key={component.id}>
-                <strong>{tr(lang, component.name)}</strong> {component.weight} {t(lang, "weightOf")}. {component.direction === "lower" ? t(lang, "lower") : t(lang, "higher")}. {tr(lang, component.note)}
+                <strong>{tr(lang, component.name)}</strong> {component.weight} {t(lang, "weightOf")}. {component.direction === "lower" ? t(lang, "lower") : t(lang, "higher")}.{" "}
+                <DateText text={tr(lang, component.note)} />
               </li>
             ))}
           </ul>
@@ -330,6 +337,7 @@ export function IndicatorScreen({
     if (!prev || row.period > prev.period) byPlace.set(row.placeId, row);
   }
   const tls = baseline.runs?.some((run) => run.tlsRelaxed) && (indicator.id === "env.pm25" || indicator.id === "env.aqi");
+  const airDay = newestAirDay(baseline.observations);
   return (
     <article className="page">
       <h1>{indicatorLabel(lang, indicator)}</h1>
@@ -349,9 +357,16 @@ export function IndicatorScreen({
               {[...byPlace.entries()]
                 .sort((a, b) => a[0].localeCompare(b[0]))
                 .map(([placeId, row]) => {
-                  const phrase = figurePhrase(lang, indicator, row, true);
+                  const phrase = figurePhrase(lang, indicator, row, true, false, airQuietNote(lang, row, airDay));
                   const air = indicator.id === "env.pm25" || indicator.id === "env.aqi";
-                  const shown = air ? `${phrase}.` : `${phrase}. ${whenPhrase(lang, row.asOf)}.`;
+                  const shown =
+                    lang === "zh"
+                      ? air
+                        ? `${phrase}。`
+                        : `${phrase}。${whenPhrase(lang, row.asOf)}。`
+                      : air
+                        ? `${phrase}.`
+                        : `${phrase}. ${whenPhrase(lang, row.asOf)}.`;
                   return (
                   <tr key={placeId}>
                     <td>

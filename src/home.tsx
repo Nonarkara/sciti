@@ -4,7 +4,7 @@ import { moneyballGap } from "./lib/rank.mjs";
 import { ProvinceMap } from "./map";
 import { Profile } from "./profile";
 import { DateText, LinkedText } from "./linked";
-import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, t, topParts, tr } from "./text";
+import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, proposedSuffix, t, topParts, tr } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreCard, ScoreRow } from "./types";
 
 const APPRAISAL_ID = "living.land_price";
@@ -121,7 +121,7 @@ export function Home({
               {LENSES.map((item) => (
                 <option key={item.id} value={item.id}>
                   {tr(lang, item.name)}
-                  {item.proposed ? ` (${t(lang, "proposed")})` : ""}
+                  {item.proposed ? proposedSuffix(lang) : ""}
                 </option>
               ))}
             </select>

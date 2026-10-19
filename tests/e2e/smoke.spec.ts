@@ -145,9 +145,17 @@ test("polish at 1440: title, fields, singular units, titled links, one border la
   await expectNamedFields(page);
   await page.goto("/place/th-10");
   await expect(page).toHaveTitle("Bangkok · Growth seekers · sciti");
-  await expect(page.locator("#profile")).not.toContainText(/\b25\d\d\b/);
-  await expect(page.locator("#profile")).toContainText("1 dataset,");
-  await expect(page.locator("#profile")).not.toContainText("1 datasets");
+  const bangkok = await page.locator("#profile").innerText();
+  expect(bangkok).toContain("[1/2564]");
+  expect(bangkok.replace(/\[[^\]]*\]/g, "").replace(/\b\d{1,4}\/25\d\d\b/g, "")).not.toMatch(/\b25\d\d\b/);
+  expect(bangkok).toContain("1 dataset,");
+  expect(bangkok).not.toContain("1 datasets");
+  await page.goto("/place/th-70");
+  await expect(page.locator("#profile")).toContainText("not reported since 19 September 2026");
+  await page.goto("/place/th-63");
+  await expect(page.locator("#profile")).toContainText("not reported since 6 October 2026");
+  await page.goto("/place/th-73");
+  await expect(page.locator("#profile")).toContainText("not reported since 13 October 2026");
   await page.goto("/place/th-11");
   await expect(page.locator("#profile")).toContainText("1 area,");
   await expect(page.locator("#profile")).not.toContainText("1 areas");
@@ -189,7 +197,56 @@ test("chinese at 390: title, credit, titled link, one border label", async ({ pa
   await expect(page.locator("#profile")).not.toContainText("National Statistical Office");
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
   expect(overflow).toBe(false);
+  await page.goto("/place/th-10?lang=zh");
+  await expectNoAsciiPunctNearCjk(page);
+  const zhProfile = await page.locator("#profile").innerText();
+  expect(zhProfile).toContain("实际产出增长：5.2%，2023");
+  expect(zhProfile).not.toMatch(/\d\s+%/);
+  await page.goto("/methods?lang=zh");
+  await expectNoAsciiPunctNearCjk(page);
+  await expectDatesDoNotWrap(page);
+  await expect(page.getByText("（提议）").first()).toBeVisible();
+  await page.goto("/methods/quiet?lang=zh");
+  await expectNoAsciiPunctNearCjk(page);
+  await expectDatesDoNotWrap(page);
 });
+
+async function expectNoAsciiPunctNearCjk(page: Page) {
+  const hits = await page.evaluate(() => {
+    const cjk = /[\u3400-\u9FFF\uF900-\uFAFF]/;
+    const text = (document.body.innerText || "").replace(/https?:\/\/\S+/g, "");
+    const found: string[] = [];
+    for (const match of text.matchAll(/[:(),]/g)) {
+      const index = match.index ?? 0;
+      const before = text[index - 1] || "";
+      const after = text[index + 1] || "";
+      if (cjk.test(before) || cjk.test(after)) found.push(text.slice(Math.max(0, index - 16), index + 16));
+    }
+    return found.slice(0, 8);
+  });
+  expect(hits).toEqual([]);
+}
+
+async function expectDatesDoNotWrap(page: Page) {
+  const wrapped = await page.evaluate(() => {
+    const re = /(?:佛历\s*)?\d{4}(?:\s*[、和–—-]\s*\d{4})*\s*年(?:\s*第[一二三四]季度|\s*学年(?:第一学期)?)?(?:\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*日)?)?(?:\s*[至到]\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*日)?)?/g;
+    const out: string[] = [];
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node: Node | null;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent || "";
+      for (const match of text.matchAll(re)) {
+        const range = document.createRange();
+        range.setStart(node, match.index ?? 0);
+        range.setEnd(node, (match.index ?? 0) + match[0].length);
+        const tops = new Set([...range.getClientRects()].map((rect) => Math.round(rect.top)));
+        if (tops.size > 1) out.push(match[0]);
+      }
+    }
+    return out;
+  });
+  expect(wrapped).toEqual([]);
+}
 
 test("thai and chinese routes stay in that language", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });

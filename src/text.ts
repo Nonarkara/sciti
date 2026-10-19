@@ -1,5 +1,8 @@
 import type { Indicator, Lang, Lens, Observation, Part, ScoreRow, Tr } from "./types";
+import { gregorianProse } from "./lib/era.mjs";
 import { publisherName } from "./lib/publishers.mjs";
+
+export { gregorianProse };
 
 export function tr(lang: Lang, text: Tr): string {
   return text[lang] || text.en;
@@ -204,6 +207,32 @@ export function t(lang: Lang, key: keyof typeof chrome): string {
   return tr(lang, chrome[key]);
 }
 
+export function proposedSuffix(lang: Lang): string {
+  return lang === "zh" ? `（${t(lang, "proposed")}）` : ` (${t(lang, "proposed")})`;
+}
+
+function labelColon(lang: Lang): string {
+  return lang === "zh" ? "：" : ": ";
+}
+
+function listComma(lang: Lang): string {
+  return lang === "zh" ? "，" : ", ";
+}
+
+function sentenceStop(lang: Lang): string {
+  return lang === "zh" ? "。" : ". ";
+}
+
+function endStop(lang: Lang): string {
+  return lang === "zh" ? "。" : ".";
+}
+
+function valueAndUnit(lang: Lang, shown: string, unit: string): string {
+  if (!unit) return shown;
+  if (lang === "zh" && unit.startsWith("%")) return `${shown}${unit}`;
+  return `${shown} ${unit}`;
+}
+
 export const methodParagraphs: Tr[] = [
   {
     en: "Each lens is a weighting you can read, not a secret score. Among the provinces that have a figure, each one gets a percentile. A tie takes the middle of the tie: provinces strictly below, plus half the provinces with the same value, divided by the provinces that have a value, times 100. Where lower is better, the percentile is flipped, so cleaner air gets the higher mark.",
@@ -251,11 +280,24 @@ const FLAG_IDS = new Set(["economy.sez", "economy.eec", "governance.emergency_de
 const BOI_IDS = new Set(["economy.investment", "economy.boi_projects", "economy.boi_jobs"]);
 const AIR_IDS = new Set(["env.pm25", "env.aqi"]);
 
-export function gregorianProse(text: string): string {
-  return text.replace(/https?:\/\/\S+|B\.E\.\s*(2[4-6]\d{2})|\b(2[4-6]\d{2})\b/g, (match, beYear: string | undefined, year: string | undefined) => {
-    if (match.startsWith("http")) return match;
-    return String(Number(beYear || year) - 543);
-  });
+export function newestAirDay(rows: { indicatorId: string; asOf?: string }[]): string {
+  let newest = "";
+  for (const row of rows) {
+    if (!AIR_IDS.has(row.indicatorId) || !row.asOf) continue;
+    const day = row.asOf.slice(0, 10);
+    if (day > newest) newest = day;
+  }
+  return newest;
+}
+
+export function airQuietNote(lang: Lang, observation: { indicatorId: string; asOf?: string; stations?: number } | null, newestDay: string): string {
+  if (!observation || !AIR_IDS.has(observation.indicatorId) || observation.stations !== 1 || !observation.asOf || !newestDay) return "";
+  const day = observation.asOf.slice(0, 10);
+  if (day >= newestDay) return "";
+  const shown = whenPhrase(lang, day);
+  if (lang === "th") return `ไม่มีการรายงานตั้งแต่ ${shown}`;
+  if (lang === "zh") return `自${shown}起未再报告`;
+  return `not reported since ${shown}`;
 }
 
 function snapshotClause(lang: Lang, asOf: string | undefined): string {
@@ -300,7 +342,7 @@ export function isFlagIndicator(indicator: { id: string; unit: Tr }): boolean {
   return /^1 or 0$/i.test(indicator.unit.en) || /^1 =/.test(indicator.unit.en);
 }
 
-export function figurePhrase(lang: Lang, indicator: Indicator, value: Observation | null, published: boolean, jobsUnreported = false): string {
+export function figurePhrase(lang: Lang, indicator: Indicator, value: Observation | null, published: boolean, jobsUnreported = false, quietNote = ""): string {
   if (!value) {
     if (indicator.id === "economy.boi_jobs" && jobsUnreported) return t(lang, "boiJobsUnreported");
     if (BOI_IDS.has(indicator.id) && published) return t(lang, "boiAbsent");
@@ -309,18 +351,19 @@ export function figurePhrase(lang: Lang, indicator: Indicator, value: Observatio
   if (AIR_IDS.has(indicator.id)) {
     const airUnit = tr(lang, indicator.unit);
     const airShown = Number.isInteger(value.value) ? num(value.value, 0) : num(value.value, 1);
-    return `${airShown} ${airUnit}, ${snapshotClause(lang, value.asOf || value.period)}`;
+    const phrase = `${valueAndUnit(lang, airShown, airUnit)}${listComma(lang)}${snapshotClause(lang, value.asOf || value.period)}`;
+    return quietNote ? `${phrase}${sentenceStop(lang)}${quietNote}` : phrase;
   }
   const when = whenPhrase(lang, value.period);
   if (isFlagIndicator(indicator)) {
     const word = value.value > 0 ? t(lang, "yes") : t(lang, "no");
-    return `${word}, ${when}`;
+    return `${word}${listComma(lang)}${when}`;
   }
   const unit = countUnit(lang, tr(lang, indicator.unit), value.value);
   const shown = Number.isInteger(value.value) ? num(value.value, 0) : num(value.value, 1);
-  const base = `${shown} ${unit}, ${when}`.replace(/\s+/g, " ").trim();
+  const base = `${valueAndUnit(lang, shown, unit)}${listComma(lang)}${when}`.replace(/\s+/g, " ").trim();
   if (indicator.id === "economy.boi_jobs" && value.value === 0) return t(lang, "boiJobsUnreported");
-  if (BOI_IDS.has(indicator.id) && value.value === 0) return `${base}. ${t(lang, "boiZero")}`;
+  if (BOI_IDS.has(indicator.id) && value.value === 0) return `${base}${sentenceStop(lang)}${t(lang, "boiZero")}`;
   return base;
 }
 
@@ -338,29 +381,29 @@ export function partSentence(lang: Lang, part: Part, lens: Lens, indicators: Ind
   const publisher = publisherName(lang, evidence.publisher || "");
   const when = whenPhrase(lang, evidence.asOf);
   if (evidence.absentAsZero) {
-    return `${name}: ${t(lang, "noCheckpoint")} ${publisher}, ${whenPhrase(lang, evidence.period)}.`;
+    return `${name}${labelColon(lang)}${t(lang, "noCheckpoint")} ${publisher}${listComma(lang)}${whenPhrase(lang, evidence.period)}${endStop(lang)}`;
   }
   if (part.kind === "cagr") {
-    const base = `${name}: ${ratePhrase(lang, part.value)}, ${yearSpan(lang, String(evidence.fromYear ?? ""), String(evidence.toYear ?? ""))}. ${publisher}, ${when}.`;
+    const base = `${name}${labelColon(lang)}${ratePhrase(lang, part.value)}${listComma(lang)}${yearSpan(lang, String(evidence.fromYear ?? ""), String(evidence.toYear ?? ""))}${sentenceStop(lang)}${publisher}${listComma(lang)}${when}${endStop(lang)}`;
     return part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
   }
   if (part.kind === "flag") {
     const word = part.value && part.value > 0 ? t(lang, "yes") : t(lang, "no");
-    const base = `${name}: ${word}, ${whenPhrase(lang, evidence.period)}. ${publisher}, ${when}.`;
+    const base = `${name}${labelColon(lang)}${word}${listComma(lang)}${whenPhrase(lang, evidence.period)}${sentenceStop(lang)}${publisher}${listComma(lang)}${when}${endStop(lang)}`;
     return evidence.stale ? `${base} ${t(lang, "lastGood")}` : base;
   }
   if (part.kind === "ratio") {
     const mul = component?.display?.mul || 1;
     const digits = component?.display?.digits ?? 2;
     const unit = component?.display ? tr(lang, component.display.unit) : "";
-    const base = `${name}: ${num(part.value * mul, digits)} ${unit}. ${publisher}, ${when}.`.replace(/\s+/g, " ").trim();
+    const base = `${name}${labelColon(lang)}${valueAndUnit(lang, num(part.value * mul, digits), unit)}${sentenceStop(lang)}${publisher}${listComma(lang)}${when}${endStop(lang)}`.replace(/\s+/g, " ").trim();
     return part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
   }
   const indicatorId = component?.indicatorId || part.id;
   const indicator = indicators.find((item) => item.id === indicatorId);
   const unit = indicator ? countUnit(lang, tr(lang, indicator.unit), part.value) : "";
   const shown = Number.isInteger(part.value) ? num(part.value, 0) : num(part.value, 1);
-  const base = `${name}: ${shown} ${unit}, ${whenPhrase(lang, evidence.period)}. ${publisher}, ${when}.`.replace(/\s+/g, " ").trim();
+  const base = `${name}${labelColon(lang)}${valueAndUnit(lang, shown, unit)}${listComma(lang)}${whenPhrase(lang, evidence.period)}${sentenceStop(lang)}${publisher}${listComma(lang)}${when}${endStop(lang)}`.replace(/\s+/g, " ").trim();
   const withMiddle = part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
   return evidence.stale ? `${withMiddle} ${t(lang, "lastGood")}` : withMiddle;
 }
@@ -371,7 +414,7 @@ export function namesFor(lang: Lang, lens: Lens, ids: string[]): string {
       const component = lens.components.find((item) => item.id === id);
       return component ? tr(lang, component.name) : id;
     })
-    .join(", ");
+    .join(lang === "zh" ? "、" : ", ");
 }
 
 export function topParts(row: ScoreRow): Part[] {

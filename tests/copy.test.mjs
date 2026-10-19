@@ -49,7 +49,11 @@ const ENGLISH_KEYS = new Set(["en", "note", "sourceName", "publisher", "smartCit
 function englishYears(value, found, key = "") {
   if (typeof value === "string") {
     if (ENGLISH_KEYS.has(key) && !/[\u0E00-\u0E7F\u4E00-\u9FFF]/.test(value)) {
-      const bare = value.replace(/https?:\/\/\S+/g, "").replace(/selectyear=\d+/g, "");
+      const bare = value
+        .replace(/https?:\/\/\S+/g, "")
+        .replace(/selectyear=\d+/g, "")
+        .replace(/\[[^\]]*\]/g, "")
+        .replace(/\b\d{1,4}\/(?:25|26)\d{2}\b/g, "");
       const years = [...bare.matchAll(/\b(?:25|26)\d{2}\b/g)].filter((match) => {
         const index = match.index ?? 0;
         const year = match[0];
