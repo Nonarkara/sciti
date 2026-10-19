@@ -1,6 +1,6 @@
 import { fetchText, median, missingToken, round1 } from "../lib.mjs";
 import { assignPoint } from "../geo.mjs";
-import { selectFreshReadings } from "../../src/lib/fresh.mjs";
+import { selectStationCluster, stationStamp } from "../../src/lib/fresh.mjs";
 
 const URL = "https://air4thai.pcd.go.th/services/getNewAQI_JSON.php";
 
@@ -25,7 +25,7 @@ export async function loadAir(geo) {
     const last = s.AQILast || {};
     const pm = num(last.PM25 && last.PM25.value);
     const aqi = num(last.AQI && last.AQI.aqi);
-    const stamp = last.date && last.time ? `${last.date}T${last.time}:00+07:00` : null;
+    const stamp = stationStamp(last.date, last.time);
     if (!stamp || (pm == null && aqi == null)) continue;
     if (!byPlace.has(code)) byPlace.set(code, []);
     byPlace.get(code).push({
@@ -42,13 +42,13 @@ export async function loadAir(geo) {
   const observations = [];
   const plotted = [];
   for (const [code, readings] of byPlace) {
-    const fresh = selectFreshReadings(readings, fetchedAt);
-    if (!fresh.asOf) continue;
-    const asOf = fresh.asOf;
+    const cluster = selectStationCluster(readings);
+    if (!cluster.asOf) continue;
+    const asOf = cluster.asOf;
     const period = asOf.slice(0, 13);
-    const pm = fresh.readings.map((row) => row.pm).filter((value) => value != null);
-    const aqi = fresh.readings.map((row) => row.aqi).filter((value) => value != null);
-    for (const row of fresh.readings) {
+    const pm = cluster.readings.map((row) => row.pm).filter((value) => value != null);
+    const aqi = cluster.readings.map((row) => row.aqi).filter((value) => value != null);
+    for (const row of cluster.readings) {
       if (row.pm == null) continue;
       plotted.push({
         id: row.id,

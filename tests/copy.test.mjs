@@ -43,3 +43,70 @@ test("Thai copy uses Buddhist years, not a Western year beside them", () => {
   }
   assert.deepEqual(found, []);
 });
+
+const ENGLISH_KEYS = new Set(["en", "note", "sourceName", "publisher", "smartCityStatus"]);
+
+function englishYears(value, found, key = "") {
+  if (typeof value === "string") {
+    if (ENGLISH_KEYS.has(key) && !/[\u0E00-\u0E7F\u4E00-\u9FFF]/.test(value)) {
+      const bare = value.replace(/https?:\/\/\S+/g, "").replace(/selectyear=\d+/g, "");
+      const years = [...bare.matchAll(/\b(?:25|26)\d{2}\b/g)].filter((match) => {
+        const index = match.index ?? 0;
+        const year = match[0];
+        const wrapped = bare[index - 1] === "(" && bare[index + year.length] === ")";
+        const before = bare.slice(Math.max(0, index - 24), index);
+        const gloss = /20\d{2}|period|January|February|March|April|May|June|July|August|September|October|November|December/.test(before);
+        return !(wrapped && !gloss);
+      });
+      if (years.length || /B\.E\./.test(bare)) found.push(`${key}: ${value.slice(0, 180)}`);
+    }
+    return;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) englishYears(item, found, key);
+    return;
+  }
+  if (value && typeof value === "object") {
+    for (const [next, item] of Object.entries(value)) englishYears(item, found, next);
+  }
+}
+
+function zhPunctuation(value, found, key = "") {
+  if (typeof value === "string") {
+    if (key === "zh") {
+      const stripped = value
+        .replace(/https?:\/\/\S+/g, "")
+        .replace(/\bn\.a\./g, "")
+        .replace(/\b[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)+\b/g, "")
+        .replace(/\d+\.\d+/g, "")
+        .replace(/\d{1,2}:\d{2}/g, "");
+      if (/[,.:()]/.test(stripped)) found.push(value.slice(0, 180));
+    }
+    return;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) zhPunctuation(item, found, key);
+    return;
+  }
+  if (value && typeof value === "object") {
+    for (const [next, item] of Object.entries(value)) zhPunctuation(item, found, next);
+  }
+}
+
+test("English copy uses Gregorian years", () => {
+  const baseline = JSON.parse(readFileSync("public/data/baseline.json", "utf8"));
+  const found = [];
+  for (const bundle of [baseline, LENSES, PLACE_NOTES, RECORD_NOTES, SOURCES, MISSING_SERIES, INDICATORS]) {
+    englishYears(bundle, found);
+  }
+  assert.deepEqual(found, []);
+});
+
+test("Chinese sentences use fullwidth punctuation", () => {
+  const baseline = JSON.parse(readFileSync("public/data/baseline.json", "utf8"));
+  const found = [];
+  for (const bundle of [baseline, LENSES, PLACE_NOTES, RECORD_NOTES, SOURCES, MISSING_SERIES, INDICATORS]) {
+    zhPunctuation(bundle, found);
+  }
+  assert.deepEqual(found, []);
+});

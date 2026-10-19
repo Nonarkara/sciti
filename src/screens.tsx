@@ -3,7 +3,7 @@ import { LENSES } from "./lib/lenses.mjs";
 import { fillFor } from "./fill";
 import { Profile } from "./profile";
 import { MISSING_SERIES, RECORD_NOTES, SOURCES } from "./lib/sources.mjs";
-import { LinkedText } from "./linked";
+import { DateText, LinkedText } from "./linked";
 import { figurePhrase, indicatorLabel, methodParagraphs, num, placeName, t, tr, whenPhrase } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreRow } from "./types";
 
@@ -60,21 +60,27 @@ export function CompareScreen({
     <article className="page">
       <h1>{t(lang, "compare")}</h1>
       <div className="row">
-        <select aria-label={t(lang, "compare")} value={a} onChange={(event) => setA(event.target.value)}>
-          {options.map((place) => (
-            <option key={place.id} value={place.id}>
-              {placeName(place, lang)}
-            </option>
-          ))}
-        </select>
+        <label className="stack" htmlFor="compare-a">
+          <span>{t(lang, "firstPlace")}</span>
+          <select id="compare-a" name="compare-a" value={a} onChange={(event) => setA(event.target.value)}>
+            {options.map((place) => (
+              <option key={place.id} value={place.id}>
+                {placeName(place, lang)}
+              </option>
+            ))}
+          </select>
+        </label>
         <span>{t(lang, "and")}</span>
-        <select aria-label={t(lang, "compare")} value={b} onChange={(event) => setB(event.target.value)}>
-          {options.map((place) => (
-            <option key={place.id} value={place.id}>
-              {placeName(place, lang)}
-            </option>
-          ))}
-        </select>
+        <label className="stack" htmlFor="compare-b">
+          <span>{t(lang, "secondPlace")}</span>
+          <select id="compare-b" name="compare-b" value={b} onChange={(event) => setB(event.target.value)}>
+            {options.map((place) => (
+              <option key={place.id} value={place.id}>
+                {placeName(place, lang)}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
       {a === b ? <p>{t(lang, "samePlace")}</p> : null}
       <div className="scroll">
@@ -102,8 +108,12 @@ export function CompareScreen({
                   <td>
                     <a href={hrefFor(`/indicator/${indicator.id}`)}>{indicatorLabel(lang, indicator)}</a>
                   </td>
-                  <td>{cell(left, a)}</td>
-                  <td>{cell(right, b)}</td>
+                  <td>
+                    <DateText text={cell(left, a)} />
+                  </td>
+                  <td>
+                    <DateText text={cell(right, b)} />
+                  </td>
                 </tr>
               );
             })}
@@ -193,7 +203,9 @@ export function CoverageScreen({ baseline, geo, lang, hrefFor }: { baseline: Bas
                   <td>
                     {lang === "th" ? `${places.size} จาก ${baseline.places.length}` : lang === "zh" ? `${places.size} / ${baseline.places.length}` : `${places.size} of ${baseline.places.length}`}
                   </td>
-                  <td>{newest ? whenPhrase(lang, newest.asOf) : t(lang, "notInFile")}</td>
+                  <td>
+                    <DateText text={newest ? whenPhrase(lang, newest.asOf) : t(lang, "notInFile")} />
+                  </td>
                 </tr>
               );
             })}
@@ -338,18 +350,19 @@ export function IndicatorScreen({
                 .sort((a, b) => a[0].localeCompare(b[0]))
                 .map(([placeId, row]) => {
                   const phrase = figurePhrase(lang, indicator, row, true);
-                  const current = phrase !== t(lang, "noCurrentReading");
+                  const air = indicator.id === "env.pm25" || indicator.id === "env.aqi";
+                  const shown = air ? `${phrase}.` : `${phrase}. ${whenPhrase(lang, row.asOf)}.`;
                   return (
                   <tr key={placeId}>
                     <td>
                       <a href={hrefFor(`/place/${placeId}`)}>{placeName(baseline.places.find((place) => place.id === placeId), lang)}</a>
                     </td>
                     <td>
-                      {current ? `${phrase}. ${whenPhrase(lang, row.asOf)}.` : `${phrase}.`}
+                      <DateText text={shown} />
                     </td>
                     <td>
                       <a href={row.sourceUrl}>{t(lang, "source")}</a>
-                      {row.stale && current ? ` ${t(lang, "lastGood")}` : ""}
+                      {row.stale ? ` ${t(lang, "lastGood")}` : ""}
                     </td>
                   </tr>
                   );
@@ -373,11 +386,15 @@ export function AboutScreen({ baseline, lang, asset }: { baseline: Baseline | nu
       <p>{t(lang, "tenetLong")}</p>
       {baseline ? (
         <p>
-          {lang === "th"
-            ? `ไฟล์นี้จัดเมื่อ ${when} รุ่น ${baseline.version} แต่ละตัวเลขมีแหล่งและวันที่ ถ้าไม่มีไฟล์ จะเว้นว่างไว้`
-            : lang === "zh"
-              ? `这份文件生成于 ${when}，版本 ${baseline.version}。每个数字都有来源和日期。没有文件的地方就空着。`
-              : `This file was built on ${when}, version ${baseline.version}. Every figure has a source and a date. Where no file was read, the cell stays empty.`}
+          <DateText
+            text={
+              lang === "th"
+                ? `ไฟล์นี้จัดเมื่อ ${when} รุ่น ${baseline.version} แต่ละตัวเลขมีแหล่งและวันที่ ถ้าไม่มีไฟล์ จะเว้นว่างไว้`
+                : lang === "zh"
+                  ? `这份文件生成于 ${when}，版本 ${baseline.version}。每个数字都有来源和日期。没有文件的地方就空着。`
+                  : `This file was built on ${when}, version ${baseline.version}. Every figure has a source and a date. Where no file was read, the cell stays empty.`
+            }
+          />
         </p>
       ) : (
         <p>{t(lang, "reading")}</p>

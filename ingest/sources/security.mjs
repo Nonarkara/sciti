@@ -12,7 +12,7 @@ const PERIOD = "2026-10-20";
 const DESIGNATED = new Set(["th-94", "th-95", "th-96"]);
 
 const NOTE =
-  "1 if any district is inside the serious-emergency area under extension 86, in force 20 October 2569 through 19 January 2570 (Cabinet, 6 October 2569): Narathiwat except Yi-ngo, Waeng and Sukhirin; Pattani except Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan; Yala except Betong, Yaha, Kabang, Krong Pinang and Raman. Songkhla is 0. This is not a count of incidents.";
+  "1 if any district is inside the serious-emergency area under extension 86, in force 20 October 2026 through 19 January 2027 (Cabinet, 6 October 2026): Narathiwat except Yi-ngo, Waeng and Sukhirin; Pattani except Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan; Yala except Betong, Yaha, Kabang, Krong Pinang and Raman. Songkhla is 0. This is not a count of incidents.";
 
 export function decreeObservations(placeIds) {
   const ids = [...new Set(placeIds)].filter((id) => /^th-\d{2}$/.test(id)).sort();
@@ -29,7 +29,7 @@ export function decreeObservations(placeIds) {
     sourceUrl: SOURCE_URL,
     publisher: "Cabinet of Thailand",
     licence: "not stated",
-    sourceName: "Thai PBS report of the Cabinet resolution, 6 October 2569, emergency-decree extension 86",
+    sourceName: "Thai PBS report of the Cabinet resolution, 6 October 2026, emergency-decree extension 86",
     note: NOTE,
     fetchedAt: "2026-10-19T12:00:00.000Z",
   }));

@@ -1,4 +1,27 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+async function expectNamedFields(page: Page) {
+  const problems = await page.evaluate(() =>
+    [...document.querySelectorAll("input, select, textarea")].flatMap((node) => {
+      const el = node as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+      const id = el.id;
+      const name = el.getAttribute("name") || "";
+      const labelText = el.labels
+        ? [...el.labels]
+            .map((label) => (label.textContent || "").replace(/\s+/g, " ").trim())
+            .filter(Boolean)
+            .join(" ")
+        : "";
+      const aria = (el.getAttribute("aria-label") || el.getAttribute("aria-labelledby") || "").trim();
+      const issues: string[] = [];
+      if (!id) issues.push("id");
+      if (!name) issues.push("name");
+      if (!labelText && !aria) issues.push("accessible name");
+      return issues.length ? [`${el.tagName.toLowerCase()}#${id || "?"} missing ${issues.join(", ")}`] : [];
+    }),
+  );
+  expect(problems).toEqual([]);
+}
 
 const viewports = [
   { width: 1440, height: 900 },
@@ -63,7 +86,9 @@ test("coverage, methods, compare, place and old addresses", async ({ page }) => 
   await page.goto("/indicator/env.pm25");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("PM2.5");
   await expect(page.getByRole("heading", { level: 1 })).not.toContainText("this hour");
-  await expect(page.getByText("No current reading").first()).toBeVisible();
+  await expect(page.getByText(/snapshot as of \d{2}:\d{2} ICT/).first()).toBeVisible();
+  await expect(page.getByText(/refreshes weekly/i)).toBeVisible();
+  await expect(page.getByText("No current reading")).toHaveCount(0);
   await page.goto("/bingo");
   await expect(page).toHaveURL(/\/about$/);
   await page.goto("/creative-economy");
@@ -102,15 +127,25 @@ test("polish at 1440: title, fields, singular units, titled links, one border la
   await expect(page.locator(".attrib")).toContainText("geoBoundaries");
   await page.goto("/?lens=quiet");
   await expect(page).toHaveTitle("Quiet retirement · sciti");
-  await expect(page.getByRole("link", { name: "Manager Online: Cambodia border trade was 0 baht in November 2568" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Manager Online: Cambodia border trade was 0 baht in November 2025" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Thai PBS Policy Watch: the Cambodia border is not what it was" })).toBeVisible();
   await expect(page.getByText("https://mgronline.com")).toHaveCount(0);
   await expect(page.getByText("https://policywatch.thaipbs.or.th")).toHaveCount(0);
   const marks = (await page.locator(".ranks").allInnerTexts()).join("\n");
   expect(marks).toContain("Cambodia border paused");
   expect(marks).not.toMatch(/Cambodia border(?! paused)/);
+  await page.goto("/");
+  await page.locator("details summary").click();
+  await expectNamedFields(page);
+  await page.goto("/compare");
+  await expect(page.locator("#compare-a")).toHaveAttribute("name", "compare-a");
+  await expect(page.locator("label[for=compare-a]")).toContainText("First place");
+  await expect(page.locator("#compare-b")).toHaveAttribute("name", "compare-b");
+  await expect(page.locator("label[for=compare-b]")).toContainText("Second place");
+  await expectNamedFields(page);
   await page.goto("/place/th-10");
   await expect(page).toHaveTitle("Bangkok · Growth seekers · sciti");
+  await expect(page.locator("#profile")).not.toContainText(/\b25\d\d\b/);
   await expect(page.locator("#profile")).toContainText("1 dataset,");
   await expect(page.locator("#profile")).not.toContainText("1 datasets");
   await page.goto("/place/th-11");
@@ -144,6 +179,10 @@ test("chinese at 390: title, credit, titled link, one border label", async ({ pa
   await expect(page.getByText("柬埔寨边境暂停").first()).toBeVisible();
   const quietOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
   expect(quietOverflow).toBe(false);
+  const wrappedDate = await page.evaluate(() =>
+    [...document.querySelectorAll(".nowrap")].some((node) => /\d{4}\s*年/.test(node.textContent || "")),
+  );
+  expect(wrappedDate).toBe(true);
   await page.goto("/place/th-32?lang=zh&lens=quiet");
   await expect(page).toHaveTitle("素林府 · 安静退休 · sciti");
   await expect(page.locator("#profile")).toContainText("国家统计局");

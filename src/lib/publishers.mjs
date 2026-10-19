@@ -97,8 +97,8 @@ export const PUBLISHERS = {
     th: "สำนักงานคณะกรรมการส่งเสริมการลงทุน (มาตรการเขตเศรษฐกิจพิเศษของบีโอไอ เขตที่คณะกรรมการนโยบายเขตเศรษฐกิจพิเศษกำหนด โดยมีสภาพัฒน์เป็นเลขานุการ)",
     zh: "泰国投资促进委员会（BOI 经济特区措施；特区由国家经济特区政策委员会划定，秘书处为国家经济和社会发展委员会）",
   },
-  "Eastern Economic Corridor Office (EEC Act B.E. 2561)": {
-    en: "Eastern Economic Corridor Office (EEC Act B.E. 2561)",
+  "Eastern Economic Corridor Office (EEC Act 2018)": {
+    en: "Eastern Economic Corridor Office (EEC Act 2018)",
     th: "สำนักงานคณะกรรมการนโยบายเขตพัฒนาพิเศษภาคตะวันออก (พระราชบัญญัติอีอีซี 2561)",
     zh: "东部经济走廊办公室（佛历 2561 年东部经济走廊法）",
   },

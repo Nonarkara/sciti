@@ -3,7 +3,7 @@ import { LENSES } from "./lib/lenses.mjs";
 import { moneyballGap } from "./lib/rank.mjs";
 import { ProvinceMap } from "./map";
 import { Profile } from "./profile";
-import { LinkedText } from "./linked";
+import { DateText, LinkedText } from "./linked";
 import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, t, topParts, tr } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreCard, ScoreRow } from "./types";
 
@@ -39,7 +39,9 @@ function Appraisal({
       {selectedGap && selectedGap.percentile != null ? (
         <p>
           {selectedGap.gap >= UNDERVALUED_GAP ? `${t(lang, "undervalued")}. ` : ""}
-          {gapSentence(lang, "appraisal", selectedGap.gap, selectedGap.percentile, selectedGap.places, selectedGap.observation.publisher || "", selectedGap.observation.asOf)}{" "}
+          <DateText
+            text={gapSentence(lang, "appraisal", selectedGap.gap, selectedGap.percentile, selectedGap.places, selectedGap.observation.publisher || "", selectedGap.observation.asOf)}
+          />{" "}
           <a href={selectedGap.observation.sourceUrl}>{t(lang, "source")}</a>
         </p>
       ) : null}
@@ -156,22 +158,28 @@ export function Home({
           ) : null}
           <details>
             <summary>{t(lang, "weights")}</summary>
-            {lens.components.map((component) => (
-              <label key={component.id} className="row">
-                <span>{tr(lang, component.name)}</span>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={component.weight}
-                  aria-label={tr(lang, component.name)}
-                  onChange={(event) => setWeight(component.id, Number(event.target.value))}
-                />
-                <span className="weight-readout">
-                  {component.weight} {t(lang, "weightOf")}
-                </span>
-              </label>
-            ))}
+            {lens.components.map((component) => {
+              const name = tr(lang, component.name);
+              const field = `weight-${component.id}`;
+              return (
+                <label key={component.id} className="row" htmlFor={field}>
+                  <span className="visually-hidden">{name}</span>
+                  <span aria-hidden="true">{name}</span>
+                  <input
+                    id={field}
+                    name={field}
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={component.weight}
+                    onChange={(event) => setWeight(component.id, Number(event.target.value))}
+                  />
+                  <span className="weight-readout" aria-hidden="true">
+                    {component.weight} {t(lang, "weightOf")}
+                  </span>
+                </label>
+              );
+            })}
             <button type="button" onClick={resetWeights}>
               {t(lang, "reset")}
             </button>
@@ -205,7 +213,7 @@ export function Home({
                     <p className="meta">{coveragePhrase(lang, row.coverage.have, row.coverage.of)}</p>
                     {lead ? (
                       <p>
-                        {partSentence(lang, lead, lens, baseline.indicators)}{" "}
+                        <DateText text={partSentence(lang, lead, lens, baseline.indicators)} />{" "}
                         {lead.evidence ? <a href={lead.evidence.sourceUrl}>{t(lang, "source")}</a> : null}
                       </p>
                     ) : null}

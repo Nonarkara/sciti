@@ -1,5 +1,4 @@
 import type { Indicator, Lang, Lens, Observation, Part, ScoreRow, Tr } from "./types";
-import { observationIsCurrent } from "./lib/fresh.mjs";
 import { publisherName } from "./lib/publishers.mjs";
 
 export function tr(lang: Lang, text: Tr): string {
@@ -62,6 +61,8 @@ const chrome = {
   menu: { en: "Menu", th: "เมนู", zh: "菜单" },
   cities: { en: "Cities", th: "เมือง", zh: "城市" },
   compare: { en: "Compare", th: "เทียบ", zh: "对照" },
+  firstPlace: { en: "First place", th: "จังหวัดที่หนึ่ง", zh: "第一个府" },
+  secondPlace: { en: "Second place", th: "จังหวัดที่สอง", zh: "第二个府" },
   coverage: { en: "Coverage", th: "ครอบคลุม", zh: "覆盖" },
   methods: { en: "Methods", th: "วิธี", zh: "方法" },
   about: { en: "About", th: "เกี่ยวกับ", zh: "关于" },
@@ -107,12 +108,12 @@ const chrome = {
     zh: "这组权重不是 depa 的官方智慧城市指数。",
   },
   depaRenewed: {
-    en: "depa: a project here was renewed, or newly labelled, in the 2568 announcement. Sixteen labels were renewed and Phuket Tinicon Valley was added. A label that the announcement does not renew is marked renewal not found. That is not a finding that it expired.",
+    en: "depa: a project here was renewed, or newly labelled, in the 2025 announcement. Sixteen labels were renewed and Phuket Tinicon Valley was added. A label that the announcement does not renew is marked renewal not found. That is not a finding that it expired.",
     th: "ดีป้า: โครงการที่นี่ถูกต่ออายุ หรือได้ป้ายใหม่ ในประกาศปี 2568 มีการต่ออายุสิบหกป้าย และเพิ่มภูเก็ตทินิคอนวัลเลย์ ป้ายที่ประกาศนั้นไม่ได้ต่ออายุ จะถูกกำกับว่ายังไม่พบการต่ออายุ นั่นไม่ใช่ข้อสรุปว่าป้ายหมดอายุ",
     zh: "depa：这里的一个项目在佛历 2568 年的公告里续期，或是新授牌。续了十六块牌子，并新增普吉 Tinicon Valley。公告没有续的牌子，标成没有找到续期。这不是认定它已经过期。",
   },
   depaNotFound: {
-    en: "depa: a project here was labelled in 2564–2566. A renewal was not found in the 2568 announcements. That is not the same as expired.",
+    en: "depa: a project here was labelled in 2021–2023. A renewal was not found in the 2025 announcements. That is not the same as expired.",
     th: "ดีป้า: โครงการที่นี่ได้ป้ายในปี 2564–2566 ไม่พบการต่ออายุในประกาศปี 2568 นั่นไม่เหมือนกับหมดอายุ",
     zh: "depa：这里的一个项目在佛历 2564–2566 年授过牌。2568 年的公告里没有找到续期。这不等于过期。",
   },
@@ -122,7 +123,7 @@ const chrome = {
     zh: "城市文件里还有市镇和 depa 项目片区。它们不在这张府地图上排名。除了市镇自己的户籍人口，其他数字是按府公布的，没有被抄到市镇头上。",
   },
   renewalShort: { en: "renewal not found", th: "ยังไม่พบการต่ออายุ", zh: "未找到续期" },
-  renewedShort: { en: "renewed or new in 2568", th: "ต่ออายุหรือป้ายใหม่ในปี 2568", zh: "2568 年续期或新授牌" },
+  renewedShort: { en: "renewed or new in 2025", th: "ต่ออายุหรือป้ายใหม่ในปี 2568", zh: "2568 年续期或新授牌" },
   eecHere: {
     en: "This province is in the Eastern Economic Corridor.",
     th: "จังหวัดนี้อยู่ในระเบียงเศรษฐกิจพิเศษภาคตะวันออก",
@@ -212,7 +213,7 @@ export const methodParagraphs: Tr[] = [
   {
     en: "A province with no value is not given zero. The other figures it does have are reweighted so those weights still sum to the same total. A figure that is missing for every province is not in that total at all, and the page says it is not in the file. A weight you set to zero is left out. A yes or no, such as a special zone, does not by itself produce an order. Border trade, and talent and border investment, are the exception: a province with no land or river checkpoint scores 0 on those lenses, and that 0 counts as an input. The customs file still leaves the cell blank. That border mark is not a percentile. It is log(1 + the million-baht total), stretched from no checkpoint at 0 to the largest province at 100, so a small checkpoint gets a small mark.",
     th: "จังหวัดที่ไม่มีค่าจะไม่ถูกใส่ศูนย์ ตัวเลขอื่นที่จังหวัดนั้นมีจะถูกถ่วงน้ำหนักใหม่ให้ผลรวมเท่าเดิม ตัวเลขที่ขาดทุกจังหวัดจะไม่อยู่ในผลรวมนั้นเลย และหน้านี้บอกว่ายังไม่อยู่ในไฟล์ น้ำหนักที่ตั้งเป็นศูนย์จะถูกตัดออก ใช่หรือไม่ เช่น เขตพิเศษ จะไม่สร้างลำดับด้วยตัวเอง การค้าชายแดน และคนมีฝีมือกับการลงทุนชายแดน เป็นข้อยกเว้น จังหวัดที่ไม่มีด่านบกหรือด่านน้ำได้ 0 ในเลนส์เหล่านั้น และ 0 นั้นนับเป็นตัวป้อน ไฟล์ศุลกากรยังเว้นช่องนั้นว่าง คะแนนชายแดนนั้นไม่ใช่เปอร์เซ็นไทล์ มันคือ log(1 + ยอดล้านบาท) ยืดจากจังหวัดที่ไม่มีด่านที่ 0 ไปถึงจังหวัดที่มากที่สุดที่ 100 ดังนั้นด่านเล็กได้คะแนนเล็ก",
-    zh: "没有数值的府不会被记成零。它确实有的其他数字会重新分配权重，使这些权重的总和不变。每个府都缺的数字根本不进这个总和，页面会写明它还不在文件里。你设成零的权重会被留在外面。是否，比如一个特区，本身不会产生名次。边境贸易，以及人才与边境投资，是例外：没有陆路或河路关口的府在这两个镜头里记 0，这个 0 算作一项输入。海关文件里那个格子仍然留空。这个边境分数不是百分位。它是 log(1 + 百万铢总额)，从没有关口的 0 拉到贸易额最大的府的 100，所以小关口只得小分。",
+    zh: "没有数值的府不会被记成零。它确实有的其他数字会重新分配权重，使这些权重的总和不变。每个府都缺的数字根本不进这个总和，页面会写明它还不在文件里。你设成零的权重会被留在外面。是否，比如一个特区，本身不会产生名次。边境贸易，以及人才与边境投资，是例外：没有陆路或河路关口的府在这两个镜头里记 0，这个 0 算作一项输入。海关文件里那个格子仍然留空。这个边境分数不是百分位。它是 log（1 + 百万铢总额），从没有关口的 0 拉到贸易额最大的府的 100，所以小关口只得小分。",
   },
   {
     en: "The mark beside a province is the weighted mean of those percentiles, from 0 to 100, using only the figures that province actually has. A figure published for only one province sits at 50, the middle of a distribution of one, and it cannot separate cities until a second province has the same figure. This is not an official index.",
@@ -248,7 +249,24 @@ export function coveragePhrase(lang: Lang, have: number, of: number): string {
 
 const FLAG_IDS = new Set(["economy.sez", "economy.eec", "governance.emergency_decree"]);
 const BOI_IDS = new Set(["economy.investment", "economy.boi_projects", "economy.boi_jobs"]);
-const HOURLY_AIR = new Set(["env.pm25", "env.aqi"]);
+const AIR_IDS = new Set(["env.pm25", "env.aqi"]);
+
+export function gregorianProse(text: string): string {
+  return text.replace(/https?:\/\/\S+|B\.E\.\s*(2[4-6]\d{2})|\b(2[4-6]\d{2})\b/g, (match, beYear: string | undefined, year: string | undefined) => {
+    if (match.startsWith("http")) return match;
+    return String(Number(beYear || year) - 543);
+  });
+}
+
+function snapshotClause(lang: Lang, asOf: string | undefined): string {
+  const raw = String(asOf || "");
+  const hourly = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(raw);
+  const day = hourly ? dateParts(hourly[1], hourly[2], hourly[3], undefined, lang) : whenPhrase(lang, asOf);
+  const clock = hourly ? `${hourly[4]}:${hourly[5]}` : "";
+  if (lang === "th") return clock ? `ภาพ ณ ${clock} น. เวลาประเทศไทย, ${day}` : `ภาพ ณ ${day} เวลาประเทศไทย`;
+  if (lang === "zh") return clock ? `快照截至 ${clock}（泰国时间），${day}` : `快照截至${day}（泰国时间）`;
+  return clock ? `snapshot as of ${clock} ICT, ${day}` : `snapshot as of ${day} ICT`;
+}
 
 const SINGULAR_EN: Record<string, string> = {
   datasets: "dataset",
@@ -288,7 +306,11 @@ export function figurePhrase(lang: Lang, indicator: Indicator, value: Observatio
     if (BOI_IDS.has(indicator.id) && published) return t(lang, "boiAbsent");
     return published ? t(lang, "notHere") : t(lang, "notInFile");
   }
-  if (HOURLY_AIR.has(indicator.id) && !observationIsCurrent(value)) return t(lang, "noCurrentReading");
+  if (AIR_IDS.has(indicator.id)) {
+    const airUnit = tr(lang, indicator.unit);
+    const airShown = Number.isInteger(value.value) ? num(value.value, 0) : num(value.value, 1);
+    return `${airShown} ${airUnit}, ${snapshotClause(lang, value.asOf || value.period)}`;
+  }
   const when = whenPhrase(lang, value.period);
   if (isFlagIndicator(indicator)) {
     const word = value.value > 0 ? t(lang, "yes") : t(lang, "no");
