@@ -12,7 +12,7 @@ export const SOURCES = [
   {
     id: "nso-gpp-level",
     publisher: { en: "NSO, compiled from NESDC", th: "สำนักงานสถิติแห่งชาติ รวบรวมจากสภาพัฒน์", zh: "国家统计局，汇编自国家经济和社会发展委员会" },
-    dataset: { en: "Statistical Yearbook T10.1, gross provincial product at current prices, 2023", th: "หนังสือสถิติประจำปี ตาราง 10.1 ผลิตภัณฑ์มวลรวมจังหวัดราคาประจำปี 2023", zh: "统计年鉴表 10.1，2023 年现价府生产总值" },
+    dataset: { en: "Statistical Yearbook T10.1, gross provincial product at current prices, 2023", th: "หนังสือสถิติประจำปี ตาราง 10.1 ผลิตภัณฑ์มวลรวมจังหวัดราคาประจำปี 2566", zh: "统计年鉴表 10.1，2023 年现价府生产总值" },
     usedFor: { en: "Output level and output per person", th: "ระดับผลผลิตและผลผลิตต่อคน", zh: "产出水平和人均产出" },
     url: "https://www.nso.go.th/nsoweb/downloadFile/stat_main_nso/FgAG/file_th",
     licence: { en: "Not stated. Public statistics, with attribution.", th: "ไม่ได้ระบุ สถิติสาธารณะ พร้อมการอ้างแหล่ง", zh: "未标明许可。公开统计，使用时注明出处。" },
@@ -175,7 +175,7 @@ export const RECORD_NOTES = [
   },
   {
     en: "In December 2568 the Department of Foreign Trade recorded no border trade with Cambodia. Sa Kaeo and Trat stay in the 2024 customs file, and both carry a current-status note.",
-    th: "เดือนธันวาคม 2568 กรมการค้าต่างประเทศบันทึกการค้าชายแดนกับกัมพูชาเป็นศูนย์ สระแก้วและตราดยังอยู่ในไฟล์ศุลกากรปี 2024 และทั้งคู่มีหมายเหตุสถานะปัจจุบัน",
+    th: "เดือนธันวาคม 2568 กรมการค้าต่างประเทศบันทึกการค้าชายแดนกับกัมพูชาเป็นศูนย์ สระแก้วและตราดยังอยู่ในไฟล์ศุลกากรปี 2567 และทั้งคู่มีหมายเหตุสถานะปัจจุบัน",
     zh: "佛历 2568 年 12 月，外贸厅记录对柬埔寨的边境贸易为零。沙缴和达叻仍在 2024 年的海关文件里，两府都带有当下状态的说明。",
   },
   {
@@ -212,7 +212,7 @@ export const MISSING_SERIES = [
   { id: "economy.wages", en: "Average wages by province", th: "ค่าจ้างเฉลี่ยรายจังหวัด", zh: "分府平均工资" },
   { id: "people.graduates", en: "Graduates by province", th: "ผู้สำเร็จการศึกษารายจังหวัด", zh: "分府毕业生" },
   { id: "market.price", en: "Market property prices", th: "ราคาทรัพย์สินในตลาด", zh: "市场房产价格" },
-  { id: "economy.gpp_2024", en: "Gross provincial product for 2024", th: "ผลิตภัณฑ์มวลรวมจังหวัดปี 2024", zh: "2024 年府生产总值" },
+  { id: "economy.gpp_2024", en: "Gross provincial product for 2024", th: "ผลิตภัณฑ์มวลรวมจังหวัดปี 2567", zh: "2024 年府生产总值" },
   { id: "env.green_space", en: "Urban green space", th: "พื้นที่สีเขียวในเมือง", zh: "城市绿地" },
   { id: "mobility.transit", en: "Transit use", th: "การใช้ขนส่งสาธารณะ", zh: "公共交通使用" },
   { id: "governance.quality", en: "Governance quality", th: "คุณภาพการปกครอง", zh: "治理质量" },

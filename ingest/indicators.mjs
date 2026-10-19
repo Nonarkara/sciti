@@ -110,7 +110,7 @@ export const INDICATORS = [
     sourceUrl: "https://stat.bora.dopa.go.th/new_stat/webPage/statByYear.php",
     method: {
       en: "Year-end civil-registration counts. The statistics host does not hand this job a single national file, so the ingest reads the Wikidata statements whose reference URL points at stat.bora.dopa.go.th or stat.dopa.go.th, for 2014 onward. The number on the page is that cited count, and the link goes to the DOPA page named in the reference, not to Wikidata. If the same province and year are cited with two different counts, that year is dropped. The latest year is not the same for every province, so the year is always shown.",
-      th: "จำนวนประชากรตามทะเบียนราษฎร์สิ้นปี เว็บสถิติของกรมการปกครองไม่ได้ให้ไฟล์เดียวทั้งประเทศกับงานนี้ งานจึงอ่านข้อความบนวิกิสนเทศที่ URL อ้างอิงชี้ไปที่ stat.bora.dopa.go.th หรือ stat.dopa.go.th ตั้งแต่ปี 2014 ตัวเลขบนหน้านี้คือจำนวนที่อ้างนั้น และลิงก์ไปที่หน้าของกรมการปกครองตามที่อ้าง ไม่ได้ลิงก์ไปที่วิกิสนเทศ ถ้าจังหวัดและปีเดียวกันถูกอ้างด้วยคนละจำนวน จะทิ้งปีนั้น ปีล่าสุดไม่เหมือนกันทุกจังหวัด จึงแสดงปีไว้เสมอ",
+      th: "จำนวนประชากรตามทะเบียนราษฎร์สิ้นปี เว็บสถิติของกรมการปกครองไม่ได้ให้ไฟล์เดียวทั้งประเทศกับงานนี้ งานจึงอ่านข้อความบนวิกิสนเทศที่ URL อ้างอิงชี้ไปที่ stat.bora.dopa.go.th หรือ stat.dopa.go.th ตั้งแต่ปี 2557 ตัวเลขบนหน้านี้คือจำนวนที่อ้างนั้น และลิงก์ไปที่หน้าของกรมการปกครองตามที่อ้าง ไม่ได้ลิงก์ไปที่วิกิสนเทศ ถ้าจังหวัดและปีเดียวกันถูกอ้างด้วยคนละจำนวน จะทิ้งปีนั้น ปีล่าสุดไม่เหมือนกันทุกจังหวัด จึงแสดงปีไว้เสมอ",
       zh: "年末户籍人口。民政统计网站没有给这个程序一份全国文件，所以程序读取维基数据里参考链接指向 stat.bora.dopa.go.th 或 stat.dopa.go.th、且年份在 2014 年及以后的陈述。页面上的数字是那条引用里的人数，链接打开的是府政厅页面，不是维基数据。同一府同一年若有两个不同人数，这一年就舍弃。各府最新年份并不相同，所以年份始终写在数字旁边。",
     },
   },
@@ -211,7 +211,7 @@ const AWAITING = [
   awaiting("economy.permits", "economy", { en: "Construction permits", th: "ใบอนุญาตก่อสร้าง", zh: "施工许可" }, { en: "permits", th: "ใบ", zh: "份" }),
   awaiting("economy.wages", "economy", { en: "Average wage", th: "ค่าจ้างเฉลี่ย", zh: "平均工资" }, { en: "baht", th: "บาท", zh: "铢" }),
   awaiting("people.graduates", "people", { en: "Graduates", th: "ผู้สำเร็จการศึกษา", zh: "毕业生" }, { en: "people", th: "คน", zh: "人" }),
-  awaiting("economy.gpp_2024", "economy", { en: "Gross provincial product, 2024", th: "ผลิตภัณฑ์มวลรวมจังหวัด ปี 2024", zh: "2024 年府生产总值" }, { en: "million baht", th: "ล้านบาท", zh: "百万铢" }),
+  awaiting("economy.gpp_2024", "economy", { en: "Gross provincial product, 2024", th: "ผลิตภัณฑ์มวลรวมจังหวัด ปี 2567", zh: "2024 年府生产总值" }, { en: "million baht", th: "ล้านบาท", zh: "百万铢" }),
   awaiting("env.green_space", "environment", { en: "Urban green space", th: "พื้นที่สีเขียวในเมือง", zh: "城市绿地" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
   awaiting("mobility.transit", "mobility", { en: "Transit use", th: "การใช้ขนส่งสาธารณะ", zh: "公共交通使用" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
   awaiting("governance.quality", "governance", { en: "Governance quality", th: "คุณภาพการปกครอง", zh: "治理质量" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),

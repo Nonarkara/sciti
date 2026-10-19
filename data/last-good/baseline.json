@@ -2324,7 +2324,7 @@
       "sourceUrl": "https://gdcatalog.go.th/",
       "method": {
         "en": "Gross provincial product at current prices, million baht, 2021–2023, from the NSO yearbook (NESDC). 2024 is not in the file. Each row keeps the link it was read from.",
-        "th": "ผลิตภัณฑ์มวลรวมจังหวัดราคาประจำปี หน่วยล้านบาท ปี 2021–2023 จากหนังสือสถิติประจำปีของสำนักงานสถิติแห่งชาติ (สภาพัฒน์) ปี 2024 ยังไม่อยู่ในไฟล์ แต่ละแถวเก็บลิงก์ของไฟล์ที่อ่าน",
+        "th": "ผลิตภัณฑ์มวลรวมจังหวัดราคาประจำปี หน่วยล้านบาท ปี 2564–2566 จากหนังสือสถิติประจำปีของสำนักงานสถิติแห่งชาติ (สภาพัฒน์) ปี 2567 ยังไม่อยู่ในไฟล์ แต่ละแถวเก็บลิงก์ของไฟล์ที่อ่าน",
         "zh": "现价府生产总值，百万铢，2021–2023 年，来自国家统计局年鉴（国家经济和社会发展委员会）。2024 年不在文件里。每一行保留它读自的链接。"
       },
       "licence": "not stated"
@@ -2378,7 +2378,7 @@
       "sourceUrl": "https://www.eppo.go.th/data-energy-statistic/energy-statistic/electric-energy-stat/%E0%B9%84%E0%B8%9F%E0%B8%9F%E0%B9%89%E0%B8%B2-2/",
       "method": {
         "en": "Electricity use by province in 2023, from the Ministry of Energy. It is all tariffs, not factories alone. No later provincial year is in the file.",
-        "th": "การใช้ไฟฟ้ารายจังหวัดปี 2023 จากกระทรวงพลังงาน เป็นทุกอัตราค่าไฟ ไม่ใช่เฉพาะโรงงาน ไม่มีปีหลังกว่านั้นรายจังหวัดในไฟล์",
+        "th": "การใช้ไฟฟ้ารายจังหวัดปี 2566 จากกระทรวงพลังงาน เป็นทุกอัตราค่าไฟ ไม่ใช่เฉพาะโรงงาน ไม่มีปีหลังกว่านั้นรายจังหวัดในไฟล์",
         "zh": "2023 年分府用电量，来自能源部。是全部电价类别，不是只有工厂。文件里没有更晚的分府年份。"
       },
       "licence": "not stated",
@@ -2406,7 +2406,7 @@
       "sourceUrl": "https://stat.bora.dopa.go.th/new_stat/webPage/statByYear.php",
       "method": {
         "en": "Year-end registered population. The 2024 and 2025 counts in the cited file are the DOPA stat_c tables. Earlier years, when the file still has them, are counts whose reference page is the same office. The latest year is shown on the number.",
-        "th": "ประชากรตามทะเบียนสิ้นปี จำนวนปี 2024 และ 2025 ในไฟล์ที่อ้างคือตาราง stat_c ของกรมการปกครอง ปีที่เก่ากว่า ถ้ายังอยู่ในไฟล์ เป็นจำนวนที่หน้าอ้างอิงเป็นของหน่วยงานเดียวกัน ปีล่าสุดถูกแสดงคู่กับตัวเลข",
+        "th": "ประชากรตามทะเบียนสิ้นปี จำนวนปี 2567 และ 2568 ในไฟล์ที่อ้างคือตาราง stat_c ของกรมการปกครอง ปีที่เก่ากว่า ถ้ายังอยู่ในไฟล์ เป็นจำนวนที่หน้าอ้างอิงเป็นของหน่วยงานเดียวกัน ปีล่าสุดถูกแสดงคู่กับตัวเลข",
         "zh": "年末户籍人口。引用文件里的 2024 和 2025 年人数是府政厅 stat_c 表。更早的年份如果还在文件里，其参考页也是同一个机构。最新年份写在数字旁边。"
       },
       "licence": "not stated"
@@ -2730,7 +2730,7 @@
       },
       "name": {
         "en": "Gross provincial product, 2024",
-        "th": "ผลิตภัณฑ์มวลรวมจังหวัด ปี 2024",
+        "th": "ผลิตภัณฑ์มวลรวมจังหวัด ปี 2567",
         "zh": "2024 年府生产总值"
       },
       "sourceName": {
@@ -2847,13 +2847,13 @@
       },
       "sourceName": {
         "en": "National Statistical Office (NSO)",
-        "th": "National Statistical Office (NSO)",
-        "zh": "National Statistical Office (NSO)"
+        "th": "สำนักงานสถิติแห่งชาติ",
+        "zh": "国家统计局"
       },
       "sourceUrl": "https://catalogapi.nso.go.th/api/index?table=MIG_01_0049_3&format=json",
       "method": {
         "en": "Unregistered residents relative to the house register, 2025. It is context. It is not a lens score. Where it is high, per-person figures come out high.",
-        "th": "ผู้ไม่ได้อยู่ในทะเบียนเทียบกับทะเบียนบ้าน ปี 2025 เป็นบริบท ไม่ใช่คะแนนเลนส์ ที่ซึ่งค่านี้สูง ตัวเลขต่อคนจะออกมาสูง",
+        "th": "ผู้ไม่ได้อยู่ในทะเบียนเทียบกับทะเบียนบ้าน ปี 2568 เป็นบริบท ไม่ใช่คะแนนเลนส์ ที่ซึ่งค่านี้สูง ตัวเลขต่อคนจะออกมาสูง",
         "zh": "2025 年未登记居民相对户籍的比例。这是背景，不是镜头分数。这个比例高的地方，人均数字会偏高。"
       }
     },
@@ -2875,13 +2875,13 @@
       },
       "sourceName": {
         "en": "National Statistical Office (NSO)",
-        "th": "National Statistical Office (NSO)",
-        "zh": "National Statistical Office (NSO)"
+        "th": "สำนักงานสถิติแห่งชาติ",
+        "zh": "国家统计局"
       },
       "sourceUrl": "https://catalogapi.nso.go.th/api/index?table=ST_02_2005005_4&format=json",
       "method": {
         "en": "Labour force in 2025, mean of the four quarters.",
-        "th": "กำลังแรงงานปี 2025 ค่าเฉลี่ยสี่ไตรมาส",
+        "th": "กำลังแรงงานปี 2568 ค่าเฉลี่ยสี่ไตรมาส",
         "zh": "2025 年劳动力，四个季度的平均。"
       }
     },
@@ -2903,13 +2903,13 @@
       },
       "sourceName": {
         "en": "National Statistical Office (NSO)",
-        "th": "National Statistical Office (NSO)",
-        "zh": "National Statistical Office (NSO)"
+        "th": "สำนักงานสถิติแห่งชาติ",
+        "zh": "国家统计局"
       },
       "sourceUrl": "https://catalogapi.nso.go.th/api/index?table=ST_02_2005005_4&format=json",
       "method": {
         "en": "Unemployment rate, mean of the four quarters of 2025. Lower is better. It is not a wage.",
-        "th": "อัตราว่างงาน ค่าเฉลี่ยสี่ไตรมาสของปี 2025 ค่าน้อยกว่าดีกว่า นี่ไม่ใช่ค่าจ้าง",
+        "th": "อัตราว่างงาน ค่าเฉลี่ยสี่ไตรมาสของปี 2568 ค่าน้อยกว่าดีกว่า นี่ไม่ใช่ค่าจ้าง",
         "zh": "失业率，2025 年四个季度的平均。越低越好。这不是工资。"
       }
     },
@@ -2931,8 +2931,8 @@
       },
       "sourceName": {
         "en": "National Statistical Office (NSO)",
-        "th": "National Statistical Office (NSO)",
-        "zh": "National Statistical Office (NSO)"
+        "th": "สำนักงานสถิติแห่งชาติ",
+        "zh": "国家统计局"
       },
       "sourceUrl": "https://catalogapi.nso.go.th/api/index?table=ICTH_37_23_Table_32&format=json",
       "method": {
@@ -2959,13 +2959,13 @@
       },
       "sourceName": {
         "en": "NSO (data owner shown in file: provincial statistical offices / MDES digital community centres)",
-        "th": "NSO (data owner shown in file: provincial statistical offices / MDES digital community centres)",
-        "zh": "NSO (data owner shown in file: provincial statistical offices / MDES digital community centres)"
+        "th": "สำนักงานสถิติแห่งชาติ (เจ้าของข้อมูลในไฟล์: สำนักงานสถิติจังหวัด / ศูนย์ดิจิทัลชุมชน กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม)",
+        "zh": "国家统计局（文件中的数据所有者：府统计办公室 / 数字经济与社会部数字社区中心）"
       },
       "sourceUrl": "https://catalogapi.nso.go.th/api/index?table=LAD_01_Table_0003&format=csv",
       "method": {
         "en": "People recorded in a digital-skills course in 2025, per 1,000 registered people. A course count is not governance quality.",
-        "th": "ผู้ที่ถูกบันทึกในหลักสูตรทักษะดิจิทัลปี 2025 ต่อประชากรตามทะเบียนพันคน จำนวนหลักสูตรไม่ใช่คุณภาพการปกครอง",
+        "th": "ผู้ที่ถูกบันทึกในหลักสูตรทักษะดิจิทัลปี 2568 ต่อประชากรตามทะเบียนพันคน จำนวนหลักสูตรไม่ใช่คุณภาพการปกครอง",
         "zh": "2025 年有数字技能课程记录的人，每千名户籍人口。课程人数不是治理质量。"
       }
     },
@@ -2987,8 +2987,8 @@
       },
       "sourceName": {
         "en": "National Statistical Office (NSO)",
-        "th": "National Statistical Office (NSO)",
-        "zh": "National Statistical Office (NSO)"
+        "th": "สำนักงานสถิติแห่งชาติ",
+        "zh": "国家统计局"
       },
       "sourceUrl": "https://catalogapi.nso.go.th/api/index?table=SFD_01_Table_0011_01&format=csv",
       "method": {
@@ -3015,13 +3015,13 @@
       },
       "sourceName": {
         "en": "NSO Statistical Yearbook Thailand 2025 (source: Royal Forest Department)",
-        "th": "NSO Statistical Yearbook Thailand 2025 (source: Royal Forest Department)",
-        "zh": "NSO Statistical Yearbook Thailand 2025 (source: Royal Forest Department)"
+        "th": "สำนักงานสถิติแห่งชาติ หนังสือสถิติประจำปี 2568 (แหล่ง: กรมป่าไม้)",
+        "zh": "国家统计局《泰国统计年鉴 2025》（来源：皇家林业厅）"
       },
       "sourceUrl": "https://www.nso.go.th/public/e-book/Statistical-Yearbook/SYB-2025_webPage/File%20SYB/2025/21/T%2021.4%202025.pdf",
       "method": {
         "en": "Forest area as a share of the province in 2024. It is not urban green space.",
-        "th": "พื้นที่ป่าเป็นสัดส่วนของจังหวัดปี 2024 ไม่ใช่พื้นที่สีเขียวในเมือง",
+        "th": "พื้นที่ป่าเป็นสัดส่วนของจังหวัดปี 2567 ไม่ใช่พื้นที่สีเขียวในเมือง",
         "zh": "2024 年森林占府面积的比例。不是城市绿地。"
       }
     },
@@ -3043,13 +3043,13 @@
       },
       "sourceName": {
         "en": "NSO Statistical Yearbook Thailand 2025 (source: Trade Policy and Strategy Office, MOC)",
-        "th": "NSO Statistical Yearbook Thailand 2025 (source: Trade Policy and Strategy Office, MOC)",
-        "zh": "NSO Statistical Yearbook Thailand 2025 (source: Trade Policy and Strategy Office, MOC)"
+        "th": "สำนักงานสถิติแห่งชาติ หนังสือสถิติประจำปี 2568 (แหล่ง: สำนักงานนโยบายและยุทธศาสตร์การค้า กระทรวงพาณิชย์)",
+        "zh": "国家统计局《泰国统计年鉴 2025》（来源：商业部贸易政策与战略办公室）"
       },
       "sourceUrl": "https://www.nso.go.th/public/e-book/Statistical-Yearbook/SYB-2025_webPage/File%20SYB/2025/14/T%2014.21%202025.pdf",
       "method": {
         "en": "Provincial inflation, 2024. Bangkok is published together with its vicinity, so Bangkok itself is blank.",
-        "th": "เงินเฟ้อรายจังหวัดปี 2024 กรุงเทพฯ ถูกเผยแพร่รวมกับปริมณฑล ดังนั้นกรุงเทพฯ เองจึงว่าง",
+        "th": "เงินเฟ้อรายจังหวัดปี 2567 กรุงเทพฯ ถูกเผยแพร่รวมกับปริมณฑล ดังนั้นกรุงเทพฯ เองจึงว่าง",
         "zh": "2024 年分府通胀。曼谷是和周边一起公布的，所以曼谷本身是空白。"
       }
     },
@@ -3071,8 +3071,8 @@
       },
       "sourceName": {
         "en": "NSO Statistical Yearbook Thailand 2025 (source: Wage Committee, Ministry of Labour)",
-        "th": "NSO Statistical Yearbook Thailand 2025 (source: Wage Committee, Ministry of Labour)",
-        "zh": "NSO Statistical Yearbook Thailand 2025 (source: Wage Committee, Ministry of Labour)"
+        "th": "สำนักงานสถิติแห่งชาติ หนังสือสถิติประจำปี 2568 (แหล่ง: คณะกรรมการค่าจ้าง กระทรวงแรงงาน)",
+        "zh": "国家统计局《泰国统计年鉴 2025》（来源：劳工部工资委员会）"
       },
       "sourceUrl": "https://www.nso.go.th/public/e-book/Statistical-Yearbook/SYB-2025_webPage/File%20SYB/2025/2/T%202.17%202025.pdf",
       "method": {
@@ -3099,13 +3099,13 @@
       },
       "sourceName": {
         "en": "NSO Statistical Yearbook Thailand 2025 (source: NESDC)",
-        "th": "NSO Statistical Yearbook Thailand 2025 (source: NESDC)",
-        "zh": "NSO Statistical Yearbook Thailand 2025 (source: NESDC)"
+        "th": "สำนักงานสถิติแห่งชาติ หนังสือสถิติประจำปี 2568 (แหล่ง: สภาพัฒน์)",
+        "zh": "国家统计局《泰国统计年鉴 2025》（来源：国家经济和社会发展委员会）"
       },
       "sourceUrl": "https://www.nso.go.th/public/e-book/Statistical-Yearbook/SYB-2025_webPage/File%20SYB/2025/10/T%2010.15%202025.pdf",
       "method": {
         "en": "One year of real gross provincial product growth, chain volume, 2023. It is not a multi-year rate. 2024 is not in the file.",
-        "th": "การเติบโตของผลิตภัณฑ์มวลรวมจังหวัดที่แท้จริงหนึ่งปี ตามปริมาณลูกโซ่ ปี 2023 ไม่ใช่อัตราหลายปี ปี 2024 ยังไม่อยู่ในไฟล์",
+        "th": "การเติบโตของผลิตภัณฑ์มวลรวมจังหวัดที่แท้จริงหนึ่งปี ตามปริมาณลูกโซ่ ปี 2566 ไม่ใช่อัตราหลายปี ปี 2567 ยังไม่อยู่ในไฟล์",
         "zh": "实际府生产总值的一年增长，链式物量，2023 年。不是多年速率。2024 年不在文件里。"
       }
     },
@@ -3127,13 +3127,13 @@
       },
       "sourceName": {
         "en": "National Statistical Office (NSO), compiled from NESDC",
-        "th": "National Statistical Office (NSO), compiled from NESDC",
-        "zh": "National Statistical Office (NSO), compiled from NESDC"
+        "th": "สำนักงานสถิติแห่งชาติ รวบรวมจากสภาพัฒน์",
+        "zh": "国家统计局，汇编自国家经济和社会发展委员会"
       },
       "sourceUrl": "https://www.nso.go.th/nsoweb/downloadFile/stat_main_nso/FgAG/file_th",
       "method": {
         "en": "Gross provincial product per registered person, 2023. Places with many people off the house register come out high.",
-        "th": "ผลิตภัณฑ์มวลรวมจังหวัดต่อประชากรตามทะเบียน ปี 2023 จังหวัดที่มีคนนอกทะเบียนจำนวนมากจะได้ค่าที่สูง",
+        "th": "ผลิตภัณฑ์มวลรวมจังหวัดต่อประชากรตามทะเบียน ปี 2566 จังหวัดที่มีคนนอกทะเบียนจำนวนมากจะได้ค่าที่สูง",
         "zh": "2023 年人均府生产总值。户籍外人口很多的地方，这个数字会偏高。"
       }
     },
@@ -3155,13 +3155,13 @@
       },
       "sourceName": {
         "en": "Thailand Board of Investment (BOI)",
-        "th": "Thailand Board of Investment (BOI)",
-        "zh": "Thailand Board of Investment (BOI)"
+        "th": "สำนักงานคณะกรรมการส่งเสริมการลงทุน",
+        "zh": "泰国投资促进委员会"
       },
       "sourceUrl": "https://ipstat.boi.go.th/pubrpt/rep08qtrprovince.php",
       "method": {
         "en": "Count of BOI-approved projects in 2025. A missing province is blank, not zero.",
-        "th": "จำนวนโครงการที่บีโอไอให้การส่งเสริมปี 2025 จังหวัดที่ไม่มีจะว่าง ไม่ใช่ศูนย์",
+        "th": "จำนวนโครงการที่บีโอไอให้การส่งเสริมปี 2568 จังหวัดที่ไม่มีจะว่าง ไม่ใช่ศูนย์",
         "zh": "2025 年 BOI 批准的项目数。没有的府是空白，不是零。"
       }
     },
@@ -3183,13 +3183,13 @@
       },
       "sourceName": {
         "en": "Thailand Board of Investment (BOI)",
-        "th": "Thailand Board of Investment (BOI)",
-        "zh": "Thailand Board of Investment (BOI)"
+        "th": "สำนักงานคณะกรรมการส่งเสริมการลงทุน",
+        "zh": "泰国投资促进委员会"
       },
       "sourceUrl": "https://ipstat.boi.go.th/pubrpt/rep08qtrprovince.php",
       "method": {
         "en": "BOI-approved investment. The file has 2024 and 2025. A province the BOI table does not list is blank, not zero.",
-        "th": "มูลค่าการลงทุนที่บีโอไอให้การส่งเสริม ไฟล์มีปี 2024 และ 2025 จังหวัดที่ตารางไม่ได้ลงไว้จะว่าง ไม่ใช่ศูนย์",
+        "th": "มูลค่าการลงทุนที่บีโอไอให้การส่งเสริม ไฟล์มีปี 2567 และ 2568 จังหวัดที่ตารางไม่ได้ลงไว้จะว่าง ไม่ใช่ศูนย์",
         "zh": "BOI 批准的投资。文件里有 2024 和 2025 年。表上没有的府是空白，不是零。"
       }
     },
@@ -3211,13 +3211,13 @@
       },
       "sourceName": {
         "en": "Thailand Board of Investment (BOI)",
-        "th": "Thailand Board of Investment (BOI)",
-        "zh": "Thailand Board of Investment (BOI)"
+        "th": "สำนักงานคณะกรรมการส่งเสริมการลงทุน",
+        "zh": "泰国投资促进委员会"
       },
       "sourceUrl": "https://ipstat.boi.go.th/pubrpt/rep08qtrprovince.php",
       "method": {
         "en": "Planned employment on BOI-approved projects in 2025, Thai and foreign jobs added together where the table gives both. A cell that is Thai 0 + foreign 0 is unreported and is not stored. A province the table omits is blank. Neither is shown as zero.",
-        "th": "การจ้างงานตามแผนของโครงการที่บีโอไอให้การส่งเสริมปี 2025 รวมคนไทยและคนต่างชาติเมื่อตารางให้ทั้งสองจำนวน ช่องที่เป็นคนไทย 0 บวกคนต่างชาติ 0 คือไม่ได้รายงาน และไม่ได้ถูกเก็บ จังหวัดที่ตารางไม่ได้ลงจะว่าง ทั้งสองอย่างไม่ถูกแสดงเป็นศูนย์",
+        "th": "การจ้างงานตามแผนของโครงการที่บีโอไอให้การส่งเสริมปี 2568 รวมคนไทยและคนต่างชาติเมื่อตารางให้ทั้งสองจำนวน ช่องที่เป็นคนไทย 0 บวกคนต่างชาติ 0 คือไม่ได้รายงาน และไม่ได้ถูกเก็บ จังหวัดที่ตารางไม่ได้ลงจะว่าง ทั้งสองอย่างไม่ถูกแสดงเป็นศูนย์",
         "zh": "2025 年 BOI 批准项目的计划就业，表上同时给出泰国人和外国人时，两者相加。泰国人 0 加外国人 0 的格子视为未报告，不入库。表上没有的府留空。两者都不显示为零。"
       }
     },
@@ -3239,13 +3239,13 @@
       },
       "sourceName": {
         "en": "Department of Business Development (DBD), Ministry of Commerce",
-        "th": "Department of Business Development (DBD), Ministry of Commerce",
-        "zh": "Department of Business Development (DBD), Ministry of Commerce"
+        "th": "กรมพัฒนาธุรกิจการค้า กระทรวงพาณิชย์",
+        "zh": "商业部商业发展厅"
       },
       "sourceUrl": "https://data.go.th/dataset/dataset_12_0111",
       "method": {
         "en": "New juristic persons registered in 2025, from the Department of Business Development.",
-        "th": "นิติบุคคลตั้งใหม่ที่จดทะเบียนปี 2025 จากกรมพัฒนาธุรกิจการค้า",
+        "th": "นิติบุคคลตั้งใหม่ที่จดทะเบียนปี 2568 จากกรมพัฒนาธุรกิจการค้า",
         "zh": "2025 年新注册法人，来自商业发展厅。"
       }
     },
@@ -3267,13 +3267,13 @@
       },
       "sourceName": {
         "en": "Department of Business Development (DBD), Ministry of Commerce",
-        "th": "Department of Business Development (DBD), Ministry of Commerce",
-        "zh": "Department of Business Development (DBD), Ministry of Commerce"
+        "th": "กรมพัฒนาธุรกิจการค้า กระทรวงพาณิชย์",
+        "zh": "商业部商业发展厅"
       },
       "sourceUrl": "https://data.go.th/dataset/dataset_12_0111",
       "method": {
         "en": "New juristic persons in 2025 per 10,000 registered people.",
-        "th": "นิติบุคคลตั้งใหม่ปี 2025 ต่อประชากรตามทะเบียนหมื่นคน",
+        "th": "นิติบุคคลตั้งใหม่ปี 2568 ต่อประชากรตามทะเบียนหมื่นคน",
         "zh": "2025 年新注册法人，每万名户籍人口。"
       }
     },
@@ -3295,13 +3295,13 @@
       },
       "sourceName": {
         "en": "Ministry of Tourism and Sports (MOTS)",
-        "th": "Ministry of Tourism and Sports (MOTS)",
-        "zh": "Ministry of Tourism and Sports (MOTS)"
+        "th": "กระทรวงการท่องเที่ยวและกีฬา",
+        "zh": "旅游与体育部"
       },
       "sourceUrl": "https://www.mots.go.th/images/v2022_11aeb83a-6afc-4c36-82aa-6ce48b273d4c.xlsx",
       "method": {
         "en": "Tourism receipts in 2025, from the Ministry of Tourism and Sports.",
-        "th": "รายได้การท่องเที่ยวปี 2025 จากกระทรวงการท่องเที่ยวและกีฬา",
+        "th": "รายได้การท่องเที่ยวปี 2568 จากกระทรวงการท่องเที่ยวและกีฬา",
         "zh": "2025 年旅游收入，来自旅游与体育部。"
       }
     },
@@ -3323,13 +3323,13 @@
       },
       "sourceName": {
         "en": "Ministry of Tourism and Sports (MOTS)",
-        "th": "Ministry of Tourism and Sports (MOTS)",
-        "zh": "Ministry of Tourism and Sports (MOTS)"
+        "th": "กระทรวงการท่องเที่ยวและกีฬา",
+        "zh": "旅游与体育部"
       },
       "sourceUrl": "https://www.mots.go.th/images/v2022_11aeb83a-6afc-4c36-82aa-6ce48b273d4c.xlsx",
       "method": {
         "en": "Tourism receipts from foreign visitors in 2025.",
-        "th": "รายได้การท่องเที่ยวจากผู้มาเยือนชาวต่างชาติปี 2025",
+        "th": "รายได้การท่องเที่ยวจากผู้มาเยือนชาวต่างชาติปี 2568",
         "zh": "2025 年外国游客带来的旅游收入。"
       }
     },
@@ -3351,13 +3351,13 @@
       },
       "sourceName": {
         "en": "Ministry of Tourism and Sports (MOTS)",
-        "th": "Ministry of Tourism and Sports (MOTS)",
-        "zh": "Ministry of Tourism and Sports (MOTS)"
+        "th": "กระทรวงการท่องเที่ยวและกีฬา",
+        "zh": "旅游与体育部"
       },
       "sourceUrl": "https://www.mots.go.th/images/v2022_11aeb83a-6afc-4c36-82aa-6ce48b273d4c.xlsx",
       "method": {
         "en": "Thai and foreign visitor trips in 2025. A trip is not a resident.",
-        "th": "จำนวนครั้งการเดินทางของผู้มาเยือนชาวไทยและชาวต่างชาติปี 2025 หนึ่งครั้งไม่ใช่หนึ่งผู้อยู่อาศัย",
+        "th": "จำนวนครั้งการเดินทางของผู้มาเยือนชาวไทยและชาวต่างชาติปี 2568 หนึ่งครั้งไม่ใช่หนึ่งผู้อยู่อาศัย",
         "zh": "2025 年泰国和外国游客人次。一次行程不是一名居民。"
       }
     },
@@ -3379,13 +3379,13 @@
       },
       "sourceName": {
         "en": "Ministry of Tourism and Sports (MOTS)",
-        "th": "Ministry of Tourism and Sports (MOTS)",
-        "zh": "Ministry of Tourism and Sports (MOTS)"
+        "th": "กระทรวงการท่องเที่ยวและกีฬา",
+        "zh": "旅游与体育部"
       },
       "sourceUrl": "https://www.mots.go.th/images/v2022_11aeb83a-6afc-4c36-82aa-6ce48b273d4c.xlsx",
       "method": {
         "en": "Foreign visitor trips in 2025.",
-        "th": "จำนวนครั้งการเดินทางของผู้มาเยือนชาวต่างชาติปี 2025",
+        "th": "จำนวนครั้งการเดินทางของผู้มาเยือนชาวต่างชาติปี 2568",
         "zh": "2025 年外国游客人次。"
       }
     },
@@ -3407,13 +3407,13 @@
       },
       "sourceName": {
         "en": "Ministry of Tourism and Sports (MOTS)",
-        "th": "Ministry of Tourism and Sports (MOTS)",
-        "zh": "Ministry of Tourism and Sports (MOTS)"
+        "th": "กระทรวงการท่องเที่ยวและกีฬา",
+        "zh": "旅游与体育部"
       },
       "sourceUrl": "https://www.mots.go.th/images/v2022_11aeb83a-6afc-4c36-82aa-6ce48b273d4c.xlsx",
       "method": {
         "en": "Hotel occupancy in 2025. A yearly rate, not a month-by-month season.",
-        "th": "อัตราเข้าพักโรงแรมปี 2025 เป็นอัตราทั้งปี ไม่ใช่ฤดูกาลรายเดือน",
+        "th": "อัตราเข้าพักโรงแรมปี 2568 เป็นอัตราทั้งปี ไม่ใช่ฤดูกาลรายเดือน",
         "zh": "2025 年酒店入住率。全年比率，不是逐月的淡旺季。"
       }
     },
@@ -3435,8 +3435,8 @@
       },
       "sourceName": {
         "en": "Pollution Control Department (PCD)",
-        "th": "Pollution Control Department (PCD)",
-        "zh": "Pollution Control Department (PCD)"
+        "th": "กรมควบคุมมลพิษ",
+        "zh": "污染控制局"
       },
       "sourceUrl": "https://pcd.gdcatalog.go.th/dataset/fc3b51fd-91e3-4788-8241-32d418e636d4/resource/9729cb19-ad5f-42a9-b4ef-e17d7e830546/download/pm2.5-2025-english-headers.csv",
       "method": {
@@ -3463,13 +3463,13 @@
       },
       "sourceName": {
         "en": "Pollution Control Department (PCD)",
-        "th": "Pollution Control Department (PCD)",
-        "zh": "Pollution Control Department (PCD)"
+        "th": "กรมควบคุมมลพิษ",
+        "zh": "污染控制局"
       },
       "sourceUrl": "https://pcd.gdcatalog.go.th/dataset/fc3b51fd-91e3-4788-8241-32d418e636d4/resource/9729cb19-ad5f-42a9-b4ef-e17d7e830546/download/pm2.5-2025-english-headers.csv",
       "method": {
         "en": "Days in 2025 when PM2.5 was over the Thai 24-hour standard, at the median station. Sixteen provinces have no station and are blank. Lower is better.",
-        "th": "จำนวนวันในปี 2025 ที่ PM2.5 เกินมาตรฐาน 24 ชั่วโมงของไทย ที่สถานีมัธยฐาน สิบหกจังหวัดไม่มีสถานีและว่างไว้ ค่าน้อยกว่าดีกว่า",
+        "th": "จำนวนวันในปี 2568 ที่ PM2.5 เกินมาตรฐาน 24 ชั่วโมงของไทย ที่สถานีมัธยฐาน สิบหกจังหวัดไม่มีสถานีและว่างไว้ ค่าน้อยกว่าดีกว่า",
         "zh": "2025 年 PM2.5 超过泰国 24 小时标准的天数，取站点中位数。十六个府没有站点，留空。越低越好。"
       }
     },
@@ -3491,13 +3491,13 @@
       },
       "sourceName": {
         "en": "Pollution Control Department (PCD)",
-        "th": "Pollution Control Department (PCD)",
-        "zh": "Pollution Control Department (PCD)"
+        "th": "กรมควบคุมมลพิษ",
+        "zh": "污染控制局"
       },
       "sourceUrl": "https://pcd.gdcatalog.go.th/dataset/fc3b51fd-91e3-4788-8241-32d418e636d4/resource/9729cb19-ad5f-42a9-b4ef-e17d7e830546/download/pm2.5-2025-english-headers.csv",
       "method": {
         "en": "Annual mean PM2.5 in 2025. Provinces with no station are blank.",
-        "th": "ค่าเฉลี่ย PM2.5 ทั้งปี 2025 จังหวัดที่ไม่มีสถานีจะว่าง",
+        "th": "ค่าเฉลี่ย PM2.5 ทั้งปี 2568 จังหวัดที่ไม่มีสถานีจะว่าง",
         "zh": "2025 年 PM2.5 年均值。没有站点的府留空。"
       }
     },
@@ -3519,13 +3519,13 @@
       },
       "sourceName": {
         "en": "Pollution Control Department (PCD)",
-        "th": "Pollution Control Department (PCD)",
-        "zh": "Pollution Control Department (PCD)"
+        "th": "กรมควบคุมมลพิษ",
+        "zh": "污染控制局"
       },
       "sourceUrl": "https://data.go.th/dataset/13_7_waste_commu_generate_prov",
       "method": {
         "en": "Municipal waste per person per day, 2024. Lower is better. It is not in a lens.",
-        "th": "ขยะมูลฝอยต่อคนต่อวัน ปี 2024 ค่าน้อยกว่าดีกว่า ไม่ได้อยู่ในเลนส์",
+        "th": "ขยะมูลฝอยต่อคนต่อวัน ปี 2567 ค่าน้อยกว่าดีกว่า ไม่ได้อยู่ในเลนส์",
         "zh": "2024 年人均每日生活垃圾。越低越好。不在任何一个镜头里。"
       }
     },
@@ -3547,13 +3547,13 @@
       },
       "sourceName": {
         "en": "Department of Disease Control (DDC), Ministry of Public Health",
-        "th": "Department of Disease Control (DDC), Ministry of Public Health",
-        "zh": "Department of Disease Control (DDC), Ministry of Public Health"
+        "th": "กรมควบคุมโรค กระทรวงสาธารณสุข",
+        "zh": "公共卫生部疾病控制局"
       },
       "sourceUrl": "https://data.go.th/dataset/rtddi",
       "method": {
         "en": "Road traffic deaths per 100,000 registered people. The file has 2024 and 2025. Lower is better. It is not a crime series.",
-        "th": "ผู้เสียชีวิตจากอุบัติเหตุทางถนนต่อประชากรตามทะเบียนแสนคน ไฟล์มีปี 2024 และ 2025 ค่าน้อยกว่าดีกว่า ไม่ใช่ชุดอาชญากรรม",
+        "th": "ผู้เสียชีวิตจากอุบัติเหตุทางถนนต่อประชากรตามทะเบียนแสนคน ไฟล์มีปี 2567 และ 2568 ค่าน้อยกว่าดีกว่า ไม่ใช่ชุดอาชญากรรม",
         "zh": "道路交通事故死亡，每十万名户籍人口。文件里有 2024 和 2025 年。越低越好。不是犯罪序列。"
       }
     },
@@ -3575,13 +3575,13 @@
       },
       "sourceName": {
         "en": "Office of the Permanent Secretary, Ministry of Public Health",
-        "th": "Office of the Permanent Secretary, Ministry of Public Health",
-        "zh": "Office of the Permanent Secretary, Ministry of Public Health"
+        "th": "สำนักงานปลัดกระทรวงสาธารณสุข",
+        "zh": "公共卫生部常务秘书办公室"
       },
       "sourceUrl": "https://moph.gdcatalog.go.th/dataset/gdpublish-doctors",
       "method": {
         "en": "Physicians in 2024 per 10,000 registered people. Private-hospital doctors may be excluded.",
-        "th": "แพทย์ปี 2024 ต่อประชากรตามทะเบียนหมื่นคน แพทย์โรงพยาบาลเอกชนอาจไม่ถูกนับ",
+        "th": "แพทย์ปี 2567 ต่อประชากรตามทะเบียนหมื่นคน แพทย์โรงพยาบาลเอกชนอาจไม่ถูกนับ",
         "zh": "2024 年医生数，每万名户籍人口。私立医院的医生可能没有计入。"
       }
     },
@@ -3603,8 +3603,8 @@
       },
       "sourceName": {
         "en": "Ministry of Higher Education, Science, Research and Innovation (MHESI)",
-        "th": "Ministry of Higher Education, Science, Research and Innovation (MHESI)",
-        "zh": "Ministry of Higher Education, Science, Research and Innovation (MHESI)"
+        "th": "กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม",
+        "zh": "高等教育、科研与创新部"
       },
       "sourceUrl": "https://data.go.th/dataset/univ_std_11_011",
       "method": {
@@ -3631,8 +3631,8 @@
       },
       "sourceName": {
         "en": "Ministry of Higher Education, Science, Research and Innovation (MHESI)",
-        "th": "Ministry of Higher Education, Science, Research and Innovation (MHESI)",
-        "zh": "Ministry of Higher Education, Science, Research and Innovation (MHESI)"
+        "th": "กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม",
+        "zh": "高等教育、科研与创新部"
       },
       "sourceUrl": "https://data.go.th/dataset/univ_std_11_011",
       "method": {
@@ -3659,13 +3659,13 @@
       },
       "sourceName": {
         "en": "Office of the Permanent Secretary, Ministry of Energy",
-        "th": "Office of the Permanent Secretary, Ministry of Energy",
-        "zh": "Office of the Permanent Secretary, Ministry of Energy"
+        "th": "สำนักงานปลัดกระทรวงพลังงาน",
+        "zh": "能源部常务秘书办公室"
       },
       "sourceUrl": "https://gdcatalog.energy.go.th/dataset/7fc9e90f-0433-4612-81ab-7f1d689f9271/resource/0d386dd4-ee5e-439a-8c6c-10e1f5dfd010/download/untitled.xlsx",
       "method": {
         "en": "Electricity sold for EV charging in 2023. It is not a count of chargers.",
-        "th": "ไฟฟ้าที่ขายเพื่อชาร์จรถไฟฟ้าปี 2023 ไม่ใช่จำนวนเครื่องชาร์จ",
+        "th": "ไฟฟ้าที่ขายเพื่อชาร์จรถไฟฟ้าปี 2566 ไม่ใช่จำนวนเครื่องชาร์จ",
         "zh": "2023 年售出的电动车充电用电。不是充电桩的数量。"
       }
     },
@@ -3687,8 +3687,8 @@
       },
       "sourceName": {
         "en": "Treasury Department, Ministry of Finance",
-        "th": "Treasury Department, Ministry of Finance",
-        "zh": "Treasury Department, Ministry of Finance"
+        "th": "กรมธนารักษ์ กระทรวงการคลัง",
+        "zh": "财政部国库厅"
       },
       "sourceUrl": "https://data.go.th/dataset/land-valuation",
       "method": {
@@ -3715,8 +3715,8 @@
       },
       "sourceName": {
         "en": "Digital Economy Promotion Agency (depa) / Smart City Committee",
-        "th": "Digital Economy Promotion Agency (depa) / Smart City Committee",
-        "zh": "Digital Economy Promotion Agency (depa) / Smart City Committee"
+        "th": "สำนักงานส่งเสริมเศรษฐกิจดิจิทัล (ดีป้า) / คณะกรรมการเมืองอัจฉริยะ",
+        "zh": "数字经济发展促进局（depa）/ 智慧城市委员会"
       },
       "sourceUrl": "https://www.depa.or.th/th/smart-city-plan/existing-smart-city",
       "method": {
@@ -3743,13 +3743,13 @@
       },
       "sourceName": {
         "en": "Customs Department, Ministry of Finance",
-        "th": "Customs Department, Ministry of Finance",
-        "zh": "Customs Department, Ministry of Finance"
+        "th": "กรมศุลกากร กระทรวงการคลัง",
+        "zh": "财政部海关厅"
       },
       "sourceUrl": "https://data.go.th/dataset/ctm_06_08",
       "method": {
         "en": "Exports plus imports in 2024 through land and river customs checkpoints. Twenty-five provinces have a figure. The rest are blank, not zero. Sangkhla Buri imports, inside Kanchanaburi, likely include pipeline gas. December 2568 border trade with Cambodia was zero at the Department of Foreign Trade.",
-        "th": "ส่งออกบวกนำเข้าปี 2024 ผ่านด่านศุลกากรทางบกและทางน้ำ ยี่สิบห้าจังหวัดมีตัวเลข ที่เหลือว่าง ไม่ใช่ศูนย์ นำเข้าที่สังขละบุรีในกาญจนบุรี น่าจะรวมก๊าซทางท่อ การค้าชายแดนกับกัมพูชาในธันวาคม 2568 เป็นศูนย์ที่กรมการค้าต่างประเทศ",
+        "th": "ส่งออกบวกนำเข้าปี 2567 ผ่านด่านศุลกากรทางบกและทางน้ำ ยี่สิบห้าจังหวัดมีตัวเลข ที่เหลือว่าง ไม่ใช่ศูนย์ นำเข้าที่สังขละบุรีในกาญจนบุรี น่าจะรวมก๊าซทางท่อ การค้าชายแดนกับกัมพูชาในธันวาคม 2568 เป็นศูนย์ที่กรมการค้าต่างประเทศ",
         "zh": "2024 年经陆路和河路海关的出口加进口。二十五个府有数字。其余是空白，不是零。北碧境内桑卡拉武里的进口很可能包括管道气。佛历 2568 年 12 月对柬埔寨的边境贸易，在外贸厅是零。"
       }
     },
@@ -3771,8 +3771,8 @@
       },
       "sourceName": {
         "en": "Office of the Permanent Secretary, Ministry of Public Health",
-        "th": "Office of the Permanent Secretary, Ministry of Public Health",
-        "zh": "Office of the Permanent Secretary, Ministry of Public Health"
+        "th": "สำนักงานปลัดกระทรวงสาธารณสุข",
+        "zh": "公共卫生部常务秘书办公室"
       },
       "sourceUrl": "https://moph.gdcatalog.go.th/dataset/gdpublish-doctors",
       "method": {
@@ -3799,8 +3799,8 @@
       },
       "sourceName": {
         "en": "Thailand Board of Investment (BOI SEZ measures; zones set by the national SEZ policy committee, NESDC secretariat)",
-        "th": "Thailand Board of Investment (BOI SEZ measures; zones set by the national SEZ policy committee, NESDC secretariat)",
-        "zh": "Thailand Board of Investment (BOI SEZ measures; zones set by the national SEZ policy committee, NESDC secretariat)"
+        "th": "สำนักงานคณะกรรมการส่งเสริมการลงทุน (มาตรการเขตเศรษฐกิจพิเศษของบีโอไอ เขตที่คณะกรรมการนโยบายเขตเศรษฐกิจพิเศษกำหนด โดยมีสภาพัฒน์เป็นเลขานุการ)",
+        "zh": "泰国投资促进委员会（BOI 经济特区措施；特区由国家经济特区政策委员会划定，秘书处为国家经济和社会发展委员会）"
       },
       "sourceUrl": "https://www.boi.go.th/upload/content/19_2565.pdf",
       "method": {
@@ -3827,8 +3827,8 @@
       },
       "sourceName": {
         "en": "Eastern Economic Corridor Office (EEC Act B.E. 2561)",
-        "th": "Eastern Economic Corridor Office (EEC Act B.E. 2561)",
-        "zh": "Eastern Economic Corridor Office (EEC Act B.E. 2561)"
+        "th": "สำนักงานคณะกรรมการนโยบายเขตพัฒนาพิเศษภาคตะวันออก (พระราชบัญญัติอีอีซี 2561)",
+        "zh": "东部经济走廊办公室（佛历 2561 年东部经济走廊法）"
       },
       "sourceUrl": "https://www.eeco.or.th/th",
       "method": {

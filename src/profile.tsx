@@ -1,5 +1,7 @@
 import type { Baseline, Lang, Lens, ScoreRow } from "./types";
 import { placeNote } from "./lib/notes.mjs";
+import { LinkedText } from "./linked";
+import { publisherName } from "./lib/publishers.mjs";
 import { coveragePhrase, depaSentence, figurePhrase, indicatorLabel, namesFor, outOf100, partSentence, placeName, regions, t, topParts, tr, whenPhrase } from "./text";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
@@ -65,7 +67,11 @@ export function Profile({
         </p>
       ) : null}
       {place.eec ? <p>{t(lang, "eecHere")}</p> : null}
-      {note ? <p>{tr(lang, note)}</p> : null}
+      {note ? (
+        <p>
+          <LinkedText lang={lang} text={tr(lang, note)} />
+        </p>
+      ) : null}
       {row && row.score != null ? (
         <p>
           {row.rank}. {coveragePhrase(lang, row.coverage.have, row.coverage.of)}. {outOf100(lang, row.score)}.
@@ -124,7 +130,7 @@ export function Profile({
                     {phrase}
                     {value && currentAir ? (
                       <>
-                        . {value.publisher || tr(lang, indicator.sourceName)}, {whenPhrase(lang, value.asOf)}.{" "}
+                        . {value.publisher ? publisherName(lang, value.publisher) : tr(lang, indicator.sourceName)}, {whenPhrase(lang, value.asOf)}.{" "}
                         <a href={value.sourceUrl}>{t(lang, "source")}</a>
                         {value.stale ? ` ${t(lang, "lastGood")}` : ""}
                       </>

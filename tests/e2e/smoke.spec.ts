@@ -89,6 +89,67 @@ test("coverage, methods, compare, place and old addresses", async ({ page }) => 
   expect(overflow).toBe(false);
 });
 
+test("polish at 1440: title, fields, singular units, titled links, one border label", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await expect(page).toHaveTitle("Growth seekers · sciti");
+  await expect(page.locator("#lens")).toHaveAttribute("name", "lens");
+  await expect(page.locator("label[for=lens]")).toContainText("Lens");
+  await expect(page.locator("#province")).toHaveAttribute("name", "province");
+  await expect(page.locator("label[for=province]")).toContainText("Choose a province");
+  await expect(page.locator("#site-menu")).toHaveAttribute("name", "menu");
+  await expect(page.locator("label[for=site-menu]")).toContainText("Menu");
+  await expect(page.locator(".attrib")).toContainText("geoBoundaries");
+  await page.goto("/?lens=quiet");
+  await expect(page).toHaveTitle("Quiet retirement · sciti");
+  await expect(page.getByRole("link", { name: "Manager Online: Cambodia border trade was 0 baht in November 2568" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Thai PBS Policy Watch: the Cambodia border is not what it was" })).toBeVisible();
+  await expect(page.getByText("https://mgronline.com")).toHaveCount(0);
+  await expect(page.getByText("https://policywatch.thaipbs.or.th")).toHaveCount(0);
+  const marks = (await page.locator(".ranks").allInnerTexts()).join("\n");
+  expect(marks).toContain("Cambodia border paused");
+  expect(marks).not.toMatch(/Cambodia border(?! paused)/);
+  await page.goto("/place/th-10");
+  await expect(page).toHaveTitle("Bangkok · Growth seekers · sciti");
+  await expect(page.locator("#profile")).toContainText("1 dataset,");
+  await expect(page.locator("#profile")).not.toContainText("1 datasets");
+  await page.goto("/place/th-11");
+  await expect(page.locator("#profile")).toContainText("1 area,");
+  await expect(page.locator("#profile")).not.toContainText("1 areas");
+  await page.goto("/?lang=th");
+  await expect(page.locator(".attrib")).toContainText("ขอบเขต: geoBoundaries ระดับจังหวัด");
+  await page.goto("/place/th-10?lang=th");
+  await expect(page).toHaveTitle("กรุงเทพมหานคร · คนที่ตามการเติบโต · sciti");
+  const thai = await page.locator("#profile").innerText();
+  expect(thai).toContain("กรมการปกครอง");
+  expect(thai).not.toContain("Department of Provincial Administration");
+  expect(thai).not.toMatch(/\b20\d\d\b/);
+  expect(thai).toMatch(/\b25[6-7]\d\b/);
+  await page.goto("/?lang=th&lens=border");
+  await expect(page).toHaveTitle("การค้าชายแดน · sciti");
+  await expect(page.getByText("ชายแดนกัมพูชาหยุด").first()).toBeVisible();
+  await expect(page.getByText("การค้าชายแดนกัมพูชาหยุด")).toHaveCount(0);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
+  expect(overflow).toBe(false);
+});
+
+test("chinese at 390: title, credit, titled link, one border label", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?lang=zh&lens=quiet");
+  await expect(page).toHaveTitle("安静退休 · sciti");
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh");
+  await expect(page.locator(".attrib")).toContainText("边界：geoBoundaries");
+  await expect(page.getByRole("link", { name: "Manager Online：佛历 2568 年 11 月对柬埔寨边境贸易为零铢" })).toBeVisible();
+  await expect(page.getByText("https://mgronline.com")).toHaveCount(0);
+  await expect(page.getByText("柬埔寨边境暂停").first()).toBeVisible();
+  await page.goto("/place/th-32?lang=zh&lens=quiet");
+  await expect(page).toHaveTitle("素林府 · 安静退休 · sciti");
+  await expect(page.locator("#profile")).toContainText("国家统计局");
+  await expect(page.locator("#profile")).not.toContainText("National Statistical Office");
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
+  expect(overflow).toBe(false);
+});
+
 test("thai and chinese routes stay in that language", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/methods?lang=th");

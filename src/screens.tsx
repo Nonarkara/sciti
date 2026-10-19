@@ -3,6 +3,7 @@ import { LENSES } from "./lib/lenses.mjs";
 import { fillFor } from "./fill";
 import { Profile } from "./profile";
 import { MISSING_SERIES, RECORD_NOTES, SOURCES } from "./lib/sources.mjs";
+import { LinkedText } from "./linked";
 import { figurePhrase, indicatorLabel, methodParagraphs, num, placeName, t, tr, whenPhrase } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreRow } from "./types";
 
@@ -235,7 +236,9 @@ export function MethodsScreen({
             ))}
           </ul>
           {RECORD_NOTES.map((note) => (
-            <p key={note.en}>{tr(lang, note)}</p>
+            <p key={note.en}>
+              <LinkedText lang={lang} text={tr(lang, note)} />
+            </p>
           ))}
           <h2>{t(lang, "stillMissing")}</h2>
           <ul className="plain">
@@ -272,7 +275,9 @@ export function MethodsScreen({
             {lens.proposed ? ` (${t(lang, "proposed")})` : ""}
           </h2>
           <p>{tr(lang, lens.question)}</p>
-          <p>{tr(lang, lens.caveat)}</p>
+          <p>
+            <LinkedText lang={lang} text={tr(lang, lens.caveat)} />
+          </p>
           <p>{t(lang, "notDepa")}</p>
           {methodParagraphs.map((paragraph) => (
             <p key={paragraph.en}>{tr(lang, paragraph)}</p>

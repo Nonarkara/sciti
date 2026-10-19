@@ -3,6 +3,7 @@ import { LENSES } from "./lib/lenses.mjs";
 import { moneyballGap } from "./lib/rank.mjs";
 import { ProvinceMap } from "./map";
 import { Profile } from "./profile";
+import { LinkedText } from "./linked";
 import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, t, topParts, tr } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreCard, ScoreRow } from "./types";
 
@@ -96,8 +97,7 @@ export function Home({
   const marks = (row: ScoreRow) => {
     const bits = [];
     if (decreeOn(row)) bits.push(t(lang, "decreeMark"));
-    if (cambodiaOn(row)) bits.push(t(lang, "cambodiaMark"));
-    if (quietCambodia(row)) bits.push(t(lang, "cambodiaQuietMark"));
+    if (cambodiaOn(row) || quietCambodia(row)) bits.push(t(lang, "cambodiaMark"));
     if (airGap(row)) bits.push(t(lang, "noAirStation"));
     return bits.length ? ` · ${bits.join(" · ")}` : "";
   };
@@ -113,9 +113,9 @@ export function Home({
         <div className="lede">
           <h1>{t(lang, "question")}</h1>
           <p>{t(lang, "tenetShort")}</p>
-          <label className="stack">
+          <label className="stack" htmlFor="lens">
             <span>{t(lang, "lensLabel")}</span>
-            <select aria-label={t(lang, "lensLabel")} value={lens.id} onChange={(event) => setLens(event.target.value)}>
+            <select id="lens" name="lens" value={lens.id} onChange={(event) => setLens(event.target.value)}>
               {LENSES.map((item) => (
                 <option key={item.id} value={item.id}>
                   {tr(lang, item.name)}
@@ -145,7 +145,9 @@ export function Home({
           <p>{t(lang, "tenetLong")}</p>
           <p>{tr(lang, lens.question)}</p>
           {lens.proposed ? <p className="meta">{t(lang, "proposed")}</p> : null}
-          <p>{tr(lang, lens.caveat)}</p>
+          <p>
+            <LinkedText lang={lang} text={tr(lang, lens.caveat)} />
+          </p>
           <p className="legend">{t(lang, "dashed")}</p>
           {scored.contextOnly ? <p>{scored.contextReason === "no-decisive" ? t(lang, "withheldProxy") : t(lang, "withheldEmpty")}</p> : null}
           <Appraisal baseline={baseline} lang={lang} scored={scored} selectedRow={selectedRow} names={names} />
@@ -177,9 +179,9 @@ export function Home({
           <p>
             <a href={hrefFor(`/methods/${lens.id}`)}>{t(lang, "openMethods")}</a>
           </p>
-          <label className="stack">
+          <label className="stack" htmlFor="province">
             <span>{t(lang, "chooseProvince")}</span>
-            <select aria-label={t(lang, "chooseProvince")} value={selected} onChange={(event) => setSelected(event.target.value)}>
+            <select id="province" name="province" value={selected} onChange={(event) => setSelected(event.target.value)}>
               <option value="">{t(lang, "chooseProvince")}</option>
               {baseline.places.map((place) => (
                 <option key={place.id} value={place.id}>

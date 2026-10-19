@@ -1,5 +1,6 @@
 import type { Indicator, Lang, Lens, Observation, Part, ScoreRow, Tr } from "./types";
 import { observationIsCurrent } from "./lib/fresh.mjs";
+import { publisherName } from "./lib/publishers.mjs";
 
 export function tr(lang: Lang, text: Tr): string {
   return text[lang] || text.en;
@@ -45,6 +46,7 @@ export function whenPhrase(lang: Lang, value: string | undefined): string {
   if (daily) return dateParts(daily[1], daily[2], daily[3], undefined, lang);
   const month = /^(\d{4})-(\d{2})$/.exec(raw);
   if (month) return dateParts(month[1], month[2], undefined, undefined, lang);
+  if (lang === "th" && /^(19|20)\d{2}$/.test(raw)) return String(Number(raw) + 543);
   return raw;
 }
 
@@ -157,8 +159,7 @@ const chrome = {
   },
   coverageLine: { en: "inputs", th: "ตัวป้อน", zh: "项输入" },
   decreeMark: { en: "Emergency decree", th: "ประกาศฉุกเฉิน", zh: "紧急状态" },
-  cambodiaMark: { en: "Cambodia border paused", th: "การค้าชายแดนกัมพูชาหยุด", zh: "对柬埔寨边境贸易暂停" },
-  cambodiaQuietMark: { en: "Cambodia border", th: "ชายแดนกัมพูชา", zh: "柬埔寨边境" },
+  cambodiaMark: { en: "Cambodia border paused", th: "ชายแดนกัมพูชาหยุด", zh: "柬埔寨边境暂停" },
   noAirStation: { en: "No air station", th: "ไม่มีสถานีอากาศ", zh: "没有空气站点" },
   noCurrentReading: { en: "No current reading", th: "ไม่มีค่าปัจจุบัน", zh: "没有当前读数" },
   boiAbsent: { en: "Not in the BOI table", th: "ไม่อยู่ในตารางบีโอไอ", zh: "不在 BOI 表上" },
@@ -190,6 +191,11 @@ const chrome = {
     en: "The air feed was read even though its certificate did not verify. The numbers are the feed's numbers.",
     th: "อ่านค่าอากาศทั้งที่ใบรับรองไม่ผ่านการตรวจ ตัวเลขคือตัวเลขของฟีดนั้น",
     zh: "空气数据是在证书未能核验的情况下读取的。数字是该数据源自己的数字。",
+  },
+  geoCredit: {
+    en: "Boundaries: geoBoundaries ADM1, built from OpenStreetMap (ODbL). Simplified for display.",
+    th: "ขอบเขต: geoBoundaries ระดับจังหวัด สร้างจาก OpenStreetMap (ODbL) ย่อเพื่อการแสดงผล",
+    zh: "边界：geoBoundaries 府级，基于 OpenStreetMap（ODbL）。为显示做了简化。",
   },
 } as const;
 
@@ -244,6 +250,33 @@ const FLAG_IDS = new Set(["economy.sez", "economy.eec", "governance.emergency_de
 const BOI_IDS = new Set(["economy.investment", "economy.boi_projects", "economy.boi_jobs"]);
 const HOURLY_AIR = new Set(["env.pm25", "env.aqi"]);
 
+const SINGULAR_EN: Record<string, string> = {
+  datasets: "dataset",
+  areas: "area",
+  projects: "project",
+  jobs: "job",
+  firms: "firm",
+  vehicles: "vehicle",
+  beds: "bed",
+  schools: "school",
+  cases: "case",
+  permits: "permit",
+  days: "day",
+  students: "student",
+  physicians: "physician",
+  "person-trips": "person-trip",
+};
+
+export function countUnit(lang: Lang, unit: string, value: number): string {
+  if (lang === "en" && value === 1 && SINGULAR_EN[unit]) return SINGULAR_EN[unit];
+  return unit;
+}
+
+function yearSpan(lang: Lang, from: string, to: string): string {
+  const joiner = lang === "th" ? " ถึง " : lang === "zh" ? "至" : " to ";
+  return `${whenPhrase(lang, from)}${joiner}${whenPhrase(lang, to)}`;
+}
+
 export function isFlagIndicator(indicator: { id: string; unit: Tr }): boolean {
   if (FLAG_IDS.has(indicator.id)) return true;
   return /^1 or 0$/i.test(indicator.unit.en) || /^1 =/.test(indicator.unit.en);
@@ -261,7 +294,7 @@ export function figurePhrase(lang: Lang, indicator: Indicator, value: Observatio
     const word = value.value > 0 ? t(lang, "yes") : t(lang, "no");
     return `${word}, ${when}`;
   }
-  const unit = tr(lang, indicator.unit);
+  const unit = countUnit(lang, tr(lang, indicator.unit), value.value);
   const shown = Number.isInteger(value.value) ? num(value.value, 0) : num(value.value, 1);
   const base = `${shown} ${unit}, ${when}`.replace(/\s+/g, " ").trim();
   if (indicator.id === "economy.boi_jobs" && value.value === 0) return t(lang, "boiJobsUnreported");
@@ -280,13 +313,13 @@ export function partSentence(lang: Lang, part: Part, lens: Lens, indicators: Ind
   const name = component ? tr(lang, component.name) : part.id;
   const evidence = part.evidence;
   if (!evidence || part.value == null) return name;
-  const publisher = evidence.publisher || "";
+  const publisher = publisherName(lang, evidence.publisher || "");
   const when = whenPhrase(lang, evidence.asOf);
   if (evidence.absentAsZero) {
     return `${name}: ${t(lang, "noCheckpoint")} ${publisher}, ${whenPhrase(lang, evidence.period)}.`;
   }
   if (part.kind === "cagr") {
-    const base = `${name}: ${ratePhrase(lang, part.value)}, ${evidence.fromYear} to ${evidence.toYear}. ${publisher}, ${when}.`;
+    const base = `${name}: ${ratePhrase(lang, part.value)}, ${yearSpan(lang, String(evidence.fromYear ?? ""), String(evidence.toYear ?? ""))}. ${publisher}, ${when}.`;
     return part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
   }
   if (part.kind === "flag") {
@@ -303,7 +336,7 @@ export function partSentence(lang: Lang, part: Part, lens: Lens, indicators: Ind
   }
   const indicatorId = component?.indicatorId || part.id;
   const indicator = indicators.find((item) => item.id === indicatorId);
-  const unit = indicator ? tr(lang, indicator.unit) : "";
+  const unit = indicator ? countUnit(lang, tr(lang, indicator.unit), part.value) : "";
   const shown = Number.isInteger(part.value) ? num(part.value, 0) : num(part.value, 1);
   const base = `${name}: ${shown} ${unit}, ${whenPhrase(lang, evidence.period)}. ${publisher}, ${when}.`.replace(/\s+/g, " ").trim();
   const withMiddle = part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
@@ -327,7 +360,8 @@ export function topParts(row: ScoreRow): Part[] {
     .slice(0, 3);
 }
 
-export function gapSentence(lang: Lang, kind: "price" | "reputation" | "appraisal", gap: number, percentile: number, places: number, publisher: string, asOf: string): string {
+export function gapSentence(lang: Lang, kind: "price" | "reputation" | "appraisal", gap: number, percentile: number, places: number, source: string, asOf: string): string {
+  const publisher = publisherName(lang, source);
   const above = gap >= 0;
   const mag = num(Math.abs(gap), 1);
   const pct = num(percentile, 0);

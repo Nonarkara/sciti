@@ -60,7 +60,7 @@ export function ProvinceMap({
       ) : (
         <p>{t(lang, "reading")}</p>
       )}
-      {geo && labelled ? <p className="attrib">{geo.attribution}</p> : null}
+      {geo && labelled ? <p className="attrib">{t(lang, "geoCredit")}</p> : null}
     </div>
   );
 }

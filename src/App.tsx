@@ -5,7 +5,7 @@ import { scoreLens } from "./lib/rank.mjs";
 import redirects from "./data/redirects.json";
 import { Home } from "./home";
 import { AboutScreen, CompareScreen, CoverageScreen, IndicatorScreen, MethodsScreen, Missing, PlaceScreen, ReadingShell } from "./screens";
-import { t } from "./text";
+import { indicatorLabel, placeName, t, tr } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreCard } from "./types";
 
 const redirectTable = redirects as Record<string, string>;
@@ -60,6 +60,30 @@ function readWeightStore(): Record<string, Record<string, number>> {
   }
 }
 
+function tabTitle(lang: Lang, path: string, lensTitle: string, baseline: Baseline | null): string {
+  const brand = "sciti";
+  if (path === "/") return `${lensTitle} · ${brand}`;
+  if (path.startsWith("/place/")) {
+    const place = baseline?.places.find((item) => item.id === path.slice("/place/".length));
+    const name = place ? placeName(place, lang) : "";
+    return name ? `${name} · ${lensTitle} · ${brand}` : `${lensTitle} · ${brand}`;
+  }
+  if (path.startsWith("/indicator/")) {
+    const indicator = baseline?.indicators.find((item) => item.id === path.slice("/indicator/".length));
+    return indicator ? `${indicatorLabel(lang, indicator)} · ${brand}` : brand;
+  }
+  if (path.startsWith("/methods/")) {
+    const named = lensById(path.slice("/methods/".length));
+    const name = named ? tr(lang, named.name) : "";
+    return name ? `${name} · ${t(lang, "methods")} · ${brand}` : `${t(lang, "methods")} · ${brand}`;
+  }
+  if (path === "/methods") return `${t(lang, "methods")} · ${brand}`;
+  if (path === "/compare") return `${t(lang, "compare")} · ${brand}`;
+  if (path === "/coverage") return `${t(lang, "coverage")} · ${brand}`;
+  if (path === "/about") return `${t(lang, "about")} · ${brand}`;
+  return brand;
+}
+
 function paramsFor(lang: Lang, lensId: string): URLSearchParams {
   const params = new URLSearchParams();
   if (lang !== "en") params.set("lang", lang);
@@ -108,10 +132,11 @@ export default function App() {
     };
   }, []);
 
+  const title = tabTitle(lang, path, tr(lang, lens.name), baseline);
   useEffect(() => {
     document.documentElement.lang = lang;
-    document.title = lang === "th" ? "sciti เมืองไหน" : lang === "zh" ? "sciti 哪些城市" : "sciti Which cities";
-  }, [lang]);
+    document.title = title;
+  }, [lang, title]);
 
   useEffect(() => {
     if (path === rawPath) return;
@@ -271,18 +296,16 @@ export default function App() {
             </a>
           ))}
         </nav>
-        <select
-          className="nav-narrow"
-          aria-label={t(lang, "menu")}
-          value={section}
-          onChange={(event) => go(hrefFor(event.target.value))}
-        >
+        <label className="nav-narrow" htmlFor="site-menu">
+          <span className="visually-hidden">{t(lang, "menu")}</span>
+          <select id="site-menu" name="menu" value={section} onChange={(event) => go(hrefFor(event.target.value))}>
           {links.map(([href, label]) => (
             <option key={href} value={href}>
               {label}
             </option>
           ))}
-        </select>
+          </select>
+        </label>
         <span className="spacer" />
         <span className="langs">
           {(["en", "th", "zh"] as const).map((code) => (
