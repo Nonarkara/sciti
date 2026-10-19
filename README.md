@@ -2,11 +2,11 @@
 
 Which cities? sciti lines up figures that Thai offices have already published, for all 77 provinces, and it leaves a blank where a number was never published. It is not a government index.
 
-The question on the first page is the product. A lens is a weighting you can read and move. Growth, quiet retirement, and talent at the border are the three lenses that ship as the core. Families, logistics, remote work and tourism are marked proposed, and they do not publish an order until the figure that would justify one is in the file.
+The question on the first page is the product. A lens is a weighting you can read and move. Growth, quiet retirement, and talent at the border publish an order from the cited file. Families, logistics, remote work and tourism stay marked proposed. They publish an order only from the figures that are actually in the file, and the page says what is still missing.
 
 ## What a number is
 
-Every figure has a source link, a publisher and a date. The ingest reads public files, retries, and on failure keeps the last good copy and marks it stale. It does not invent a zero. Electricity by province, hospital beds by province, investment, prices, reputation, students, schools, border trade, special zones, visitors, tourism receipts and broadband are named and empty until a file arrives.
+Every figure has a source link, a publisher and a date. The ingest reads public files, retries, and on failure keeps the last good copy and marks it stale. It does not invent a zero. The cited file in `data/incoming/sciti_incoming.csv` fills investment, border trade, students, doctors, visitors, receipts, electricity, gross provincial product for 2021–2023, and the Treasury land appraisal. Hospital beds, provincial crime, construction permits, average wages, graduates, market sale prices, gross provincial product for 2024, urban green space, transit use, broadband speed and governance quality stay empty. The appraisal is not a market price. A province is called undervalued for its fundamentals only when its lens mark sits at least 5 points above the appraisal's percentile.
 
 The map boundaries are [geoBoundaries](https://www.geoboundaries.org/) ADM1 for Thailand, built from OpenStreetMap, © OpenStreetMap contributors, under the ODbL.
 
@@ -59,6 +59,26 @@ On `https://nonarkara.github.io/sciti/`:
 - No award page, bingo page, or invented score remains.
 
 Then look at `https://sciti.nonarkara.org` separately. Until its origin is this build, it will keep serving the previous site. Do not treat a green GitHub Pages deploy as a green custom domain.
+
+### Custom domain, when you choose to cut over
+
+Do not cut over as part of merging this branch. The two hosts are not the same site.
+
+What is true today, checked on 19 Oct 2026:
+
+- GitHub Pages for this repo is the `gh-pages` branch, from `/`, with no custom domain attached. The Pages API reports `cname: null` and `https://nonarkara.github.io/sciti/`. The HTML there loads `/sciti/assets/…`. `last-modified` on that index was 11 Jul 2026. Pushing `main` is what replaces it, and only after this pull request is merged.
+- `https://sciti.nonarkara.org` answers with `server: cloudflare`. The DNS is on Cloudflare (`liz.ns.cloudflare.com`, `jaxson.ns.cloudflare.com`) and the address is Cloudflare's anycast range. The HTML cache header `public, max-age=0, must-revalidate` is the usual Cloudflare Pages pattern. The page loads `/static/index-….js`, Leaflet from `unpkg.com`, and fonts from `fonts.googleapis.com`. The bundle names pages (`AsusPage`, `GeminiChat`, `ScitiBingoPage`) that are not in this repository's history. There is no `wrangler.toml`, no `_headers`, and no `CNAME` here. This repo's deploy workflow cannot be what is serving that hostname.
+- The edge sends this content security policy: `default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'`. The live page needs `unpkg` and Google Fonts. This build does not. Jost, Prompt and the Noto Sans SC subset are files in the site.
+
+A safe cutover, in this order:
+
+1. Merge only when you mean to publish GitHub Pages. Confirm `https://nonarkara.github.io/sciti/` in English, Thai and Chinese, including `/city/phuket`, `/bingo`, a missing path, and that scripts load from `/sciti/assets/`.
+2. Leave the custom domain where it is while you do that. Do not add a `CNAME` to this repo. A `CNAME` would attach the hostname to GitHub Pages, and the project site's base path is `/sciti/`, so the apex domain would request assets at the wrong path.
+3. Build a root copy for the domain with the base path `/`. That is `npm run build` without `GITHUB_ACTIONS=true`. Open `dist/index.html` and confirm the script and the stylesheet are `/assets/…`, and that the file does not mention `fonts.googleapis.com` or `unpkg.com`.
+4. On Cloudflare, deploy that `dist` as a preview first (the Pages project that already owns the hostname, or a new project if the current one is a manual upload). Open the preview URL, not the public hostname. Check the map, the three languages, `/city/phuket`, `/bingo`, and a missing path.
+5. Keep the current content security policy in place for the promotion. This build only needs `'self'`, so the old policy does not block it. Tightening the policy before the promotion would break the site that is live now, because that site still loads `unpkg` and Google Fonts.
+6. Promote the preview. Then confirm the public hostname no longer requests `unpkg` or `fonts.googleapis.com`. After that, the policy can drop those two hosts: `script-src 'self'; style-src 'self'; font-src 'self'`. `img-src` can stay `'self' data:` unless a later page needs an outside image.
+7. Rollback is the previous Cloudflare deployment. In the Pages project, roll the production deployment back to the one that was live before the promotion. Do not delete that deployment. DNS does not have to move. If the hostname was pointed somewhere else instead, put the DNS record back. Rolling back GitHub Pages is a separate act, described above, and it does not restore this hostname.
 
 ## Colour
 

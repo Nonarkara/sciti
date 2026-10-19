@@ -6,6 +6,55 @@ import { Profile } from "./profile";
 import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, t, topParts, tr } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreCard } from "./types";
 
+const APPRAISAL_ID = "living.land_price";
+const UNDERVALUED_GAP = 5;
+
+function Appraisal({
+  baseline,
+  lang,
+  scored,
+  selectedRow,
+  names,
+}: {
+  baseline: Baseline;
+  lang: Lang;
+  scored: ScoreCard;
+  selectedRow: ScoreCard["rows"][number] | undefined;
+  names: Map<string, string>;
+}) {
+  const hasAppraisal = baseline.observations.some((item) => item.indicatorId === APPRAISAL_ID);
+  if (!hasAppraisal) return <p className="meta">{t(lang, "gapNone")}</p>;
+  const ranked = scored.rows
+    .filter((row) => row.score != null)
+    .map((row) => ({ row, gap: moneyballGap(row.score, baseline.observations, row.placeId, APPRAISAL_ID) }))
+    .filter((item): item is { row: (typeof item)["row"]; gap: NonNullable<(typeof item)["gap"]> } => !!item.gap && item.gap.gap >= UNDERVALUED_GAP)
+    .sort((a, b) => b.gap.gap - a.gap.gap || a.row.placeId.localeCompare(b.row.placeId))
+    .slice(0, 8);
+  const selectedGap = selectedRow && selectedRow.score != null ? moneyballGap(selectedRow.score, baseline.observations, selectedRow.placeId, APPRAISAL_ID) : null;
+  return (
+    <div>
+      <h2>{t(lang, "undervalued")}</h2>
+      <p>{t(lang, "appraisalCaveat")}</p>
+      {selectedGap && selectedGap.percentile != null ? (
+        <p>
+          {selectedGap.gap >= UNDERVALUED_GAP ? `${t(lang, "undervalued")}. ` : ""}
+          {gapSentence(lang, "appraisal", selectedGap.gap, selectedGap.percentile, selectedGap.places, selectedGap.observation.publisher || "", selectedGap.observation.asOf)}{" "}
+          <a href={selectedGap.observation.sourceUrl}>{t(lang, "source")}</a>
+        </p>
+      ) : null}
+      {ranked.length ? (
+        <ol className="ranks">
+          {ranked.map(({ row, gap }) => (
+            <li key={row.placeId}>
+              {names.get(row.placeId)} · {gap.gap.toFixed(1)}
+            </li>
+          ))}
+        </ol>
+      ) : null}
+    </div>
+  );
+}
+
 export function Home({
   lang,
   baseline,
@@ -68,23 +117,7 @@ export function Home({
           <p>{tr(lang, lens.caveat)}</p>
           <p className="legend">{t(lang, "dashed")}</p>
           {scored.contextOnly ? <p>{scored.contextReason === "no-decisive" ? t(lang, "withheldProxy") : t(lang, "withheldEmpty")}</p> : null}
-          {baseline.observations.some((item) => item.indicatorId === "market.price" || item.indicatorId === "market.reputation") ? null : (
-            <p className="meta">{t(lang, "gapNone")}</p>
-          )}
-          {selectedRow && selectedRow.score != null
-            ? (["market.price", "market.reputation"] as const).map((id) => {
-                const score = selectedRow.score;
-                if (score == null) return null;
-                const gap = moneyballGap(score, baseline.observations, selected, id);
-                if (!gap || gap.percentile == null) return null;
-                return (
-                  <p key={id}>
-                    {gapSentence(lang, id === "market.price" ? "price" : "reputation", gap.gap, gap.percentile, gap.places, gap.observation.publisher || "", gap.observation.asOf)}{" "}
-                    <a href={gap.observation.sourceUrl}>{t(lang, "source")}</a>
-                  </p>
-                );
-              })
-            : null}
+          <Appraisal baseline={baseline} lang={lang} scored={scored} selectedRow={selectedRow} names={names} />
           {baseline.runs?.some((run) => run.tlsRelaxed) && lens.components.some((component) => component.id === "env.pm25" && component.weight > 0) ? (
             <p className="meta">{t(lang, "airCert")}</p>
           ) : null}

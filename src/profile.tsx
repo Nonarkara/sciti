@@ -1,5 +1,6 @@
 import type { Baseline, Lang, Lens, ScoreRow } from "./types";
-import { coveragePhrase, day, namesFor, num, outOf100, partSentence, placeName, regions, t, topParts, tr } from "./text";
+import { placeNote } from "./lib/notes.mjs";
+import { coveragePhrase, day, depaSentence, namesFor, num, outOf100, partSentence, placeName, regions, t, topParts, tr } from "./text";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
   const rows = baseline.observations.filter((item) => item.indicatorId === indicatorId && item.placeId === placeId);
@@ -27,6 +28,7 @@ export function Profile({
   const place = baseline.places.find((item) => item.id === placeId);
   if (!place) return null;
   const region = regions[place.region];
+  const note = placeNote(placeId);
   const anyHere = (id: string) => baseline.observations.some((item) => item.indicatorId === id);
   return (
     <section id="profile">
@@ -44,6 +46,26 @@ export function Profile({
           {tr(lang, region)}. {t(lang, "areasLabel")}
         </p>
       ) : null}
+      {depaSentence(lang, place.smartCityStatus) ? (
+        <p>
+          {depaSentence(lang, place.smartCityStatus)}
+          {place.smartCityProjects ? ` ${place.smartCityProjects}.` : ""}{" "}
+          {place.smartCitySource ? <a href={place.smartCitySource.split(";")[0].trim()}>{t(lang, "source")}</a> : null}
+        </p>
+      ) : null}
+      {place.borderSez ? (
+        <p>
+          {place.borderSez}.
+          {place.zoneSource ? (
+            <>
+              {" "}
+              <a href={place.zoneSource.split(";")[0].trim()}>{t(lang, "source")}</a>
+            </>
+          ) : null}
+        </p>
+      ) : null}
+      {place.eec ? <p>{t(lang, "eecHere")}</p> : null}
+      {note ? <p>{tr(lang, note)}</p> : null}
       {row && row.score != null ? (
         <p>
           {row.rank}. {coveragePhrase(lang, row.coverage.have, row.coverage.of)}. {outOf100(lang, row.score)}.

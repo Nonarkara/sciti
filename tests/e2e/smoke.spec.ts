@@ -34,6 +34,11 @@ test("coverage, methods, compare, place and old addresses", async ({ page }) => 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Coverage");
   await page.goto("/methods");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Methods");
+  await expect(page.getByRole("heading", { name: "Sources" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Treasury Department" })).toBeVisible();
+  await expect(page.getByText("renewal not found").first()).toBeVisible();
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Undervalued for its fundamentals" })).toBeVisible();
   await page.goto("/methods/growth");
   await expect(page.getByText("Growth seekers")).toBeVisible();
   await page.goto("/methods/families");

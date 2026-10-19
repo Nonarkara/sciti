@@ -6,6 +6,8 @@ import { loadIncomingDir, mergeByKey } from "./incoming.mjs";
 import { regionOf } from "./regions.mjs";
 import { loadBoundaries, projectCollection, projectPoint } from "./geo.mjs";
 import { INDICATORS, AREAS } from "./indicators.mjs";
+import { applyLabels } from "./labels.mjs";
+import { loadCityFile } from "./cities.mjs";
 import { loadPopulation } from "./sources/population.mjs";
 import { loadAir } from "./sources/air.mjs";
 import { loadVehicles } from "./sources/vehicles.mjs";
@@ -106,6 +108,16 @@ async function main() {
     if (!indicatorList.some((indicator) => indicator.id === extra.id)) indicatorList.push(extra);
   }
   observations = mergeByKey(observations, incoming.accepted);
+  // The cited national series is the one to show. A later year from a two-province catalog
+  // would otherwise become the latest figure for that province.
+  if (incoming.accepted.some((row) => row.indicatorId === "economy.gpp")) {
+    const keep = new Set(
+      incoming.accepted.filter((row) => row.indicatorId === "economy.gpp").map((row) => `${row.placeId}|${row.period}`),
+    );
+    observations = observations.filter((row) => row.indicatorId !== "economy.gpp" || keep.has(`${row.placeId}|${row.period}`));
+  }
+  applyLabels(indicatorList);
+  const cityFile = await loadCityFile(path.join(root, "data/research/cities.csv"));
   observations = observations.map((observation) => {
     const indicator = indicatorList.find((item) => item.id === observation.indicatorId);
     return {
@@ -127,14 +139,8 @@ async function main() {
   const doc = {
     version: "2.0.0",
     generatedAt,
-    places: places.map((p) => ({
-      id: p.code.toLowerCase(),
-      code: p.code,
-      en: p.en,
-      th: p.th || p.en,
-      zh: p.zh || "",
-      region: regionOf(p.code),
-    })),
+    places: places.map((p) => decoratePlace(p, cityFile.byId.get(p.code.toLowerCase()))),
+    localities: cityFile.localities,
     areas: AREAS,
     indicators: indicatorList,
     observations,
@@ -192,6 +198,34 @@ async function main() {
     byIndicator[ind.id] = { observations: rows.length, places: placesWith.size, status: ind.status };
   }
   console.log(JSON.stringify({ generatedAt, places: doc.places.length, byIndicator, runs, gaps }, null, 2));
+}
+
+function decoratePlace(p, city) {
+  const base = {
+    id: p.code.toLowerCase(),
+    code: p.code,
+    en: p.en,
+    th: p.th || p.en,
+    zh: p.zh || "",
+    region: regionOf(p.code),
+  };
+  if (!city) return base;
+  return {
+    ...base,
+    en: city.en || base.en,
+    th: city.th || base.th,
+    zh: city.zh || base.zh,
+    lat: city.lat,
+    lon: city.lon,
+    smartCityStatus: city.smartCityStatus,
+    smartCityProjects: city.smartCityProjects,
+    smartCitySource: city.smartCitySource,
+    borderSez: city.borderSez,
+    eec: city.eec,
+    zoneSource: city.zoneSource,
+    nameSource: city.nameSource,
+    notes: city.notes,
+  };
 }
 
 function buildPlaces(fromWiki, previous) {

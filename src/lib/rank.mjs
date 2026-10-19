@@ -50,11 +50,13 @@ export function latestOf(list) {
   ];
 }
 
-export function computeCagr(list) {
+export function computeCagr(list, options = {}) {
+  const sinceYear = options.sinceYear;
   const byYear = new Map();
   for (const o of list || []) {
     const y = yearOf(o.period);
     if (y == null || !(o.value > 0)) continue;
+    if (sinceYear != null && y < sinceYear) continue;
     if (!byYear.has(y)) byYear.set(y, o);
     else if (!same(byYear.get(y).value, o.value)) byYear.set(y, null);
   }
@@ -124,7 +126,7 @@ function evidenceFrom(kind, resolved) {
 
 function resolvePlace(component, placeId, index) {
   if (component.kind === "cagr") {
-    const cagr = computeCagr(index.get(`${component.indicatorId}|${placeId}`));
+    const cagr = computeCagr(index.get(`${component.indicatorId}|${placeId}`), { sinceYear: component.sinceYear });
     if (!cagr) return null;
     return { value: cagr.value, evidence: evidenceFrom("cagr", cagr) };
   }

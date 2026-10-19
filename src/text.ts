@@ -47,10 +47,51 @@ const chrome = {
   notScored: { en: "Not scored", th: "ไม่ได้จัดลำดับ", zh: "没有排名" },
   source: { en: "Source", th: "แหล่ง", zh: "来源" },
   gapNone: {
-    en: "No reputation series and no price series are in the file, so the gap between the fundamentals and a reputation or a price is not computed.",
-    th: "ยังไม่มีชุดชื่อเสียงและไม่มีชุดราคาในไฟล์ ช่องว่างระหว่างปัจจัยพื้นฐานกับชื่อเสียงหรือราคาจึงยังไม่ถูกคำนวณ",
-    zh: "文件里没有名声序列，也没有价格序列，所以基本面同名声或价格之间的差距还没有计算。",
+    en: "No reputation series is in the file. The comparison below uses the Treasury land appraisal, which is not a market price.",
+    th: "ยังไม่มีชุดชื่อเสียงในไฟล์ การเทียบด้านล่างใช้ราคาประเมินที่ดินของกรมธนารักษ์ ซึ่งไม่ใช่ราคาตลาด",
+    zh: "文件里没有名声序列。下面的比较用的是国库厅土地评估价，那不是市场价。",
   },
+  appraisalCaveat: {
+    en: "The price in this comparison is the Treasury Department's median official land appraisal, in baht per square wah. It is not a sale and it is not a rent. A province is called undervalued for its fundamentals only when its lens mark sits at least 5 points above that appraisal's percentile. There is still no reputation series.",
+    th: "ราคาในการเทียบนี้คือมัธยฐานราคาประเมินที่ดินราชการของกรมธนารักษ์ หน่วยบาทต่อตารางวา ไม่ใช่ราคาซื้อขาย และไม่ใช่ค่าเช่า จะเรียกจังหวัดว่าปัจจัยพื้นฐานสูงกว่าราคาประเมิน ก็ต่อเมื่อคะแนนเลนส์สูงกว่าเปอร์เซ็นไทล์ของราคาประเมินนั้นอย่างน้อย 5 คะแนน ยังไม่มีชุดชื่อเสียง",
+    zh: "这个比较里的价格，是国库厅官方土地评估价的中位数，单位是铢/平方哇。不是成交价，也不是租金。只有镜头分数比该评估价的百分位至少高出 5 分，才把一个府称为基本面高于评估价。名声序列仍然没有。",
+  },
+  undervalued: {
+    en: "Undervalued for its fundamentals",
+    th: "ปัจจัยพื้นฐานสูงกว่าราคาประเมิน",
+    zh: "基本面高于评估价",
+  },
+  sourcesTitle: { en: "Sources", th: "แหล่ง", zh: "来源" },
+  stillMissing: { en: "Still missing", th: "ยังขาด", zh: "仍然没有" },
+  notDepa: {
+    en: "This weighting is not the official depa smart-city index.",
+    th: "น้ำหนักชุดนี้ไม่ใช่ดัชนีเมืองอัจฉริยะอย่างเป็นทางการของดีป้า",
+    zh: "这组权重不是 depa 的官方智慧城市指数。",
+  },
+  depaRenewed: {
+    en: "depa: a project here was renewed, or newly labelled, in the 2568 announcement. Sixteen labels were renewed and Phuket Tinicon Valley was added. A label that the announcement does not renew is marked renewal not found. That is not a finding that it expired.",
+    th: "ดีป้า: โครงการที่นี่ถูกต่ออายุ หรือได้ป้ายใหม่ ในประกาศปี 2568 มีการต่ออายุสิบหกป้าย และเพิ่มภูเก็ตทินิคอนวัลเลย์ ป้ายที่ประกาศนั้นไม่ได้ต่ออายุ จะถูกกำกับว่ายังไม่พบการต่ออายุ นั่นไม่ใช่ข้อสรุปว่าป้ายหมดอายุ",
+    zh: "depa：这里的一个项目在佛历 2568 年的公告里续期，或是新授牌。续了十六块牌子，并新增普吉 Tinicon Valley。公告没有续的牌子，标成没有找到续期。这不是认定它已经过期。",
+  },
+  depaNotFound: {
+    en: "depa: a project here was labelled in 2564–2566. A renewal was not found in the 2568 announcements. That is not the same as expired.",
+    th: "ดีป้า: โครงการที่นี่ได้ป้ายในปี 2564–2566 ไม่พบการต่ออายุในประกาศปี 2568 นั่นไม่เหมือนกับหมดอายุ",
+    zh: "depa：这里的一个项目在佛历 2564–2566 年授过牌。2568 年的公告里没有找到续期。这不等于过期。",
+  },
+  localitiesNote: {
+    en: "The city file also names municipalities and depa project areas. They are not ranked on this province map. Apart from a registered-population count on the municipality itself, other figures were published for the province. They are not copied onto the municipality.",
+    th: "ไฟล์เมืองยังระบุเทศบาลและพื้นที่โครงการของดีป้า สิ่งเหล่านี้ไม่ได้ถูกจัดลำดับบนแผนที่จังหวัด นอกจากจำนวนประชากรตามทะเบียนของตัวเทศบาลเอง ตัวเลขอื่นถูกเผยแพร่ระดับจังหวัด และไม่ได้ถูกคัดลอกไปใส่เทศบาล",
+    zh: "城市文件里还有市镇和 depa 项目片区。它们不在这张府地图上排名。除了市镇自己的户籍人口，其他数字是按府公布的，没有被抄到市镇头上。",
+  },
+  renewalShort: { en: "renewal not found", th: "ยังไม่พบการต่ออายุ", zh: "未找到续期" },
+  renewedShort: { en: "renewed or new in 2568", th: "ต่ออายุหรือป้ายใหม่ในปี 2568", zh: "2568 年续期或新授牌" },
+  eecHere: {
+    en: "This province is in the Eastern Economic Corridor.",
+    th: "จังหวัดนี้อยู่ในระเบียงเศรษฐกิจพิเศษภาคตะวันออก",
+    zh: "这个府在东部经济走廊里。",
+  },
+  yes: { en: "yes", th: "ใช่", zh: "是" },
+  no: { en: "no", th: "ไม่", zh: "否" },
   withheldProxy: {
     en: "This lens does not publish a ranking yet. The figure that would be allowed to order the map is not in the file, and a stand-in is not used.",
     th: "เลนส์นี้ยังไม่เผยแพร่ลำดับ ตัวเลขที่จะได้รับอนุญาตให้จัดลำดับบนแผนที่ยังไม่อยู่ในไฟล์ และไม่ใช้ตัวเลขแทน",
@@ -160,8 +201,16 @@ export function partSentence(lang: Lang, part: Part, lens: Lens, indicators: Ind
     const base = `${name}: ${ratePhrase(lang, part.value)}, ${evidence.fromYear} to ${evidence.toYear}. ${publisher}, ${when}.`;
     return part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
   }
+  if (part.kind === "flag") {
+    const word = part.value && part.value > 0 ? t(lang, "yes") : t(lang, "no");
+    const base = `${name}: ${word}, ${evidence.period}. ${publisher}, ${when}.`;
+    return evidence.stale ? `${base} ${t(lang, "lastGood")}` : base;
+  }
   if (part.kind === "ratio") {
-    const base = `${name}: ${num(part.value, 2)}. ${publisher}, ${when}.`;
+    const mul = component?.display?.mul || 1;
+    const digits = component?.display?.digits ?? 2;
+    const unit = component?.display ? tr(lang, component.display.unit) : "";
+    const base = `${name}: ${num(part.value * mul, digits)} ${unit}. ${publisher}, ${when}.`.replace(/\s+/g, " ").trim();
     return part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
   }
   const indicatorId = component?.indicatorId || part.id;
@@ -190,23 +239,33 @@ export function topParts(row: ScoreRow): Part[] {
     .slice(0, 3);
 }
 
-export function gapSentence(lang: Lang, kind: "price" | "reputation", gap: number, percentile: number, places: number, publisher: string, asOf: string): string {
+export function gapSentence(lang: Lang, kind: "price" | "reputation" | "appraisal", gap: number, percentile: number, places: number, publisher: string, asOf: string): string {
   const above = gap >= 0;
   const mag = num(Math.abs(gap), 1);
   const pct = num(percentile, 0);
   if (lang === "th") {
     const side = above ? "สูงกว่า" : "ต่ำกว่า";
-    const what = kind === "price" ? "เปอร์เซ็นไทล์ของราคา" : "เปอร์เซ็นไทล์ของชื่อเสียง";
-    return `ปัจจัยพื้นฐานอยู่${side}${what} ${mag} คะแนน จาก 100 (${pct} จาก 100, ${places} จังหวัด). ${publisher}, ${day(asOf)}.`;
+    const what = kind === "reputation" ? "เปอร์เซ็นไทล์ของชื่อเสียง" : kind === "appraisal" ? "เปอร์เซ็นไทล์ของราคาประเมินราชการ" : "เปอร์เซ็นไทล์ของราคา";
+    const tail = kind === "appraisal" ? " ราคาประเมินไม่ใช่ราคาตลาด." : "";
+    return `คะแนนเลนส์อยู่${side}${what} ${mag} คะแนน (${pct} จาก 100, ${places} จังหวัด). ${publisher}, ${day(asOf)}.${tail}`;
   }
   if (lang === "zh") {
     const side = above ? "高于" : "低于";
-    const what = kind === "price" ? "价格百分位" : "名声百分位";
-    return `基本面${side}${what} ${mag} 分（百分位 ${pct}，${places} 个府）。${publisher}，${day(asOf)}。`;
+    const what = kind === "reputation" ? "名声百分位" : kind === "appraisal" ? "官方评估价的百分位" : "价格百分位";
+    const tail = kind === "appraisal" ? "评估价不是市场价。" : "";
+    return `镜头分数${side}${what} ${mag} 分（百分位 ${pct}，${places} 个府）。${publisher}，${day(asOf)}。${tail}`;
   }
   const side = above ? "above" : "below";
-  const what = kind === "price" ? "the price percentile" : "the reputation percentile";
-  return `Fundamentals sit ${mag} points ${side} ${what} (${pct} out of 100, ${places} provinces). ${publisher}, ${day(asOf)}.`;
+  const what = kind === "reputation" ? "the reputation percentile" : kind === "appraisal" ? "the official-appraisal percentile" : "the price percentile";
+  const tail = kind === "appraisal" ? " The appraisal is not a market price." : "";
+  return `The lens mark sits ${mag} points ${side} ${what} (${pct} out of 100, ${places} provinces). ${publisher}, ${day(asOf)}.${tail}`;
+}
+
+export function depaSentence(lang: Lang, status: string | undefined): string {
+  if (!status) return "";
+  if (/renewal not found/i.test(status)) return t(lang, "depaNotFound");
+  if (/renewed\/new|newly labelled|new \(effective/i.test(status)) return t(lang, "depaRenewed");
+  return "";
 }
 
 export const regions: Record<string, Tr> = {

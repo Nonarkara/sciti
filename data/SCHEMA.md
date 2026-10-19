@@ -53,7 +53,44 @@ These ids are already named on the site. Send the same id and the row fills that
 | `economy.sez` | Special economic zone, `1` or `0` for every province | no |
 | `economy.visitors` | Visitors | no |
 | `economy.tourism_receipts` | Tourism receipts | no |
-| `mobility.broadband` | Broadband. Do not send a count of open datasets under this id. | no |
+| `mobility.broadband` | Broadband speed. Do not send a count of open datasets, or a household-internet share, under this id. | no |
+| `living.land_price` | Official land appraisal. Not a market price. | no |
+| `living.doctors` | Physicians. The sheet may omit private hospitals. | no |
+| `living.doctors_per_10k` | Physicians per 10,000 registered people. | no |
+| `living.density` | People per square kilometre. Do not send a population count under this id. | no |
+| `env.pm25_bad_days` | Days PM2.5 was over the standard. Not the hourly reading. | no |
+| `economy.gpp_real_growth` | One year of real output growth, in percent. | no |
+| `economy.new_firms` | New juristic persons. | no |
+| `economy.new_firms_per_10k` | New juristic persons per 10,000 people. | no |
+| `economy.eec` | Eastern Economic Corridor, `1` or `0` for every province. | no |
+| `economy.minimum_wage` | Statutory daily minimum wage. Not an average wage. | no |
+| `economy.unemployment` | Unemployment rate. | no |
+| `economy.visitors_foreign` | Foreign visitor trips. | no |
+| `people.tertiary_per_1000` | Tertiary students per 1,000 people. | no |
+| `people.internet_households` | Households with internet. Not a broadband speed. | no |
+| `mobility.road_deaths` | Road deaths per 100,000 people. | no |
+| `energy.electricity` | Electricity use. | no |
+
+`data/incoming/sciti_incoming.csv` is the cited file: 3,400 rows, 77 provinces. `data/research/` holds the city list, the indicator catalog, the depa table, and the notes on sources, coverage and lenses.
+
+These are still empty. A blank is not stored as zero.
+
+| Id | What is missing |
+| --- | --- |
+| `living.beds` | Hospital beds by province |
+| `living.density` | Density. Population is in the file. Province area is not. |
+| `governance.crime` | Provincial crime |
+| `economy.permits` | Construction permits |
+| `economy.wages` | Average wages. The minimum wage is a different series. |
+| `people.graduates` | Graduates. Enrolment is a different series. |
+| `people.schools` | Schools |
+| `market.price` | A market sale price. The appraisal is `living.land_price`. |
+| `market.reputation` | Reputation |
+| `economy.gpp_2024` | Gross provincial product for 2024. 2021–2023 are under `economy.gpp`. |
+| `env.green_space` | Urban green space. Forest cover is a different series. |
+| `mobility.transit` | Transit use |
+| `mobility.broadband` | Broadband speed |
+| `governance.quality` | Governance quality |
 
 These three are computed. Do not put them in the file.
 

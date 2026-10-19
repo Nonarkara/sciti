@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { LENSES } from "./lib/lenses.mjs";
 import { fillFor } from "./fill";
 import { Profile } from "./profile";
+import { MISSING_SERIES, RECORD_NOTES, SOURCES } from "./lib/sources.mjs";
 import { day, methodParagraphs, num, placeName, t, tr } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreRow } from "./types";
 
@@ -143,6 +144,27 @@ export function CoverageScreen({ baseline, geo, lang, hrefFor }: { baseline: Bas
           <p>{t(lang, "reading")}</p>
         )}
       </div>
+      {baseline.localities && baseline.localities.length ? (
+        <details>
+          <summary>
+            {baseline.localities.length}{" "}
+            {lang === "th" ? "เทศบาลและพื้นที่โครงการ" : lang === "zh" ? "个市镇和项目片区" : "municipalities and project areas"}
+          </summary>
+          <p>{t(lang, "localitiesNote")}</p>
+          <ul className="plain">
+            {baseline.localities.map((item) => (
+              <li key={item.id}>
+                {placeName(item, lang)}
+                {item.provinceId ? ` · ${placeName(baseline.places.find((place) => place.id === item.provinceId), lang)}` : ""}
+                {item.population != null ? ` · ${num(item.population, 0)}` : ""}
+                {item.smartCityStatus
+                  ? ` · ${/renewal not found/i.test(item.smartCityStatus) ? t(lang, "renewalShort") : /renewed\/new/i.test(item.smartCityStatus) ? t(lang, "renewedShort") : ""}`
+                  : ""}
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
       <div className="scroll">
         <table>
           <thead>
@@ -207,6 +229,24 @@ export function MethodsScreen({
               </li>
             ))}
           </ul>
+          {RECORD_NOTES.map((note) => (
+            <p key={note.en}>{tr(lang, note)}</p>
+          ))}
+          <h2>{t(lang, "stillMissing")}</h2>
+          <ul className="plain">
+            {MISSING_SERIES.map((item) => (
+              <li key={item.id}>
+                <a href={hrefFor(`/indicator/${item.id}`)}>{tr(lang, item)}</a>
+              </li>
+            ))}
+          </ul>
+          <h2 id="sources">{t(lang, "sourcesTitle")}</h2>
+          <p>{t(lang, "notDepa")}</p>
+          {SOURCES.map((source) => (
+            <p key={source.id}>
+              <a href={source.url}>{tr(lang, source.publisher)}</a>. {tr(lang, source.dataset)}. {tr(lang, source.usedFor)}. {tr(lang, source.licence)}
+            </p>
+          ))}
           <h2>{t(lang, "profile")}</h2>
           <ul className="plain">
             {baseline.indicators.map((indicator) => (
@@ -224,6 +264,7 @@ export function MethodsScreen({
           </h2>
           <p>{tr(lang, lens.question)}</p>
           <p>{tr(lang, lens.caveat)}</p>
+          <p>{t(lang, "notDepa")}</p>
           {methodParagraphs.map((paragraph) => (
             <p key={paragraph.en}>{tr(lang, paragraph)}</p>
           ))}

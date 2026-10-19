@@ -9,6 +9,31 @@ export type Place = {
   th: string;
   zh: string;
   region: string;
+  lat?: number | null;
+  lon?: number | null;
+  smartCityStatus?: string;
+  smartCityProjects?: string;
+  smartCitySource?: string;
+  borderSez?: string;
+  eec?: string;
+  zoneSource?: string;
+  nameSource?: string;
+  notes?: string;
+};
+
+export type Locality = {
+  id: string;
+  en: string;
+  th: string;
+  zh: string;
+  adminLevel: string;
+  provinceId: string;
+  provinceName: string;
+  population: number | null;
+  smartCityStatus: string;
+  smartCityProjects: string;
+  smartCitySource: string;
+  nameSource: string;
 };
 
 export type Area = { id: string; en: string; th: string; zh: string };
@@ -44,6 +69,7 @@ export type Baseline = {
   version: string;
   generatedAt: string;
   places: Place[];
+  localities?: Locality[];
   areas: Area[];
   indicators: Indicator[];
   observations: Observation[];
@@ -64,6 +90,8 @@ export type ComponentSpec = {
   direction: "higher" | "lower";
   weight: number;
   decisive: boolean;
+  sinceYear?: number;
+  display?: { mul: number; digits: number; unit: Tr };
   name: Tr;
   note: Tr;
 };

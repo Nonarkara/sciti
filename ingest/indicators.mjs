@@ -178,21 +178,35 @@ function awaiting(id, area, name, unit) {
 }
 
 const AWAITING = [
-  awaiting("economy.investment", "economy", { en: "Investment", th: "การลงทุน", zh: "投资" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
-  awaiting("economy.border_trade", "economy", { en: "Cross-border trade", th: "การค้าชายแดน", zh: "跨境贸易" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
-  awaiting("economy.sez", "economy", { en: "Special economic zone", th: "เขตเศรษฐกิจพิเศษ", zh: "经济特区" }, { en: "1 or 0", th: "1 หรือ 0", zh: "1 或 0" }),
-  awaiting("economy.visitors", "economy", { en: "Visitors", th: "ผู้มาเยือน", zh: "游客" }, { en: "people", th: "คน", zh: "人" }),
-  awaiting("economy.tourism_receipts", "economy", { en: "Tourism receipts", th: "รายได้การท่องเที่ยว", zh: "旅游收入" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
-  awaiting("market.price", "living", { en: "Price", th: "ราคา", zh: "价格" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
+  awaiting("market.price", "living", { en: "Market property price", th: "ราคาทรัพย์สินในตลาด", zh: "市场房产价格" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
   awaiting("market.reputation", "economy", { en: "Reputation", th: "ชื่อเสียง", zh: "名声" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
-  awaiting("people.tertiary", "people", { en: "Tertiary students", th: "นักศึกษาระดับอุดมศึกษา", zh: "高等教育在校生" }, { en: "people", th: "คน", zh: "人" }),
   awaiting("people.schools", "people", { en: "Schools", th: "โรงเรียน", zh: "学校" }, { en: "schools", th: "แห่ง", zh: "所" }),
-  awaiting("mobility.broadband", "mobility", { en: "Broadband", th: "บรอดแบนด์", zh: "宽带" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
+  awaiting("mobility.broadband", "mobility", { en: "Broadband speed", th: "ความเร็วบรอดแบนด์", zh: "宽带速率" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
+  awaiting("living.density", "living", { en: "Population density", th: "ความหนาแน่นประชากร", zh: "人口密度" }, { en: "people per km²", th: "คนต่อตร.กม.", zh: "人/平方公里" }),
+  awaiting("governance.crime", "governance", { en: "Provincial crime", th: "อาชญากรรมรายจังหวัด", zh: "分府犯罪" }, { en: "cases", th: "คดี", zh: "起" }),
+  awaiting("economy.permits", "economy", { en: "Construction permits", th: "ใบอนุญาตก่อสร้าง", zh: "施工许可" }, { en: "permits", th: "ใบ", zh: "份" }),
+  awaiting("economy.wages", "economy", { en: "Average wage", th: "ค่าจ้างเฉลี่ย", zh: "平均工资" }, { en: "baht", th: "บาท", zh: "铢" }),
+  awaiting("people.graduates", "people", { en: "Graduates", th: "ผู้สำเร็จการศึกษา", zh: "毕业生" }, { en: "people", th: "คน", zh: "人" }),
+  awaiting("economy.gpp_2024", "economy", { en: "Gross provincial product, 2024", th: "ผลิตภัณฑ์มวลรวมจังหวัด ปี 2024", zh: "2024 年府生产总值" }, { en: "million baht", th: "ล้านบาท", zh: "百万铢" }),
+  awaiting("env.green_space", "environment", { en: "Urban green space", th: "พื้นที่สีเขียวในเมือง", zh: "城市绿地" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
+  awaiting("mobility.transit", "mobility", { en: "Transit use", th: "การใช้ขนส่งสาธารณะ", zh: "公共交通使用" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
+  awaiting("governance.quality", "governance", { en: "Governance quality", th: "คุณภาพการปกครอง", zh: "治理质量" }, { en: "as published", th: "ตามที่เผยแพร่", zh: "按公布单位" }),
 ];
 
 for (const extra of AWAITING) INDICATORS.push(extra);
 const priceIndicator = INDICATORS.find((item) => item.id === "market.price");
-if (priceIndicator) priceIndicator.direction = "lower";
+if (priceIndicator) {
+  priceIndicator.direction = "lower";
+  priceIndicator.method = {
+    en: "Not in the file. The Treasury appraisal is a separate series, living.land_price. A market sale price is not estimated from it.",
+    th: "ยังไม่อยู่ในไฟล์ ราคาประเมินของกรมธนารักษ์เป็นชุดอื่น ชื่อ living.land_price ไม่ได้ประมาณราคาซื้อขายจากราคาประเมิน",
+    zh: "还不在文件里。国库厅评估价是另一条序列，编号 living.land_price。不会用它去估计市场成交价。",
+  };
+}
+for (const id of ["governance.crime", "living.density", "economy.wages"]) {
+  const item = INDICATORS.find((indicator) => indicator.id === id);
+  if (item) item.direction = "lower";
+}
 
 export const AREAS = [
   { id: "environment", en: "Environment", th: "สิ่งแวดล้อม", zh: "环境" },

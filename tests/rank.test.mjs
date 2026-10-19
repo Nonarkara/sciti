@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { computeCagr, moneyballGap, percentile, scoreLens } from "../src/lib/rank.mjs";
+import { LENSES } from "../src/lib/lenses.mjs";
 import { applySource, toCsv } from "../ingest/lib.mjs";
 import { acceptRows, mergeByKey, rowsFromCsv, rowsFromJson } from "../ingest/incoming.mjs";
 
@@ -200,6 +202,64 @@ test("incoming rows without a source url are rejected and not stored as zero", (
   assert.equal(good.accepted[0].placeId, "th-83");
   const merged = mergeByKey([obs({ indicatorId: "people.tertiary", placeId: "th-83", period: "2023", value: 900 })], good.accepted);
   assert.equal(merged.length, 2);
+});
+
+test("population growth can ignore years before a cutoff", () => {
+  const rate = computeCagr(
+    [
+      obs({ period: "2014", value: 100 }),
+      obs({ period: "2022", value: 100 }),
+      obs({ period: "2024", value: 121 }),
+    ],
+    { sinceYear: 2022 },
+  );
+  assert.ok(Math.abs(rate.value - 0.1) < 1e-9);
+  assert.equal(rate.fromYear, 2022);
+});
+
+test("the cited incoming file is accepted in full", async () => {
+  const text = await readFile(new URL("../data/incoming/sciti_incoming.csv", import.meta.url), "utf8");
+  const result = acceptRows(rowsFromCsv(text));
+  assert.equal(result.rejected.length, 0);
+  assert.equal(result.accepted.length, 3400);
+  const growth = LENSES.find((lens) => lens.id === "growth");
+  const scored = scoreLens({
+    placeIds: ["th-10", "th-83"],
+    observations: result.accepted,
+    components: growth.components,
+    rankGate: growth.rankGate,
+  });
+  assert.equal(scored.contextOnly, false);
+  assert.ok(scored.rows.every((row) => row.rank != null));
+  const quiet = LENSES.find((lens) => lens.id === "quiet");
+  const quietScore = scoreLens({
+    placeIds: [...new Set(result.accepted.map((row) => row.placeId))],
+    observations: result.accepted,
+    components: quiet.components,
+    rankGate: quiet.rankGate,
+  });
+  assert.equal(quietScore.notInFile.includes("living.density"), true);
+  assert.ok(quietScore.rows.some((row) => row.rank != null));
+  const blankBorder = quietScore.rows.find((row) => row.placeId === "th-10");
+  assert.ok(blankBorder);
+});
+
+test("a province with no border checkpoint is not scored as zero trade", () => {
+  const talent = LENSES.find((lens) => lens.id === "talent");
+  const observations = [
+    obs({ indicatorId: "people.tertiary_per_1000", placeId: "th-10", period: "2025", value: 80, sourceUrl: "https://data.go.th/dataset/univ_std_11_011" }),
+    obs({ indicatorId: "people.tertiary_per_1000", placeId: "th-27", period: "2025", value: 10, sourceUrl: "https://data.go.th/dataset/univ_std_11_011" }),
+    obs({ indicatorId: "economy.border_trade", placeId: "th-27", period: "2024", value: 100, sourceUrl: "https://data.go.th/dataset/ctm_06_08" }),
+    obs({ indicatorId: "economy.sez", placeId: "th-10", period: "2026", value: 0, sourceUrl: "https://www.boi.go.th/th/SEZ_policy" }),
+    obs({ indicatorId: "economy.sez", placeId: "th-27", period: "2026", value: 1, sourceUrl: "https://www.boi.go.th/th/SEZ_policy" }),
+    obs({ indicatorId: "economy.eec", placeId: "th-10", period: "2026", value: 0, sourceUrl: "https://www.eeco.or.th/th" }),
+    obs({ indicatorId: "economy.eec", placeId: "th-27", period: "2026", value: 0, sourceUrl: "https://www.eeco.or.th/th" }),
+  ];
+  const result = scoreLens({ placeIds: ["th-10", "th-27"], observations, components: talent.components, rankGate: talent.rankGate });
+  const bangkok = result.rows.find((row) => row.placeId === "th-10");
+  assert.equal(bangkok.parts.find((part) => part.id === "economy.border_trade").state, "missing-here");
+  assert.equal(bangkok.parts.find((part) => part.id === "economy.border_trade").value, null);
+  assert.notEqual(bangkok.score, null);
 });
 
 test("csv quoting keeps a comma inside the publisher", () => {
