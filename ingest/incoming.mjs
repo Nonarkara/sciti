@@ -3,6 +3,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { missingToken, parseNumber, parseCsv } from "./lib.mjs";
+import { publisherName } from "../src/lib/publishers.mjs";
 
 const AREAS = new Set([
   "environment",
@@ -102,14 +103,14 @@ export function validateRow(row) {
     },
     sourceName: {
       en: observation.publisher,
-      th: observation.publisher,
-      zh: observation.publisher,
+      th: publisherName("th", observation.publisher),
+      zh: publisherName("zh", observation.publisher),
     },
     sourceUrl,
     method: {
       en: observation.note || "Read from a row in data/incoming. The figure is the one in that file.",
-      th: observation.note || "อ่านจากแถวใน data/incoming ตัวเลขคือตัวเลขในไฟล์นั้น",
-      zh: observation.note || "读自 data/incoming 里的一行。数字就是该文件里的数字。",
+      th: "อ่านจากแถวใน data/incoming ตัวเลขคือตัวเลขในไฟล์นั้น",
+      zh: "读自 data/incoming 里的一行。数字就是该文件里的数字。",
     },
   };
   return { ok: true, observation, indicator };

@@ -3,7 +3,8 @@ import { LENSES } from "./lib/lenses.mjs";
 import { moneyballGap } from "./lib/rank.mjs";
 import { ProvinceMap } from "./map";
 import { Profile } from "./profile";
-import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, t, topParts, tr } from "./text";
+import { DateText, LinkedText } from "./linked";
+import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, proposedSuffix, t, topParts, tr } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreCard, ScoreRow } from "./types";
 
 const APPRAISAL_ID = "living.land_price";
@@ -38,7 +39,9 @@ function Appraisal({
       {selectedGap && selectedGap.percentile != null ? (
         <p>
           {selectedGap.gap >= UNDERVALUED_GAP ? `${t(lang, "undervalued")}. ` : ""}
-          {gapSentence(lang, "appraisal", selectedGap.gap, selectedGap.percentile, selectedGap.places, selectedGap.observation.publisher || "", selectedGap.observation.asOf)}{" "}
+          <DateText
+            text={gapSentence(lang, "appraisal", selectedGap.gap, selectedGap.percentile, selectedGap.places, selectedGap.observation.publisher || "", selectedGap.observation.asOf)}
+          />{" "}
           <a href={selectedGap.observation.sourceUrl}>{t(lang, "source")}</a>
         </p>
       ) : null}
@@ -92,13 +95,14 @@ export function Home({
   const borderLens = lens.components.some((component) => component.id === "economy.border_trade" && component.weight > 0);
   const cambodiaOn = (row: ScoreRow) => borderLens && (row.placeId === "th-23" || row.placeId === "th-27");
   const quietCambodia = (row: ScoreRow) => lens.id === "quiet" && (row.placeId === "th-32" || row.placeId === "th-33");
-  const airGap = (row: ScoreRow) => row.missingInFile.includes("env.pm25_bad_days");
+  const hasAirReading = (placeId: string) => baseline.observations.some((item) => item.placeId === placeId && item.indicatorId === "env.pm25");
+  const airGap = (row: ScoreRow) => row.missingInFile.includes("env.pm25_bad_days") && !hasAirReading(row.placeId);
+  const listedMissing = (row: ScoreRow) => row.missingInFile.filter((id) => id !== "env.pm25_bad_days" || hasAirReading(row.placeId));
   const marks = (row: ScoreRow) => {
     const bits = [];
     if (decreeOn(row)) bits.push(t(lang, "decreeMark"));
-    if (cambodiaOn(row)) bits.push(t(lang, "cambodiaMark"));
-    if (quietCambodia(row)) bits.push(t(lang, "cambodiaQuietMark"));
-    if (airGap(row)) bits.push(t(lang, "noAirStation"));
+    if (cambodiaOn(row) || quietCambodia(row)) bits.push(t(lang, "cambodiaMark"));
+    if (airGap(row)) bits.push(t(lang, "noCurrentReading"));
     return bits.length ? ` · ${bits.join(" · ")}` : "";
   };
 
@@ -113,13 +117,13 @@ export function Home({
         <div className="lede">
           <h1>{t(lang, "question")}</h1>
           <p>{t(lang, "tenetShort")}</p>
-          <label className="stack">
+          <label className="stack" htmlFor="lens">
             <span>{t(lang, "lensLabel")}</span>
-            <select aria-label={t(lang, "lensLabel")} value={lens.id} onChange={(event) => setLens(event.target.value)}>
+            <select id="lens" name="lens" value={lens.id} onChange={(event) => setLens(event.target.value)}>
               {LENSES.map((item) => (
                 <option key={item.id} value={item.id}>
                   {tr(lang, item.name)}
-                  {item.proposed ? ` (${t(lang, "proposed")})` : ""}
+                  {item.proposed ? proposedSuffix(lang) : ""}
                 </option>
               ))}
             </select>
@@ -145,7 +149,9 @@ export function Home({
           <p>{t(lang, "tenetLong")}</p>
           <p>{tr(lang, lens.question)}</p>
           {lens.proposed ? <p className="meta">{t(lang, "proposed")}</p> : null}
-          <p>{tr(lang, lens.caveat)}</p>
+          <p>
+            <LinkedText lang={lang} text={tr(lang, lens.caveat)} />
+          </p>
           <p className="legend">{t(lang, "dashed")}</p>
           {scored.contextOnly ? <p>{scored.contextReason === "no-decisive" ? t(lang, "withheldProxy") : t(lang, "withheldEmpty")}</p> : null}
           <Appraisal baseline={baseline} lang={lang} scored={scored} selectedRow={selectedRow} names={names} />
@@ -154,22 +160,28 @@ export function Home({
           ) : null}
           <details>
             <summary>{t(lang, "weights")}</summary>
-            {lens.components.map((component) => (
-              <label key={component.id} className="row">
-                <span>{tr(lang, component.name)}</span>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={component.weight}
-                  aria-label={tr(lang, component.name)}
-                  onChange={(event) => setWeight(component.id, Number(event.target.value))}
-                />
-                <span className="weight-readout">
-                  {component.weight} {t(lang, "weightOf")}
-                </span>
-              </label>
-            ))}
+            {lens.components.map((component) => {
+              const name = tr(lang, component.name);
+              const field = `weight-${component.id}`;
+              return (
+                <label key={component.id} className="row" htmlFor={field}>
+                  <span className="visually-hidden">{name}</span>
+                  <span aria-hidden="true">{name}</span>
+                  <input
+                    id={field}
+                    name={field}
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={component.weight}
+                    onChange={(event) => setWeight(component.id, Number(event.target.value))}
+                  />
+                  <span className="weight-readout" aria-hidden="true">
+                    {component.weight} {t(lang, "weightOf")}
+                  </span>
+                </label>
+              );
+            })}
             <button type="button" onClick={resetWeights}>
               {t(lang, "reset")}
             </button>
@@ -177,9 +189,9 @@ export function Home({
           <p>
             <a href={hrefFor(`/methods/${lens.id}`)}>{t(lang, "openMethods")}</a>
           </p>
-          <label className="stack">
+          <label className="stack" htmlFor="province">
             <span>{t(lang, "chooseProvince")}</span>
-            <select aria-label={t(lang, "chooseProvince")} value={selected} onChange={(event) => setSelected(event.target.value)}>
+            <select id="province" name="province" value={selected} onChange={(event) => setSelected(event.target.value)}>
               <option value="">{t(lang, "chooseProvince")}</option>
               {baseline.places.map((place) => (
                 <option key={place.id} value={place.id}>
@@ -203,14 +215,14 @@ export function Home({
                     <p className="meta">{coveragePhrase(lang, row.coverage.have, row.coverage.of)}</p>
                     {lead ? (
                       <p>
-                        {partSentence(lang, lead, lens, baseline.indicators)}{" "}
+                        <DateText text={partSentence(lang, lead, lens, baseline.indicators)} />{" "}
                         {lead.evidence ? <a href={lead.evidence.sourceUrl}>{t(lang, "source")}</a> : null}
                       </p>
                     ) : null}
-                    {airGap(row) ? <p className="meta">{t(lang, "noAirStation")}.</p> : null}
-                    {row.missingInFile.filter((id) => id !== "env.pm25_bad_days").length ? (
+                    {airGap(row) ? <p className="meta">{t(lang, "noCurrentReading")}.</p> : null}
+                    {listedMissing(row).length ? (
                       <p className="meta">
-                        {t(lang, "notHere")}: {namesFor(lang, lens, row.missingInFile.filter((id) => id !== "env.pm25_bad_days"))}.
+                        {t(lang, "notHere")}: {namesFor(lang, lens, listedMissing(row))}.
                       </p>
                     ) : null}
                   </li>
@@ -227,7 +239,7 @@ export function Home({
                     <a href={hrefFor(`/place/${row.placeId}`)}>{names.get(row.placeId)}</a>
                     {marks(row)}
                     <span className="meta"> {coveragePhrase(lang, row.coverage.have, row.coverage.of)}</span>
-                    {airGap(row) ? <span className="meta"> {t(lang, "noAirStation")}.</span> : null}
+                    {airGap(row) ? <span className="meta"> {t(lang, "noCurrentReading")}.</span> : null}
                   </li>
                 ))}
               </ul>

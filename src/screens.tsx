@@ -3,7 +3,8 @@ import { LENSES } from "./lib/lenses.mjs";
 import { fillFor } from "./fill";
 import { Profile } from "./profile";
 import { MISSING_SERIES, RECORD_NOTES, SOURCES } from "./lib/sources.mjs";
-import { figurePhrase, indicatorLabel, methodParagraphs, num, placeName, t, tr, whenPhrase } from "./text";
+import { DateText, LinkedText } from "./linked";
+import { airQuietNote, figurePhrase, indicatorLabel, methodParagraphs, newestAirDay, num, placeName, proposedSuffix, t, tr, whenPhrase } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreRow } from "./types";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
@@ -59,21 +60,27 @@ export function CompareScreen({
     <article className="page">
       <h1>{t(lang, "compare")}</h1>
       <div className="row">
-        <select aria-label={t(lang, "compare")} value={a} onChange={(event) => setA(event.target.value)}>
-          {options.map((place) => (
-            <option key={place.id} value={place.id}>
-              {placeName(place, lang)}
-            </option>
-          ))}
-        </select>
+        <label className="stack" htmlFor="compare-a">
+          <span>{t(lang, "firstPlace")}</span>
+          <select id="compare-a" name="compare-a" value={a} onChange={(event) => setA(event.target.value)}>
+            {options.map((place) => (
+              <option key={place.id} value={place.id}>
+                {placeName(place, lang)}
+              </option>
+            ))}
+          </select>
+        </label>
         <span>{t(lang, "and")}</span>
-        <select aria-label={t(lang, "compare")} value={b} onChange={(event) => setB(event.target.value)}>
-          {options.map((place) => (
-            <option key={place.id} value={place.id}>
-              {placeName(place, lang)}
-            </option>
-          ))}
-        </select>
+        <label className="stack" htmlFor="compare-b">
+          <span>{t(lang, "secondPlace")}</span>
+          <select id="compare-b" name="compare-b" value={b} onChange={(event) => setB(event.target.value)}>
+            {options.map((place) => (
+              <option key={place.id} value={place.id}>
+                {placeName(place, lang)}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
       {a === b ? <p>{t(lang, "samePlace")}</p> : null}
       <div className="scroll">
@@ -94,15 +101,20 @@ export function CompareScreen({
                 baseline.observations.some(
                   (item) => item.placeId === placeId && (item.indicatorId === "economy.investment" || item.indicatorId === "economy.boi_projects"),
                 );
+              const airDay = newestAirDay(baseline.observations);
               const cell = (value: typeof left, placeId: string) =>
-                figurePhrase(lang, indicator, value, published, indicator.id === "economy.boi_jobs" && inBoi(placeId));
+                figurePhrase(lang, indicator, value, published, indicator.id === "economy.boi_jobs" && inBoi(placeId), airQuietNote(lang, value, airDay));
               return (
                 <tr key={indicator.id}>
                   <td>
                     <a href={hrefFor(`/indicator/${indicator.id}`)}>{indicatorLabel(lang, indicator)}</a>
                   </td>
-                  <td>{cell(left, a)}</td>
-                  <td>{cell(right, b)}</td>
+                  <td>
+                    <DateText text={cell(left, a)} />
+                  </td>
+                  <td>
+                    <DateText text={cell(right, b)} />
+                  </td>
                 </tr>
               );
             })}
@@ -192,7 +204,9 @@ export function CoverageScreen({ baseline, geo, lang, hrefFor }: { baseline: Bas
                   <td>
                     {lang === "th" ? `${places.size} จาก ${baseline.places.length}` : lang === "zh" ? `${places.size} / ${baseline.places.length}` : `${places.size} of ${baseline.places.length}`}
                   </td>
-                  <td>{newest ? whenPhrase(lang, newest.asOf) : t(lang, "notInFile")}</td>
+                  <td>
+                    <DateText text={newest ? whenPhrase(lang, newest.asOf) : t(lang, "notInFile")} />
+                  </td>
                 </tr>
               );
             })}
@@ -222,20 +236,24 @@ export function MethodsScreen({
         <div>
           <p>{t(lang, "normalisationTitle")}</p>
           {methodParagraphs.map((paragraph) => (
-            <p key={paragraph.en}>{tr(lang, paragraph)}</p>
+            <p key={paragraph.en}>
+              <DateText text={tr(lang, paragraph)} />
+            </p>
           ))}
           <ul className="plain">
             {LENSES.map((item) => (
               <li key={item.id}>
                 <a href={hrefFor(`/methods/${item.id}`)}>
                   {tr(lang, item.name)}
-                  {item.proposed ? ` (${t(lang, "proposed")})` : ""}
+                  {item.proposed ? proposedSuffix(lang) : ""}
                 </a>
               </li>
             ))}
           </ul>
           {RECORD_NOTES.map((note) => (
-            <p key={note.en}>{tr(lang, note)}</p>
+            <p key={note.en}>
+              <LinkedText lang={lang} text={tr(lang, note)} />
+            </p>
           ))}
           <h2>{t(lang, "stillMissing")}</h2>
           <ul className="plain">
@@ -249,7 +267,8 @@ export function MethodsScreen({
           <p>{t(lang, "notDepa")}</p>
           {SOURCES.map((source) => (
             <p key={source.id}>
-              <a href={source.url}>{tr(lang, source.publisher)}</a>. {tr(lang, source.dataset)}. {tr(lang, source.usedFor)}. {tr(lang, source.licence)}
+              <a href={source.url}>{tr(lang, source.publisher)}</a>
+              <DateText text={`. ${tr(lang, source.dataset)}. ${tr(lang, source.usedFor)}. ${tr(lang, source.licence)}`} />
             </p>
           ))}
           {baseline ? (
@@ -269,18 +288,23 @@ export function MethodsScreen({
         <div>
           <h2>
             {tr(lang, lens.name)}
-            {lens.proposed ? ` (${t(lang, "proposed")})` : ""}
+            {lens.proposed ? proposedSuffix(lang) : ""}
           </h2>
           <p>{tr(lang, lens.question)}</p>
-          <p>{tr(lang, lens.caveat)}</p>
+          <p>
+            <LinkedText lang={lang} text={tr(lang, lens.caveat)} />
+          </p>
           <p>{t(lang, "notDepa")}</p>
           {methodParagraphs.map((paragraph) => (
-            <p key={paragraph.en}>{tr(lang, paragraph)}</p>
+            <p key={paragraph.en}>
+              <DateText text={tr(lang, paragraph)} />
+            </p>
           ))}
           <ul className="plain">
             {lens.components.map((component) => (
               <li key={component.id}>
-                <strong>{tr(lang, component.name)}</strong> {component.weight} {t(lang, "weightOf")}. {component.direction === "lower" ? t(lang, "lower") : t(lang, "higher")}. {tr(lang, component.note)}
+                <strong>{tr(lang, component.name)}</strong> {component.weight} {t(lang, "weightOf")}. {component.direction === "lower" ? t(lang, "lower") : t(lang, "higher")}.{" "}
+                <DateText text={tr(lang, component.note)} />
               </li>
             ))}
           </ul>
@@ -313,6 +337,7 @@ export function IndicatorScreen({
     if (!prev || row.period > prev.period) byPlace.set(row.placeId, row);
   }
   const tls = baseline.runs?.some((run) => run.tlsRelaxed) && (indicator.id === "env.pm25" || indicator.id === "env.aqi");
+  const airDay = newestAirDay(baseline.observations);
   return (
     <article className="page">
       <h1>{indicatorLabel(lang, indicator)}</h1>
@@ -332,19 +357,27 @@ export function IndicatorScreen({
               {[...byPlace.entries()]
                 .sort((a, b) => a[0].localeCompare(b[0]))
                 .map(([placeId, row]) => {
-                  const phrase = figurePhrase(lang, indicator, row, true);
-                  const current = phrase !== t(lang, "noCurrentReading");
+                  const phrase = figurePhrase(lang, indicator, row, true, false, airQuietNote(lang, row, airDay));
+                  const air = indicator.id === "env.pm25" || indicator.id === "env.aqi";
+                  const shown =
+                    lang === "zh"
+                      ? air
+                        ? `${phrase}。`
+                        : `${phrase}。${whenPhrase(lang, row.asOf)}。`
+                      : air
+                        ? `${phrase}.`
+                        : `${phrase}. ${whenPhrase(lang, row.asOf)}.`;
                   return (
                   <tr key={placeId}>
                     <td>
                       <a href={hrefFor(`/place/${placeId}`)}>{placeName(baseline.places.find((place) => place.id === placeId), lang)}</a>
                     </td>
                     <td>
-                      {current ? `${phrase}. ${whenPhrase(lang, row.asOf)}.` : `${phrase}.`}
+                      <DateText text={shown} />
                     </td>
                     <td>
                       <a href={row.sourceUrl}>{t(lang, "source")}</a>
-                      {row.stale && current ? ` ${t(lang, "lastGood")}` : ""}
+                      {row.stale ? ` ${t(lang, "lastGood")}` : ""}
                     </td>
                   </tr>
                   );
@@ -368,11 +401,15 @@ export function AboutScreen({ baseline, lang, asset }: { baseline: Baseline | nu
       <p>{t(lang, "tenetLong")}</p>
       {baseline ? (
         <p>
-          {lang === "th"
-            ? `ไฟล์นี้จัดเมื่อ ${when} รุ่น ${baseline.version} แต่ละตัวเลขมีแหล่งและวันที่ ถ้าไม่มีไฟล์ จะเว้นว่างไว้`
-            : lang === "zh"
-              ? `这份文件生成于 ${when}，版本 ${baseline.version}。每个数字都有来源和日期。没有文件的地方就空着。`
-              : `This file was built on ${when}, version ${baseline.version}. Every figure has a source and a date. Where no file was read, the cell stays empty.`}
+          <DateText
+            text={
+              lang === "th"
+                ? `ไฟล์นี้จัดเมื่อ ${when} รุ่น ${baseline.version} แต่ละตัวเลขมีแหล่งและวันที่ ถ้าไม่มีไฟล์ จะเว้นว่างไว้`
+                : lang === "zh"
+                  ? `这份文件生成于 ${when}，版本 ${baseline.version}。每个数字都有来源和日期。没有文件的地方就空着。`
+                  : `This file was built on ${when}, version ${baseline.version}. Every figure has a source and a date. Where no file was read, the cell stays empty.`
+            }
+          />
         </p>
       ) : (
         <p>{t(lang, "reading")}</p>

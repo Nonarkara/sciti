@@ -4,7 +4,7 @@ export const SOURCES = [
   {
     id: "dopa",
     publisher: { en: "DOPA, Bureau of Registration Administration", th: "กรมการปกครอง สำนักบริหารการทะเบียน", zh: "内政部府政厅登记局" },
-    dataset: { en: "Registered population by province, December 2565, 2567 and 2568", th: "ประชากรตามทะเบียนรายจังหวัด ธันวาคม 2565, 2567 และ 2568", zh: "分府户籍人口，佛历 2565、2567、2568 年 12 月" },
+    dataset: { en: "Registered population by province, December 2022, 2024 and 2025", th: "ประชากรตามทะเบียนรายจังหวัด ธันวาคม 2565, 2567 และ 2568", zh: "分府户籍人口，佛历 2565、2567、2568 年 12 月" },
     usedFor: { en: "Population and its growth", th: "ประชากรและการเติบโต", zh: "人口及其增长" },
     url: "https://stat.bora.dopa.go.th/new_stat/file/68/stat_c68.txt",
     licence: { en: "Not stated. Public statistics, with attribution.", th: "ไม่ได้ระบุ สถิติสาธารณะ พร้อมการอ้างแหล่ง", zh: "未标明许可。公开统计，使用时注明出处。" },
@@ -12,7 +12,7 @@ export const SOURCES = [
   {
     id: "nso-gpp-level",
     publisher: { en: "NSO, compiled from NESDC", th: "สำนักงานสถิติแห่งชาติ รวบรวมจากสภาพัฒน์", zh: "国家统计局，汇编自国家经济和社会发展委员会" },
-    dataset: { en: "Statistical Yearbook T10.1, gross provincial product at current prices, 2023", th: "หนังสือสถิติประจำปี ตาราง 10.1 ผลิตภัณฑ์มวลรวมจังหวัดราคาประจำปี 2023", zh: "统计年鉴表 10.1，2023 年现价府生产总值" },
+    dataset: { en: "Statistical Yearbook T10.1, gross provincial product at current prices, 2023", th: "หนังสือสถิติประจำปี ตาราง 10.1 ผลิตภัณฑ์มวลรวมจังหวัดราคาประจำปี 2566", zh: "统计年鉴表 10.1，2023 年现价府生产总值" },
     usedFor: { en: "Output level and output per person", th: "ระดับผลผลิตและผลผลิตต่อคน", zh: "产出水平和人均产出" },
     url: "https://www.nso.go.th/nsoweb/downloadFile/stat_main_nso/FgAG/file_th",
     licence: { en: "Not stated. Public statistics, with attribution.", th: "ไม่ได้ระบุ สถิติสาธารณะ พร้อมการอ้างแหล่ง", zh: "未标明许可。公开统计，使用时注明出处。" },
@@ -36,7 +36,7 @@ export const SOURCES = [
   {
     id: "boi",
     publisher: { en: "Thailand Board of Investment", th: "สำนักงานคณะกรรมการส่งเสริมการลงทุน", zh: "泰国投资促进委员会" },
-    dataset: { en: "Investment promotion approvals by province, 2567 and 2568", th: "การอนุมัติส่งเสริมการลงทุนรายจังหวัด ปี 2567 และ 2568", zh: "分府投资促进批准，佛历 2567 和 2568 年" },
+    dataset: { en: "Investment promotion approvals by province, 2024 and 2025", th: "การอนุมัติส่งเสริมการลงทุนรายจังหวัด ปี 2567 และ 2568", zh: "分府投资促进批准，佛历 2567 和 2568 年" },
     usedFor: { en: "Approved investment, projects and jobs", th: "เงินลงทุน โครงการ และงานที่ได้รับส่งเสริม", zh: "获批投资、项目和岗位" },
     url: "https://ipstat.boi.go.th/pubrpt/rep08qtrprovince.php",
     licence: { en: "Not stated. Public statistics, with attribution.", th: "ไม่ได้ระบุ สถิติสาธารณะ พร้อมการอ้างแหล่ง", zh: "未标明许可。公开统计，使用时注明出处。" },
@@ -44,7 +44,7 @@ export const SOURCES = [
   {
     id: "dbd",
     publisher: { en: "Department of Business Development", th: "กรมพัฒนาธุรกิจการค้า", zh: "商业发展厅" },
-    dataset: { en: "New juristic persons and their capital, by province, 2567–2569", th: "นิติบุคคลตั้งใหม่และทุน จดทะเบียนรายจังหวัด ปี 2567–2569", zh: "分府新注册法人及其资本，佛历 2567–2569 年" },
+    dataset: { en: "New juristic persons and their capital, by province, 2024–2026", th: "นิติบุคคลตั้งใหม่และทุน จดทะเบียนรายจังหวัด ปี 2567–2569", zh: "分府新注册法人及其资本，佛历 2567–2569 年" },
     usedFor: { en: "New companies", th: "บริษัทใหม่", zh: "新公司" },
     url: "https://data.go.th/dataset/dataset_12_0111",
     licence: { en: "Open Data Common", th: "สัญญาอนุญาตข้อมูลเปิดภาครัฐ", zh: "政府开放数据通用许可" },
@@ -52,7 +52,7 @@ export const SOURCES = [
   {
     id: "mots",
     publisher: { en: "Ministry of Tourism and Sports", th: "กระทรวงการท่องเที่ยวและกีฬา", zh: "旅游与体育部" },
-    dataset: { en: "Domestic tourism by province, January–December 2568", th: "การท่องเที่ยวภายในประเทศรายจังหวัด มกราคม–ธันวาคม 2568", zh: "分府国内旅游，佛历 2568 年 1 月至 12 月" },
+    dataset: { en: "Domestic tourism by province, January–December 2025", th: "การท่องเที่ยวภายในประเทศรายจังหวัด มกราคม–ธันวาคม 2568", zh: "分府国内旅游，佛历 2568 年 1 月至 12 月" },
     usedFor: { en: "Visitors, receipts and hotel occupancy", th: "ผู้มาเยือน รายได้ และอัตราเข้าพัก", zh: "游客、收入和酒店入住率" },
     url: "https://www.mots.go.th/news/category/829",
     licence: { en: "Not stated. Public statistics, with attribution.", th: "ไม่ได้ระบุ สถิติสาธารณะ พร้อมการอ้างแหล่ง", zh: "未标明许可。公开统计，使用时注明出处。" },
@@ -60,7 +60,7 @@ export const SOURCES = [
   {
     id: "customs",
     publisher: { en: "Customs Department", th: "กรมศุลกากร", zh: "海关厅" },
-    dataset: { en: "Trade by checkpoint, 2567, land and river checkpoints only", th: "การค้าผ่านด่าน ปี 2567 เฉพาะด่านบกและด่านน้ำ", zh: "佛历 2567 年分关口贸易，只用陆路和河路关口" },
+    dataset: { en: "Trade by checkpoint, 2024, land and river checkpoints only", th: "การค้าผ่านด่าน ปี 2567 เฉพาะด่านบกและด่านน้ำ", zh: "佛历 2567 年分关口贸易，只用陆路和河路关口" },
     usedFor: { en: "Border trade", th: "การค้าชายแดน", zh: "边境贸易" },
     url: "https://data.go.th/dataset/ctm_06_08",
     licence: { en: "Open Data Common", th: "สัญญาอนุญาตข้อมูลเปิดภาครัฐ", zh: "政府开放数据通用许可" },
@@ -68,7 +68,7 @@ export const SOURCES = [
   {
     id: "dft",
     publisher: { en: "Department of Foreign Trade", th: "กรมการค้าต่างประเทศ", zh: "外贸厅" },
-    dataset: { en: "Border trade by neighbouring country, December 2568", th: "การค้าชายแดนรายประเทศเพื่อนบ้าน ธันวาคม 2568", zh: "按邻国的边境贸易，佛历 2568 年 12 月" },
+    dataset: { en: "Border trade by neighbouring country, December 2025", th: "การค้าชายแดนรายประเทศเพื่อนบ้าน ธันวาคม 2568", zh: "按邻国的边境贸易，佛历 2568 年 12 月" },
     usedFor: { en: "The Cambodia note on Sa Kaeo and Trat", th: "หมายเหตุกัมพูชาสำหรับสระแก้วและตราด", zh: "沙缴和达叻的柬埔寨说明" },
     url: "https://gdcatalog.dft.go.th/dataset/c6d19948-6c7f-4e94-9960-656ecd4d717d",
     licence: { en: "Open Data Common", th: "สัญญาอนุญาตข้อมูลเปิดภาครัฐ", zh: "政府开放数据通用许可" },
@@ -76,7 +76,7 @@ export const SOURCES = [
   {
     id: "pcd",
     publisher: { en: "Pollution Control Department", th: "กรมควบคุมมลพิษ", zh: "污染控制局" },
-    dataset: { en: "PM2.5 by station, 2568, and municipal waste by province, 2567", th: "PM2.5 รายสถานี ปี 2568 และขยะมูลฝอยรายจังหวัด ปี 2567", zh: "佛历 2568 年分站点 PM2.5，以及 2567 年分府生活垃圾" },
+    dataset: { en: "PM2.5 by station, 2025, and municipal waste by province, 2024", th: "PM2.5 รายสถานี ปี 2568 และขยะมูลฝอยรายจังหวัด ปี 2567", zh: "佛历 2568 年分站点 PM2.5，以及 2567 年分府生活垃圾" },
     usedFor: { en: "Bad-air days, the yearly mean, waste", th: "วันที่อากาศแย่ ค่าเฉลี่ยทั้งปี และขยะ", zh: "超标天数、年均值和垃圾" },
     url: "https://pcd.gdcatalog.go.th/dataset/fc3b51fd-91e3-4788-8241-32d418e636d4",
     licence: { en: "Open Data Common", th: "สัญญาอนุญาตข้อมูลเปิดภาครัฐ", zh: "政府开放数据通用许可" },
@@ -84,7 +84,7 @@ export const SOURCES = [
   {
     id: "ddc",
     publisher: { en: "Department of Disease Control", th: "กรมควบคุมโรค", zh: "疾病控制局" },
-    dataset: { en: "Road traffic deaths, RTDDI, 2567 and 2568", th: "ผู้เสียชีวิตจากอุบัติเหตุทางถนน RTDDI ปี 2567 และ 2568", zh: "道路交通事故死亡，RTDDI，佛历 2567 和 2568 年" },
+    dataset: { en: "Road traffic deaths, RTDDI, 2024 and 2025", th: "ผู้เสียชีวิตจากอุบัติเหตุทางถนน RTDDI ปี 2567 และ 2568", zh: "道路交通事故死亡，RTDDI，佛历 2567 和 2568 年" },
     usedFor: { en: "Road deaths", th: "ผู้เสียชีวิตบนถนน", zh: "道路死亡" },
     url: "https://data.go.th/dataset/rtddi",
     licence: { en: "CC BY-SA", th: "CC BY-SA", zh: "CC BY-SA" },
@@ -92,7 +92,7 @@ export const SOURCES = [
   {
     id: "moph",
     publisher: { en: "Office of the Permanent Secretary, Ministry of Public Health", th: "สำนักงานปลัดกระทรวงสาธารณสุข", zh: "公共卫生部常务秘书办公室" },
-    dataset: { en: "Physicians by province, 2554–2567", th: "แพทย์รายจังหวัด ปี 2554–2567", zh: "分府医生，佛历 2554–2567 年" },
+    dataset: { en: "Physicians by province, 2011–2024", th: "แพทย์รายจังหวัด ปี 2554–2567", zh: "分府医生，佛历 2554–2567 年" },
     usedFor: { en: "Doctors", th: "แพทย์", zh: "医生" },
     url: "https://moph.gdcatalog.go.th/dataset/gdpublish-doctors",
     licence: { en: "Open Data Common", th: "สัญญาอนุญาตข้อมูลเปิดภาครัฐ", zh: "政府开放数据通用许可" },
@@ -100,7 +100,7 @@ export const SOURCES = [
   {
     id: "mhesi",
     publisher: { en: "Ministry of Higher Education, Science, Research and Innovation", th: "กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม", zh: "高等教育、科研与创新部" },
-    dataset: { en: "Current students by institution, academic year 2568, first semester", th: "นักศึกษาปัจจุบันรายสถาบัน ปีการศึกษา 2568 ภาคต้น", zh: "分院校在校生，佛历 2568 学年第一学期" },
+    dataset: { en: "Current students by institution, academic year 2025, first semester", th: "นักศึกษาปัจจุบันรายสถาบัน ปีการศึกษา 2568 ภาคต้น", zh: "分院校在校生，佛历 2568 学年第一学期" },
     usedFor: { en: "Tertiary students", th: "นักศึกษา", zh: "高等教育在校生" },
     url: "https://data.go.th/dataset/univ_std_11_011",
     licence: { en: "Not stated. Public statistics, with attribution.", th: "ไม่ได้ระบุ สถิติสาธารณะ พร้อมการอ้างแหล่ง", zh: "未标明许可。公开统计，使用时注明出处。" },
@@ -108,7 +108,7 @@ export const SOURCES = [
   {
     id: "energy",
     publisher: { en: "Ministry of Energy, Office of the Permanent Secretary", th: "กระทรวงพลังงาน สำนักงานปลัดกระทรวง", zh: "能源部常务秘书办公室" },
-    dataset: { en: "Electricity use by province and tariff, 2566", th: "การใช้ไฟฟ้ารายจังหวัดและอัตราค่าไฟ ปี 2566", zh: "分府、分电价的用电量，佛历 2566 年" },
+    dataset: { en: "Electricity use by province and tariff, 2023", th: "การใช้ไฟฟ้ารายจังหวัดและอัตราค่าไฟ ปี 2566", zh: "分府、分电价的用电量，佛历 2566 年" },
     usedFor: { en: "Electricity and EV charging", th: "ไฟฟ้าและการชาร์จรถไฟฟ้า", zh: "用电和电动车充电" },
     url: "https://data.go.th/dataset/dataset_41_075",
     licence: { en: "Open Data Common", th: "สัญญาอนุญาตข้อมูลเปิดภาครัฐ", zh: "政府开放数据通用许可" },
@@ -124,7 +124,7 @@ export const SOURCES = [
   {
     id: "depa",
     publisher: { en: "depa, the Digital Economy Promotion Agency", th: "สำนักงานส่งเสริมเศรษฐกิจดิจิทัล (ดีป้า)", zh: "数字经济发展促进局（depa）" },
-    dataset: { en: "Smart-city label announcements, 2564–2566, and the 4 September 2568 renewal", th: "ประกาศเมืองอัจฉริยะ ปี 2564–2566 และการต่ออายุวันที่ 4 กันยายน 2568", zh: "佛历 2564–2566 年智慧城市授牌公告，以及 2568 年 9 月 4 日的续期" },
+    dataset: { en: "Smart-city label announcements, 2021–2023, and the 4 September 2025 renewal", th: "ประกาศเมืองอัจฉริยะ ปี 2564–2566 และการต่ออายุวันที่ 4 กันยายน 2568", zh: "佛历 2564–2566 年智慧城市授牌公告，以及 2568 年 9 月 4 日的续期" },
     usedFor: { en: "Whether a label was renewed, newly given, or not found", th: "ว่าป้ายถูกต่ออายุ ได้ใหม่ หรือยังไม่พบการต่ออายุ", zh: "牌子是续了、新发了，还是没有找到续期" },
     url: "https://www.depa.or.th/th/smart-city-plan/existing-smart-city",
     licence: { en: "Official announcements.", th: "ประกาศทางการ", zh: "官方公告。" },
@@ -140,7 +140,7 @@ export const SOURCES = [
   {
     id: "eec",
     publisher: { en: "Eastern Economic Corridor Office", th: "สำนักงานคณะกรรมการนโยบายเขตพัฒนาพิเศษภาคตะวันออก", zh: "东部经济走廊办公室" },
-    dataset: { en: "EEC Act B.E. 2561: Chachoengsao, Chon Buri, Rayong", th: "พระราชบัญญัติอีอีซี 2561: ฉะเชิงเทรา ชลบุรี ระยอง", zh: "佛历 2561 年东部经济走廊法：北柳、春武里、罗勇" },
+    dataset: { en: "EEC Act 2018: Chachoengsao, Chon Buri, Rayong", th: "พระราชบัญญัติอีอีซี 2561: ฉะเชิงเทรา ชลบุรี ระยอง", zh: "佛历 2561 年东部经济走廊法：北柳、春武里、罗勇" },
     usedFor: { en: "The corridor flag", th: "ธงระเบียงเศรษฐกิจ", zh: "走廊标记" },
     url: "https://www.eeco.or.th/th",
     licence: { en: "Official.", th: "ทางการ", zh: "官方。" },
@@ -149,7 +149,7 @@ export const SOURCES = [
     id: "emergency-decree",
     publisher: { en: "Cabinet of Thailand", th: "คณะรัฐมนตรี", zh: "泰国内阁" },
     dataset: {
-      en: "Serious-emergency extension 86, in force 20 October 2569 through 19 January 2570, Cabinet 6 October 2569, with Raman among Yala's exceptions. Cited from the Thai PBS report. A Royal Gazette notice for this extension was not found.",
+      en: "Serious-emergency extension 86, in force 20 October 2026 through 19 January 2027, Cabinet 6 October 2026, with Raman among Yala's exceptions. Cited from the Thai PBS report. A Royal Gazette notice for this extension was not found.",
       th: "การขยายสถานการณ์ฉุกเฉินที่มีความร้ายแรง ครั้งที่ 86 มีผล 20 ตุลาคม 2569 ถึง 19 มกราคม 2570 มติคณะรัฐมนตรี 6 ตุลาคม 2569 และรามันอยู่ในอำเภอยกเว้นของยะลา อ้างจากรายงานของไทยพีบีเอส ยังไม่พบประกาศในราชกิจจานุเบกษาสำหรับการขยายครั้งนี้",
       zh: "严重紧急状态第 86 次延长，佛历 2569 年 10 月 20 日至 2570 年 1 月 19 日有效，内阁 2569 年 10 月 6 日，拉曼列入也拉的除外县。引自泰国公共广播的报道。没有找到这次延长的皇家公报。",
     },
@@ -169,13 +169,13 @@ export const SOURCES = [
 
 export const RECORD_NOTES = [
   {
-    en: "depa renewed 16 smart-city labels in 2568 and added one new label, Phuket Tinicon Valley. Earlier labels that are not in that announcement are marked renewal not found. That is not a finding that they expired.",
+    en: "depa renewed 16 smart-city labels in 2025 and added one new label, Phuket Tinicon Valley. Earlier labels that are not in that announcement are marked renewal not found. That is not a finding that they expired.",
     th: "ดีป้าต่ออายุป้ายเมืองอัจฉริยะสิบหกแห่งในปี 2568 และเพิ่มป้ายใหม่หนึ่งแห่ง คือภูเก็ตทินิคอนวัลเลย์ ป้ายที่เก่ากว่าซึ่งไม่อยู่ในประกาศนั้นถูกกำกับว่ายังไม่พบการต่ออายุ นั่นไม่ใช่ข้อสรุปว่าป้ายหมดอายุ",
     zh: "depa 在佛历 2568 年续了十六块智慧城市牌子，并新增一块：普吉 Tinicon Valley。更早的、不在那份公告里的牌子，标成没有找到续期。这不是认定它们已经过期。",
   },
   {
-    en: "In December 2568 the Department of Foreign Trade recorded no border trade with Cambodia. Sa Kaeo and Trat stay in the 2024 customs file, and both carry a current-status note.",
-    th: "เดือนธันวาคม 2568 กรมการค้าต่างประเทศบันทึกการค้าชายแดนกับกัมพูชาเป็นศูนย์ สระแก้วและตราดยังอยู่ในไฟล์ศุลกากรปี 2024 และทั้งคู่มีหมายเหตุสถานะปัจจุบัน",
+    en: "In December 2025 the Department of Foreign Trade recorded no border trade with Cambodia. Sa Kaeo and Trat stay in the 2024 customs file, and both carry a current-status note.",
+    th: "เดือนธันวาคม 2568 กรมการค้าต่างประเทศบันทึกการค้าชายแดนกับกัมพูชาเป็นศูนย์ สระแก้วและตราดยังอยู่ในไฟล์ศุลกากรปี 2567 และทั้งคู่มีหมายเหตุสถานะปัจจุบัน",
     zh: "佛历 2568 年 12 月，外贸厅记录对柬埔寨的边境贸易为零。沙缴和达叻仍在 2024 年的海关文件里，两府都带有当下状态的说明。",
   },
   {
@@ -189,12 +189,12 @@ export const RECORD_NOTES = [
     zh: "医生序列可能不包括私立医院的医生。表上没有写。",
   },
   {
-    en: "The minimum wage is the statutory daily rate as of January 2568, not an average wage.",
+    en: "The minimum wage is the statutory daily rate as of January 2025, not an average wage.",
     th: "ค่าจ้างขั้นต่ำคืออัตรารายวันตามกฎหมาย ณ มกราคม 2568 ไม่ใช่ค่าจ้างเฉลี่ย",
     zh: "最低工资是截至佛历 2568 年 1 月的法定日工资，不是平均工资。",
   },
   {
-    en: "Security data missing. There is no provincial crime series in the file. Parts of Yala, Pattani and Narathiwat are emergency-decree areas under extension 86, in force 20 October 2569 through 19 January 2570 (Cabinet, 6 October 2569). Raman is among Yala's exceptions. Quiet retirement, families, remote workers and tourism mark those three and move them down. Songkhla is not under that decree. Four of its districts were internal-security areas through 30 September 2569, and a later extension is not in this file, so Songkhla is not scored as a security zone. The decree line is not a count of incidents.",
+    en: "Security data missing. There is no provincial crime series in the file. Parts of Yala, Pattani and Narathiwat are emergency-decree areas under extension 86, in force 20 October 2026 through 19 January 2027 (Cabinet, 6 October 2026). Raman is among Yala's exceptions. Quiet retirement, families, remote workers and tourism mark those three and move them down. Songkhla is not under that decree. Four of its districts were internal-security areas through 30 September 2026, and a later extension is not in this file, so Songkhla is not scored as a security zone. The decree line is not a count of incidents.",
     th: "ข้อมูลความปลอดภัยยังขาด ไม่มีชุดอาชญากรรมรายจังหวัดในไฟล์ ยะลา ปัตตานี และนราธิวาสบางส่วนเป็นพื้นที่ประกาศสถานการณ์ฉุกเฉินตามการขยายครั้งที่ 86 มีผลตั้งแต่วันที่ 20 ตุลาคม 2569 ถึงวันที่ 19 มกราคม 2570 (มติคณะรัฐมนตรี 6 ตุลาคม 2569) และรามันอยู่ในอำเภอยกเว้นของยะลา เลนส์เกษียณแบบสงบ ครอบครัว คนทำงานทางไกล และท่องเที่ยวทำเครื่องหมายสามจังหวัดนี้แล้วดันลง สงขลาไม่อยู่ใต้ประกาศนั้น สี่อำเภอเคยเป็นพื้นที่ความมั่นคงถึงวันที่ 30 กันยายน 2569 และยังไม่มีการขยายหลังวันนั้นในไฟล์นี้ จึงไม่ได้ให้คะแนนสงขลาเป็นเขตความมั่นคง บรรทัดประกาศไม่ใช่จำนวนเหตุการณ์",
     zh: "安全数据缺失。文件里没有分府犯罪序列。也拉、北大年、那拉提瓦的部分地区按第 86 次延长处于紧急状态，自佛历 2569 年 10 月 20 日起至 2570 年 1 月 19 日（内阁，2569 年 10 月 6 日）。拉曼列入也拉的除外县。安静退休、家庭、远程工作和旅游标出这三府并下移。宋卡不在该项宣布里。它的四个县曾是内部安全区，到佛历 2569 年 9 月 30 日为止，这份文件里没有之后的延长，所以宋卡不按安全区计分。紧急状态这一行不是事件计数。",
   },
@@ -212,7 +212,7 @@ export const MISSING_SERIES = [
   { id: "economy.wages", en: "Average wages by province", th: "ค่าจ้างเฉลี่ยรายจังหวัด", zh: "分府平均工资" },
   { id: "people.graduates", en: "Graduates by province", th: "ผู้สำเร็จการศึกษารายจังหวัด", zh: "分府毕业生" },
   { id: "market.price", en: "Market property prices", th: "ราคาทรัพย์สินในตลาด", zh: "市场房产价格" },
-  { id: "economy.gpp_2024", en: "Gross provincial product for 2024", th: "ผลิตภัณฑ์มวลรวมจังหวัดปี 2024", zh: "2024 年府生产总值" },
+  { id: "economy.gpp_2024", en: "Gross provincial product for 2024", th: "ผลิตภัณฑ์มวลรวมจังหวัดปี 2567", zh: "2024 年府生产总值" },
   { id: "env.green_space", en: "Urban green space", th: "พื้นที่สีเขียวในเมือง", zh: "城市绿地" },
   { id: "mobility.transit", en: "Transit use", th: "การใช้ขนส่งสาธารณะ", zh: "公共交通使用" },
   { id: "governance.quality", en: "Governance quality", th: "คุณภาพการปกครอง", zh: "治理质量" },
