@@ -1,0 +1,175 @@
+import { useEffect } from "react";
+import { LENSES } from "./lib/lenses.mjs";
+import { moneyballGap } from "./lib/rank.mjs";
+import { ProvinceMap } from "./map";
+import { Profile } from "./profile";
+import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, t, topParts, tr } from "./text";
+import type { Baseline, GeoFile, Lang, Lens, ScoreCard } from "./types";
+
+export function Home({
+  lang,
+  baseline,
+  geo,
+  lens,
+  scored,
+  selected,
+  setSelected,
+  setLens,
+  setWeight,
+  resetWeights,
+  hrefFor,
+  asset,
+}: {
+  lang: Lang;
+  baseline: Baseline;
+  geo: GeoFile | null;
+  lens: Lens;
+  scored: ScoreCard;
+  selected: string;
+  setSelected: (id: string) => void;
+  setLens: (id: string) => void;
+  setWeight: (id: string, value: number) => void;
+  resetWeights: () => void;
+  hrefFor: (path: string) => string;
+  asset: (path: string) => string;
+}) {
+  const names = new Map(baseline.places.map((place) => [place.id, placeName(place, lang)]));
+  const selectedRow = scored.rows.find((row) => row.placeId === selected);
+  const ranked = scored.rows.filter((row) => row.rank != null).slice().sort((a, b) => (a.rank || 0) - (b.rank || 0) || a.placeId.localeCompare(b.placeId));
+  const held = scored.rows.filter((row) => row.rank == null);
+
+  useEffect(() => {
+    if (!selected || window.innerWidth >= 801) return;
+    document.getElementById("profile")?.scrollIntoView({ block: "start" });
+  }, [selected, lens.id]);
+
+  return (
+    <div className="home">
+      <div className="column">
+        <div className="lede">
+          <h1>{t(lang, "question")}</h1>
+          <p>{t(lang, "tenetShort")}</p>
+          <label className="stack">
+            <span>{t(lang, "lensLabel")}</span>
+            <select aria-label={t(lang, "lensLabel")} value={lens.id} onChange={(event) => setLens(event.target.value)}>
+              {LENSES.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {tr(lang, item.name)}
+                  {item.proposed ? ` (${t(lang, "proposed")})` : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <div className="rail">
+          <p>{t(lang, "tenetLong")}</p>
+          <p>{tr(lang, lens.question)}</p>
+          {lens.proposed ? <p className="meta">{t(lang, "proposed")}</p> : null}
+          <p>{tr(lang, lens.caveat)}</p>
+          <p className="legend">{t(lang, "dashed")}</p>
+          {scored.contextOnly ? <p>{scored.contextReason === "no-decisive" ? t(lang, "withheldProxy") : t(lang, "withheldEmpty")}</p> : null}
+          {baseline.observations.some((item) => item.indicatorId === "market.price" || item.indicatorId === "market.reputation") ? null : (
+            <p className="meta">{t(lang, "gapNone")}</p>
+          )}
+          {selectedRow && selectedRow.score != null
+            ? (["market.price", "market.reputation"] as const).map((id) => {
+                const score = selectedRow.score;
+                if (score == null) return null;
+                const gap = moneyballGap(score, baseline.observations, selected, id);
+                if (!gap || gap.percentile == null) return null;
+                return (
+                  <p key={id}>
+                    {gapSentence(lang, id === "market.price" ? "price" : "reputation", gap.gap, gap.percentile, gap.places, gap.observation.publisher || "", gap.observation.asOf)}{" "}
+                    <a href={gap.observation.sourceUrl}>{t(lang, "source")}</a>
+                  </p>
+                );
+              })
+            : null}
+          {baseline.runs?.some((run) => run.tlsRelaxed) && lens.components.some((component) => component.id === "env.pm25" && component.weight > 0) ? (
+            <p className="meta">{t(lang, "airCert")}</p>
+          ) : null}
+          <details>
+            <summary>{t(lang, "weights")}</summary>
+            {lens.components.map((component) => (
+              <label key={component.id} className="row">
+                <span>{tr(lang, component.name)}</span>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={component.weight}
+                  aria-label={tr(lang, component.name)}
+                  onChange={(event) => setWeight(component.id, Number(event.target.value))}
+                />
+                <span className="weight-readout">
+                  {component.weight} {t(lang, "weightOf")}
+                </span>
+              </label>
+            ))}
+            <button type="button" onClick={resetWeights}>
+              {t(lang, "reset")}
+            </button>
+          </details>
+          <p>
+            <a href={hrefFor(`/methods/${lens.id}`)}>{t(lang, "openMethods")}</a>
+          </p>
+          <label className="stack">
+            <span>{t(lang, "chooseProvince")}</span>
+            <select aria-label={t(lang, "chooseProvince")} value={selected} onChange={(event) => setSelected(event.target.value)}>
+              <option value="">{t(lang, "chooseProvince")}</option>
+              {baseline.places.map((place) => (
+                <option key={place.id} value={place.id}>
+                  {placeName(place, lang)}
+                </option>
+              ))}
+            </select>
+          </label>
+          {selected ? <Profile baseline={baseline} placeId={selected} lang={lang} lens={lens} row={selectedRow} hrefFor={hrefFor} /> : null}
+          {ranked.length ? (
+            <ol className="ranks">
+              {ranked.map((row) => {
+                const place = baseline.places.find((item) => item.id === row.placeId);
+                const lead = topParts(row)[0];
+                return (
+                  <li key={row.placeId}>
+                    <a href={hrefFor(`/place/${row.placeId}`)}>
+                      {row.rank}. {placeName(place, lang)}
+                    </a>
+                    <p className="meta">{coveragePhrase(lang, row.coverage.have, row.coverage.of)}</p>
+                    {lead ? (
+                      <p>
+                        {partSentence(lang, lead, lens, baseline.indicators)}{" "}
+                        {lead.evidence ? <a href={lead.evidence.sourceUrl}>{t(lang, "source")}</a> : null}
+                      </p>
+                    ) : null}
+                    {row.missingInFile.length ? (
+                      <p className="meta">
+                        {t(lang, "notHere")}: {namesFor(lang, lens, row.missingInFile)}.
+                      </p>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ol>
+          ) : null}
+          {held.length && !scored.contextOnly ? (
+            <div>
+              <h2>{t(lang, "notScored")}</h2>
+              <ul className="plain">
+                {held.map((row) => (
+                  <li key={row.placeId}>
+                    <a href={hrefFor(`/place/${row.placeId}`)}>{names.get(row.placeId)}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          <p className="meta">
+            <a href={asset("data/baseline.json")}>{t(lang, "json")}</a> · <a href={asset("data/baseline.csv")}>{t(lang, "csv")}</a>
+          </p>
+        </div>
+      </div>
+      <ProvinceMap geo={geo} rows={scored.rows} names={names} selected={selected} onSelect={setSelected} lang={lang} labelled />
+    </div>
+  );
+}

@@ -1,0 +1,213 @@
+import type { Indicator, Lang, Lens, Part, ScoreRow, Tr } from "./types";
+
+export function tr(lang: Lang, text: Tr): string {
+  return text[lang] || text.en;
+}
+
+export function placeName(place: { en: string; th: string; zh: string } | undefined, lang: Lang): string {
+  if (!place) return "";
+  if (lang === "th") return place.th || place.en;
+  if (lang === "zh") return place.zh || place.en;
+  return place.en;
+}
+
+export function day(value: string | undefined): string {
+  if (!value) return "";
+  return value.slice(0, 10);
+}
+
+export function num(value: number, digits = 1): string {
+  return value.toLocaleString("en-US", { maximumFractionDigits: digits, minimumFractionDigits: digits });
+}
+
+const chrome = {
+  menu: { en: "Menu", th: "เมนู", zh: "菜单" },
+  cities: { en: "Cities", th: "เมือง", zh: "城市" },
+  compare: { en: "Compare", th: "เทียบ", zh: "对照" },
+  coverage: { en: "Coverage", th: "ครอบคลุม", zh: "覆盖" },
+  methods: { en: "Methods", th: "วิธี", zh: "方法" },
+  about: { en: "About", th: "เกี่ยวกับ", zh: "关于" },
+  question: { en: "Which cities?", th: "เมืองไหน", zh: "哪些城市？" },
+  tenetShort: {
+    en: "Cities are the economy. A better economy is built by building better cities, and the hard question is which cities.",
+    th: "เมืองคือเศรษฐกิจ เศรษฐกิจที่ดีขึ้นเกิดจากการทำให้เมืองดีขึ้น และคำถามที่ยากคือเมืองไหน",
+    zh: "城市就是经济。要有更好的经济，就得把城市建得更好，难的是选哪一座。",
+  },
+  tenetLong: {
+    en: "Reputation is loud. The figures that already exist are quieter. This page lines those figures up so you can see who the numbers favour, and it leaves a blank where a number was never published. It is not a government index, and it does not price a city that has not been measured.",
+    th: "ชื่อเสียงดังกว่าตัวเลข หน้านี้เรียงตัวเลขที่มีอยู่แล้วให้เห็นว่าตัวเลขเข้าข้างใคร และเว้นว่างไว้ตรงที่ไม่เคยมีการเผยแพร่ ที่นี่ไม่ใช่ดัชนีของทางราชการ และไม่ตีราคาเมืองที่ยังไม่ได้วัด",
+    zh: "名声很响，已经公布的数字比较安静。这一页把这些数字排开，让人看见数字偏向谁。没有公布的，就空着。这不是政府指数，也不会给还没测过的城市标价。",
+  },
+  proposed: { en: "proposed", th: "ข้อเสนอ", zh: "提议" },
+  lensLabel: { en: "Lens", th: "เลนส์", zh: "镜头" },
+  weights: { en: "Adjust the weights", th: "ปรับน้ำหนัก", zh: "调整权重" },
+  reset: { en: "Reset weights", th: "คืนน้ำหนักเดิม", zh: "恢复默认权重" },
+  weightOf: { en: "weight", th: "น้ำหนัก", zh: "权重" },
+  chooseProvince: { en: "Choose a province", th: "เลือกจังหวัด", zh: "选择一个府" },
+  notScored: { en: "Not scored", th: "ไม่ได้จัดลำดับ", zh: "没有排名" },
+  source: { en: "Source", th: "แหล่ง", zh: "来源" },
+  gapNone: {
+    en: "No reputation series and no price series are in the file, so the gap between the fundamentals and a reputation or a price is not computed.",
+    th: "ยังไม่มีชุดชื่อเสียงและไม่มีชุดราคาในไฟล์ ช่องว่างระหว่างปัจจัยพื้นฐานกับชื่อเสียงหรือราคาจึงยังไม่ถูกคำนวณ",
+    zh: "文件里没有名声序列，也没有价格序列，所以基本面同名声或价格之间的差距还没有计算。",
+  },
+  withheldProxy: {
+    en: "This lens does not publish a ranking yet. The figure that would be allowed to order the map is not in the file, and a stand-in is not used.",
+    th: "เลนส์นี้ยังไม่เผยแพร่ลำดับ ตัวเลขที่จะได้รับอนุญาตให้จัดลำดับบนแผนที่ยังไม่อยู่ในไฟล์ และไม่ใช้ตัวเลขแทน",
+    zh: "这个镜头还不公布排名。允许给地图排序的数字还不在文件里，也不用替代数字。",
+  },
+  withheldEmpty: {
+    en: "This lens does not publish a ranking. The figures it needs are not in the file.",
+    th: "เลนส์นี้ไม่เผยแพร่ลำดับ ตัวเลขที่ต้องการยังไม่อยู่ในไฟล์",
+    zh: "这个镜头不公布排名。它需要的数字还不在文件里。",
+  },
+  dashed: {
+    en: "A darker province sits higher on this lens. A dashed edge is not scored.",
+    th: "จังหวัดที่เข้มกว่าอยู่สูงกว่าในเลนส์นี้ เส้นประคือไม่ได้จัดลำดับ",
+    zh: "在这个镜头里，颜色更深的府排得更靠前。虚线表示没有排名。",
+  },
+  notInFile: { en: "Not in the file", th: "ยังไม่อยู่ในไฟล์", zh: "还不在文件里" },
+  notHere: { en: "Not published for this province", th: "ไม่ได้เผยแพร่สำหรับจังหวัดนี้", zh: "这个府没有公布" },
+  oneProvince: {
+    en: "Only one province has this figure, so its percentile sits in the middle.",
+    th: "มีจังหวัดเดียวที่มีตัวเลขนี้ เปอร์เซ็นไทล์จึงอยู่ตรงกลาง",
+    zh: "只有一个府有这个数字，所以它的百分位落在中间。",
+  },
+  lastGood: {
+    en: "Last good copy. The refresh failed.",
+    th: "สำเนาล่าสุดที่ใช้ได้ การดึงใหม่ไม่สำเร็จ",
+    zh: "这是上一份还能用的副本。这次刷新失败了。",
+  },
+  coverageLine: { en: "figures in the file", th: "ตัวเลขในไฟล์", zh: "文件中的数字" },
+  zeroWeight: { en: "Weight zero, so it stays out", th: "น้ำหนักเป็นศูนย์ จึงไม่เข้าผลรวม", zh: "权重为零，所以不进总和" },
+  reading: { en: "Reading the file.", th: "กำลังอ่านไฟล์", zh: "正在读取文件。" },
+  failed: { en: "The baseline file did not load.", th: "ไฟล์ฐานไม่โหลด", zh: "基线文件没有载入。" },
+  missingPage: { en: "This page is not on the site.", th: "หน้านี้ไม่มีบนเว็บ", zh: "这个页面不在站上。" },
+  home: { en: "Back to the map", th: "กลับไปที่แผนที่", zh: "回到地图" },
+  skip: { en: "Skip to the map", th: "ข้ามไปที่แผนที่", zh: "跳到地图" },
+  mapLabel: { en: "Thailand by province", th: "ประเทศไทยรายจังหวัด", zh: "按府划分的泰国" },
+  profile: { en: "Baseline", th: "ฐาน", zh: "基线" },
+  why: { en: "Why this place", th: "ทำไมจังหวัดนี้", zh: "为什么是这里" },
+  areasLabel: { en: "A label for the region, not a figure.", th: "ป้ายชื่อภาค ไม่ใช่ตัวเลข", zh: "这是区域的名称，不是一个数字。" },
+  higher: { en: "Higher is better", th: "ยิ่งสูงยิ่งดี", zh: "越高越好" },
+  lower: { en: "Lower is better", th: "ยิ่งต่ำยิ่งดี", zh: "越低越好" },
+  asOf: { en: "as of", th: "ณ วันที่", zh: "截至" },
+  provinces: { en: "provinces", th: "จังหวัด", zh: "个府" },
+  json: { en: "Download JSON", th: "ดาวน์โหลด JSON", zh: "下载 JSON" },
+  csv: { en: "Download CSV", th: "ดาวน์โหลด CSV", zh: "下载 CSV" },
+  compareWith: { en: "Compare", th: "เทียบ", zh: "对照" },
+  samePlace: { en: "Choose two different provinces.", th: "เลือกสองจังหวัดที่ไม่ซ้ำกัน", zh: "请选择两个不同的府。" },
+  and: { en: "and", th: "กับ", zh: "和" },
+  openMethods: { en: "How this lens is built", th: "เลนส์นี้สร้างอย่างไร", zh: "这个镜头怎么做的" },
+  normalisationTitle: { en: "How a lens becomes an order", th: "เลนส์กลายเป็นลำดับอย่างไร", zh: "镜头如何变成名次" },
+  airCert: {
+    en: "The air feed was read even though its certificate did not verify. The numbers are the feed's numbers.",
+    th: "อ่านค่าอากาศทั้งที่ใบรับรองไม่ผ่านการตรวจ ตัวเลขคือตัวเลขของฟีดนั้น",
+    zh: "空气数据是在证书未能核验的情况下读取的。数字是该数据源自己的数字。",
+  },
+} as const;
+
+export function t(lang: Lang, key: keyof typeof chrome): string {
+  return tr(lang, chrome[key]);
+}
+
+export const methodParagraphs: Tr[] = [
+  {
+    en: "Each lens is a weighting you can read, not a secret score. Among the provinces that have a figure, each one gets a percentile. A tie takes the middle of the tie: provinces strictly below, plus half the provinces with the same value, divided by the provinces that have a value, times 100. Where lower is better, the percentile is flipped, so cleaner air gets the higher mark.",
+    th: "แต่ละเลนส์คือน้ำหนักที่อ่านได้ ไม่ใช่คะแนนลับ ในบรรดาจังหวัดที่มีตัวเลข แต่ละจังหวัดได้เปอร์เซ็นไทล์ ค่าที่เท่ากันอยู่ตรงกลางของกลุ่มที่เท่ากัน นับจังหวัดที่ต่ำกว่า บวกครึ่งหนึ่งของจังหวัดที่ค่าเท่ากัน หารด้วยจำนวนจังหวัดที่มีค่า แล้วคูณหนึ่งร้อย ที่ซึ่งค่าน้อยกว่าดีกว่า เปอร์เซ็นไทล์ถูกกลับด้าน อากาศที่สะอาดกว่าจึงได้คะแนนสูงกว่า",
+    zh: "每个镜头都是可以读懂的权重，不是隐藏分数。在有这个数字的府里，每个府得到一个百分位。并列的取并列的中间：严格更低的府，加上数值相同的府的一半，再除以有数值的府数，乘以 100。越低越好的数字，百分位会被反过来，所以更干净的空气得到更高的分。",
+  },
+  {
+    en: "A province with no value is not given zero. The other figures it does have are reweighted so those weights still sum to the same total. A figure that is missing for every province is not in that total at all, and the page says it is not in the file. A weight you set to zero is left out. A yes or no, such as a special zone, does not by itself produce an order.",
+    th: "จังหวัดที่ไม่มีค่าจะไม่ถูกใส่ศูนย์ ตัวเลขอื่นที่จังหวัดนั้นมีจะถูกถ่วงน้ำหนักใหม่ให้ผลรวมเท่าเดิม ตัวเลขที่ขาดทุกจังหวัดจะไม่อยู่ในผลรวมนั้นเลย และหน้านี้บอกว่ายังไม่อยู่ในไฟล์ น้ำหนักที่ตั้งเป็นศูนย์จะถูกตัดออก ใช่หรือไม่ เช่น เขตพิเศษ จะไม่สร้างลำดับด้วยตัวเอง",
+    zh: "没有数值的府不会被记成零。它确实有的其他数字会重新分配权重，使这些权重的总和不变。每个府都缺的数字根本不进这个总和，页面会写明它还不在文件里。你设成零的权重会被留在外面。是否，比如一个特区，本身不会产生名次。",
+  },
+  {
+    en: "The mark beside a province is the weighted mean of those percentiles, from 0 to 100, using only the figures that province actually has. A figure published for only one province sits at 50, the middle of a distribution of one, and it cannot separate cities until a second province has the same figure. This is not an official index.",
+    th: "ค่าข้างจังหวัดคือค่าเฉลี่ยถ่วงน้ำหนักของเปอร์เซ็นไทล์เหล่านั้น จาก 0 ถึง 100 โดยใช้เฉพาะตัวเลขที่จังหวัดนั้นมีจริง ตัวเลขที่มีจังหวัดเดียวจะอยู่ที่ 50 คือตรงกลางของการกระจายที่มีสมาชิกเดียว และจะแยกเมืองไม่ออกจนกว่าจะมีจังหวัดที่สองที่มีตัวเลขเดียวกัน ที่นี่ไม่ใช่ดัชนีทางการ",
+    zh: "府旁边的分数是这些百分位的加权平均，从 0 到 100，只用该府真正有的数字。只公布了一个府的数字会落在 50，也就是只有一个成员的分布的中点，在第二个府有同一个数字之前，它分不出城市。这不是官方指数。",
+  },
+];
+
+export function ratePhrase(lang: Lang, rate: number): string {
+  const pct = num(rate * 100, 1);
+  if (lang === "th") return `${pct} เปอร์เซ็นต์ต่อปี`;
+  if (lang === "zh") return `每年 ${pct} 个百分点`;
+  return `${pct} percent a year`;
+}
+
+export function coveragePhrase(lang: Lang, have: number, of: number): string {
+  if (lang === "th") return `${have} จาก ${of} ${t(lang, "coverageLine")}`;
+  if (lang === "zh") return `${of} 项里的 ${have} 项`;
+  return `${have} of ${of} ${t(lang, "coverageLine")}`;
+}
+
+export function partSentence(lang: Lang, part: Part, lens: Lens, indicators: Indicator[]): string {
+  const component = lens.components.find((item) => item.id === part.id);
+  const name = component ? tr(lang, component.name) : part.id;
+  const evidence = part.evidence;
+  if (!evidence || part.value == null) return name;
+  const publisher = evidence.publisher || "";
+  const when = day(evidence.asOf);
+  if (part.kind === "cagr") {
+    const base = `${name}: ${ratePhrase(lang, part.value)}, ${evidence.fromYear} to ${evidence.toYear}. ${publisher}, ${when}.`;
+    return part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
+  }
+  if (part.kind === "ratio") {
+    const base = `${name}: ${num(part.value, 2)}. ${publisher}, ${when}.`;
+    return part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
+  }
+  const indicatorId = component?.indicatorId || part.id;
+  const indicator = indicators.find((item) => item.id === indicatorId);
+  const unit = indicator ? tr(lang, indicator.unit) : "";
+  const shown = Number.isInteger(part.value) ? num(part.value, 0) : num(part.value, 1);
+  const base = `${name}: ${shown} ${unit}, ${evidence.period}. ${publisher}, ${when}.`.replace(/\s+/g, " ").trim();
+  const withMiddle = part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
+  return evidence.stale ? `${withMiddle} ${t(lang, "lastGood")}` : withMiddle;
+}
+
+export function namesFor(lang: Lang, lens: Lens, ids: string[]): string {
+  return ids
+    .map((id) => {
+      const component = lens.components.find((item) => item.id === id);
+      return component ? tr(lang, component.name) : id;
+    })
+    .join(", ");
+}
+
+export function topParts(row: ScoreRow): Part[] {
+  return row.parts
+    .filter((part) => part.state === "used" || part.state === "flag-used")
+    .slice()
+    .sort((a, b) => (b.contribution || 0) - (a.contribution || 0))
+    .slice(0, 3);
+}
+
+export function gapSentence(lang: Lang, kind: "price" | "reputation", gap: number, percentile: number, places: number, publisher: string, asOf: string): string {
+  const above = gap >= 0;
+  const mag = num(Math.abs(gap), 1);
+  const pct = num(percentile, 0);
+  if (lang === "th") {
+    const side = above ? "สูงกว่า" : "ต่ำกว่า";
+    const what = kind === "price" ? "เปอร์เซ็นไทล์ของราคา" : "เปอร์เซ็นไทล์ของชื่อเสียง";
+    return `ปัจจัยพื้นฐานอยู่${side}${what} ${mag} คะแนน จาก 100 (${pct} จาก 100, ${places} จังหวัด). ${publisher}, ${day(asOf)}.`;
+  }
+  if (lang === "zh") {
+    const side = above ? "高于" : "低于";
+    const what = kind === "price" ? "价格百分位" : "名声百分位";
+    return `基本面${side}${what} ${mag} 分（百分位 ${pct}，${places} 个府）。${publisher}，${day(asOf)}。`;
+  }
+  const side = above ? "above" : "below";
+  const what = kind === "price" ? "the price percentile" : "the reputation percentile";
+  return `Fundamentals sit ${mag} points ${side} ${what} (${pct} out of 100, ${places} provinces). ${publisher}, ${day(asOf)}.`;
+}
+
+export const regions: Record<string, Tr> = {
+  bangkok: { en: "Bangkok", th: "กรุงเทพมหานคร", zh: "曼谷" },
+  central: { en: "Central", th: "ภาคกลาง", zh: "中部" },
+  north: { en: "North", th: "ภาคเหนือ", zh: "北部" },
+  northeast: { en: "Northeast", th: "ภาคตะวันออกเฉียงเหนือ", zh: "东北部" },
+  east: { en: "East", th: "ภาคตะวันออก", zh: "东部" },
+  west: { en: "West", th: "ภาคตะวันตก", zh: "西部" },
+  south: { en: "South", th: "ภาคใต้", zh: "南部" },
+};

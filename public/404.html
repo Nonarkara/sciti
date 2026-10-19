@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>sciti</title>
+    <script>
+      (function () {
+        var segment = /\.github\.io$/.test(window.location.hostname) ? 1 : 0;
+        var l = window.location;
+        var parts = l.pathname.split("/");
+        var base = parts.slice(0, 1 + segment).join("/");
+        var rest = parts.slice(1 + segment).join("/").replace(/&/g, "~and~");
+        l.replace(
+          l.protocol +
+            "//" +
+            l.hostname +
+            (l.port ? ":" + l.port : "") +
+            base +
+            "/?/" +
+            rest +
+            (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+            l.hash,
+        );
+      })();
+    </script>
+  </head>
+  <body>
+    <p>sciti</p>
+  </body>
+</html>
