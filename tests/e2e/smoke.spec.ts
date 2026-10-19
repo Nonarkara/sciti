@@ -142,6 +142,8 @@ test("chinese at 390: title, credit, titled link, one border label", async ({ pa
   await expect(page.getByRole("link", { name: "Manager Online：佛历 2568 年 11 月对柬埔寨边境贸易为零铢" })).toBeVisible();
   await expect(page.getByText("https://mgronline.com")).toHaveCount(0);
   await expect(page.getByText("柬埔寨边境暂停").first()).toBeVisible();
+  const quietOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
+  expect(quietOverflow).toBe(false);
   await page.goto("/place/th-32?lang=zh&lens=quiet");
   await expect(page).toHaveTitle("素林府 · 安静退休 · sciti");
   await expect(page.locator("#profile")).toContainText("国家统计局");

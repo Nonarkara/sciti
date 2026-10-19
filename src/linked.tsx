@@ -15,7 +15,7 @@ const TITLES: Record<string, Tr> = {
 };
 
 export function LinkedText({ lang, text }: { lang: Lang; text: string }) {
-  const parts = text.split(/(https?:\/\/[^\s)]+)/g);
+  const parts = text.split(/(https?:\/\/[^\s)）]+)/g);
   return (
     <>
       {parts.map((part, index) => {
