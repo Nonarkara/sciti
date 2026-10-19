@@ -164,7 +164,6 @@ const chrome = {
   coverageLine: { en: "inputs", th: "ตัวป้อน", zh: "项输入" },
   decreeMark: { en: "Emergency decree", th: "ประกาศฉุกเฉิน", zh: "紧急状态" },
   cambodiaMark: { en: "Cambodia border paused", th: "ชายแดนกัมพูชาหยุด", zh: "柬埔寨边境暂停" },
-  noAirStation: { en: "No air station", th: "ไม่มีสถานีอากาศ", zh: "没有空气站点" },
   noCurrentReading: { en: "No current reading", th: "ไม่มีค่าปัจจุบัน", zh: "没有当前读数" },
   boiAbsent: { en: "Not in the BOI table", th: "ไม่อยู่ในตารางบีโอไอ", zh: "不在 BOI 表上" },
   boiJobsUnreported: { en: "Jobs not reported", th: "ไม่รายงานตำแหน่งงาน", zh: "岗位未报告" },
@@ -297,7 +296,7 @@ export function airQuietNote(lang: Lang, observation: { indicatorId: string; asO
   const shown = whenPhrase(lang, day);
   if (lang === "th") return `ไม่มีการรายงานตั้งแต่ ${shown}`;
   if (lang === "zh") return `自${shown}起未再报告`;
-  return `not reported since ${shown}`;
+  return `Not reported since ${shown}`;
 }
 
 function snapshotClause(lang: Lang, asOf: string | undefined): string {

@@ -95,12 +95,14 @@ export function Home({
   const borderLens = lens.components.some((component) => component.id === "economy.border_trade" && component.weight > 0);
   const cambodiaOn = (row: ScoreRow) => borderLens && (row.placeId === "th-23" || row.placeId === "th-27");
   const quietCambodia = (row: ScoreRow) => lens.id === "quiet" && (row.placeId === "th-32" || row.placeId === "th-33");
-  const airGap = (row: ScoreRow) => row.missingInFile.includes("env.pm25_bad_days");
+  const hasAirReading = (placeId: string) => baseline.observations.some((item) => item.placeId === placeId && item.indicatorId === "env.pm25");
+  const airGap = (row: ScoreRow) => row.missingInFile.includes("env.pm25_bad_days") && !hasAirReading(row.placeId);
+  const listedMissing = (row: ScoreRow) => row.missingInFile.filter((id) => id !== "env.pm25_bad_days" || hasAirReading(row.placeId));
   const marks = (row: ScoreRow) => {
     const bits = [];
     if (decreeOn(row)) bits.push(t(lang, "decreeMark"));
     if (cambodiaOn(row) || quietCambodia(row)) bits.push(t(lang, "cambodiaMark"));
-    if (airGap(row)) bits.push(t(lang, "noAirStation"));
+    if (airGap(row)) bits.push(t(lang, "noCurrentReading"));
     return bits.length ? ` · ${bits.join(" · ")}` : "";
   };
 
@@ -217,10 +219,10 @@ export function Home({
                         {lead.evidence ? <a href={lead.evidence.sourceUrl}>{t(lang, "source")}</a> : null}
                       </p>
                     ) : null}
-                    {airGap(row) ? <p className="meta">{t(lang, "noAirStation")}.</p> : null}
-                    {row.missingInFile.filter((id) => id !== "env.pm25_bad_days").length ? (
+                    {airGap(row) ? <p className="meta">{t(lang, "noCurrentReading")}.</p> : null}
+                    {listedMissing(row).length ? (
                       <p className="meta">
-                        {t(lang, "notHere")}: {namesFor(lang, lens, row.missingInFile.filter((id) => id !== "env.pm25_bad_days"))}.
+                        {t(lang, "notHere")}: {namesFor(lang, lens, listedMissing(row))}.
                       </p>
                     ) : null}
                   </li>
@@ -237,7 +239,7 @@ export function Home({
                     <a href={hrefFor(`/place/${row.placeId}`)}>{names.get(row.placeId)}</a>
                     {marks(row)}
                     <span className="meta"> {coveragePhrase(lang, row.coverage.have, row.coverage.of)}</span>
-                    {airGap(row) ? <span className="meta"> {t(lang, "noAirStation")}.</span> : null}
+                    {airGap(row) ? <span className="meta"> {t(lang, "noCurrentReading")}.</span> : null}
                   </li>
                 ))}
               </ul>

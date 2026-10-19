@@ -134,6 +134,10 @@ test("polish at 1440: title, fields, singular units, titled links, one border la
   const marks = (await page.locator(".ranks").allInnerTexts()).join("\n");
   expect(marks).toContain("Cambodia border paused");
   expect(marks).not.toMatch(/Cambodia border(?! paused)/);
+  expect(marks).not.toContain("No air station");
+  expect(marks).toContain("No current reading");
+  await expect(page.locator(".ranks").getByRole("link", { name: "64. Ang Thong" })).not.toContainText("No current reading");
+  await expect(page.locator(".ranks").getByRole("link", { name: /Phetchaburi/ })).toContainText("No current reading");
   await page.goto("/");
   await page.locator("details summary").click();
   await expectNamedFields(page);
@@ -151,11 +155,11 @@ test("polish at 1440: title, fields, singular units, titled links, one border la
   expect(bangkok).toContain("1 dataset,");
   expect(bangkok).not.toContain("1 datasets");
   await page.goto("/place/th-70");
-  await expect(page.locator("#profile")).toContainText("not reported since 19 September 2026");
+  await expect(page.locator("#profile")).toContainText("Not reported since 19 September 2026");
   await page.goto("/place/th-63");
-  await expect(page.locator("#profile")).toContainText("not reported since 6 October 2026");
+  await expect(page.locator("#profile")).toContainText("Not reported since 6 October 2026");
   await page.goto("/place/th-73");
-  await expect(page.locator("#profile")).toContainText("not reported since 13 October 2026");
+  await expect(page.locator("#profile")).toContainText("Not reported since 13 October 2026");
   await page.goto("/place/th-11");
   await expect(page.locator("#profile")).toContainText("1 area,");
   await expect(page.locator("#profile")).not.toContainText("1 areas");

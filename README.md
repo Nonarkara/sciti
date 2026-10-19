@@ -22,7 +22,7 @@ npm run build
 npm run dev
 ```
 
-`npm test` checks the weighting, the last-good fallback, and the incoming file rules. Nothing here calls a paid API.
+`npm test` checks the weighting, the last-good fallback, and the incoming file rules. Nothing here calls a paid API. It needs Node.js 22.6 or newer (`.nvmrc` is 22) for `--experimental-strip-types`.
 
 ## Languages
 

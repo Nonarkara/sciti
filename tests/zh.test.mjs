@@ -62,7 +62,7 @@ test("English evidence sentences stay in ASCII", () => {
   assert.match(phrase, /^18\.6 % y\/y \(chain volume\), 2023$/);
   assert.equal(
     airQuietNote("en", { indicatorId: "env.pm25", asOf: "2026-09-19T20:00:00+07:00", stations: 1 }, "2026-10-19"),
-    "not reported since 19 September 2026",
+    "Not reported since 19 September 2026",
   );
   assert.equal(airQuietNote("en", { indicatorId: "env.pm25", asOf: "2026-10-19T20:00:00+07:00", stations: 1 }, "2026-10-19"), "");
   assert.equal(airQuietNote("en", { indicatorId: "env.pm25", asOf: "2026-10-06T13:00:00+07:00", stations: 2 }, "2026-10-19"), "");
