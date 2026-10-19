@@ -37,7 +37,7 @@ test("coverage, methods, compare, place and old addresses", async ({ page }) => 
   await page.goto("/methods/growth");
   await expect(page.getByText("Growth seekers")).toBeVisible();
   await page.goto("/methods/families");
-  await expect(page.getByText("proposed")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Families (proposed)" })).toBeVisible();
   await page.goto("/compare");
   await expect(page.locator("table")).toBeVisible();
   await page.goto("/place/th-10");
