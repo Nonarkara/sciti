@@ -61,9 +61,9 @@ const investmentPerPerson = {
   display: bahtPerPerson,
   name: { en: "BOI investment per person", th: "เงินลงทุนบีโอไอต่อคน", zh: "人均 BOI 投资" },
   note: {
-    en: "BOI-approved investment for 2025, in million baht, divided by the latest registered population, shown as baht per person. Provinces the BOI table does not list are left blank. A blank is not a zero. The latest year in the file is used.",
-    th: "มูลค่าส่งเสริมการลงทุนของบีโอไอปี 2025 หน่วยล้านบาท หารด้วยประชากรตามทะเบียนล่าสุด แสดงเป็นบาทต่อคน จังหวัดที่ตารางบีโอไอไม่ได้ลงไว้ จะว่าง ช่องว่างไม่ใช่ศูนย์ ใช้ปีล่าสุดในไฟล์",
-    zh: "2025 年 BOI 批准投资额，单位百万铢，除以最新户籍人口，显示为每人铢。BOI 表上没有的府留空。空着不是零。用文件里的最近一年。",
+    en: "BOI-approved investment for 2025, in million baht, divided by the latest registered population, shown as baht per person. A zero the BOI table publishes is a real zero. Provinces the table does not list are left blank. A blank is not a zero. The latest year in the file is used.",
+    th: "มูลค่าส่งเสริมการลงทุนของบีโอไอปี 2025 หน่วยล้านบาท หารด้วยประชากรตามทะเบียนล่าสุด แสดงเป็นบาทต่อคน ศูนย์ที่ตารางบีโอไอเผยแพร่คือศูนย์จริง จังหวัดที่ตารางไม่ได้ลงไว้ จะว่าง ช่องว่างไม่ใช่ศูนย์ ใช้ปีล่าสุดในไฟล์",
+    zh: "2025 年 BOI 批准投资额，单位百万铢，除以最新户籍人口，显示为每人铢。表上公布的零是真正的零。表上没有的府留空。空着不是零。用文件里的最近一年。",
   },
 };
 
@@ -180,19 +180,28 @@ const students = (weight, decisive) =>
     },
   );
 
-const borderTrade = (weight) =>
-  raw(
+function borderTrade(weight, missingAsZero = false) {
+  const component = raw(
     "economy.border_trade",
     weight,
     "higher",
     true,
     { en: "Border customs trade", th: "การค้าผ่านด่านศุลกากรชายแดน", zh: "边境海关贸易" },
-    {
-      en: "Exports plus imports in 2024 through land and river customs checkpoints, in million baht, from the Customs Department. Only the 25 provinces with such a checkpoint have a figure. The others are blank, not zero. Seaports and airports are not included. In December 2568 the Department of Foreign Trade recorded no border trade with Cambodia, so Sa Kaeo and Trat need a current check before anyone treats them as a border bet. Sangkhla Buri imports, inside the Kanchanaburi figure, likely include pipeline gas.",
-      th: "ส่งออกบวกนำเข้าปี 2024 ผ่านด่านศุลกากรทางบกและทางน้ำ หน่วยล้านบาท จากกรมศุลกากร มีตัวเลขเฉพาะ 25 จังหวัดที่มีด่านแบบนั้น จังหวัดอื่นว่าง ไม่ใช่ศูนย์ ไม่รวมท่าเรือและสนามบิน เดือนธันวาคม 2568 กรมการค้าต่างประเทศบันทึกการค้าชายแดนกับกัมพูชาเป็นศูนย์ จึงต้องตรวจสถานะปัจจุบันก่อนถือว่าสระแก้วหรือตราดเป็นการเดิมพันชายแดน นำเข้าที่สังขละบุรี ซึ่งอยู่ในตัวเลขกาญจนบุรี น่าจะรวมก๊าซทางท่อ",
-      zh: "2024 年经陆路和河路海关关口的出口加进口，单位百万铢，来自海关厅。只有设有这类关口的 25 个府有数字。其余留空，不是零。不含海港和机场。佛历 2568 年 12 月，外贸厅记录对柬埔寨边境贸易为零，所以把沙缴或达叻当成边境赌注之前，要先核对当下的口岸状态。桑卡拉武里的进口算在北碧府的数字里，很可能包括管道天然气。",
-    },
+    missingAsZero
+      ? {
+          en: "Exports plus imports in 2024 through land and river customs checkpoints, in million baht, from the Customs Department. On this lens a province with no such checkpoint scores 0, and that 0 counts as present. It is the absence of a checkpoint, not a published customs total of zero, and the file still leaves the cell blank. Seaports and airports are not included. In December 2568 the Department of Foreign Trade recorded no border trade with Cambodia, so Sa Kaeo and Trat keep their 2024 customs year and carry a status mark. Sangkhla Buri imports, inside the Kanchanaburi figure, likely include pipeline gas.",
+          th: "ส่งออกบวกนำเข้าปี 2024 ผ่านด่านศุลกากรทางบกและทางน้ำ หน่วยล้านบาท จากกรมศุลกากร ในเลนส์นี้ จังหวัดที่ไม่มีด่านแบบนั้นได้ 0 และ 0 นั้นนับว่ามีตัวป้อน มันคือการไม่มีด่าน ไม่ใช่ยอดศุลกากรที่เป็นศูนย์ซึ่งถูกเผยแพร่ และไฟล์ยังเว้นช่องนั้นว่าง ไม่รวมท่าเรือและสนามบิน เดือนธันวาคม 2568 กรมการค้าต่างประเทศบันทึกการค้าชายแดนกับกัมพูชาเป็นศูนย์ ดังนั้นสระแก้วและตราดคงยอดศุลกากรทั้งปี 2024 ไว้ และมีเครื่องหมายสถานะ นำเข้าที่สังขละบุรี ซึ่งอยู่ในตัวเลขกาญจนบุรี น่าจะรวมก๊าซทางท่อ",
+          zh: "2024 年经陆路和河路海关关口的出口加进口，单位百万铢，来自海关厅。在这个镜头里，没有这类关口的府记 0，这个 0 算作已有输入。它是没有关口，不是一份公布出来的海关零，文件里那个格子仍然留空。不含海港和机场。佛历 2568 年 12 月，外贸厅记录对柬埔寨边境贸易为零，所以沙缴和达叻保留 2024 年的海关全年数字，并带有状态标记。桑卡拉武里的进口算在北碧府的数字里，很可能包括管道天然气。",
+        }
+      : {
+          en: "Exports plus imports in 2024 through land and river customs checkpoints, in million baht, from the Customs Department. Only the 25 provinces with such a checkpoint have a figure. The others are blank, not zero. Seaports and airports are not included. In December 2568 the Department of Foreign Trade recorded no border trade with Cambodia, so Sa Kaeo and Trat need a current check before anyone treats them as a border bet. Sangkhla Buri imports, inside the Kanchanaburi figure, likely include pipeline gas.",
+          th: "ส่งออกบวกนำเข้าปี 2024 ผ่านด่านศุลกากรทางบกและทางน้ำ หน่วยล้านบาท จากกรมศุลกากร มีตัวเลขเฉพาะ 25 จังหวัดที่มีด่านแบบนั้น จังหวัดอื่นว่าง ไม่ใช่ศูนย์ ไม่รวมท่าเรือและสนามบิน เดือนธันวาคม 2568 กรมการค้าต่างประเทศบันทึกการค้าชายแดนกับกัมพูชาเป็นศูนย์ จึงต้องตรวจสถานะปัจจุบันก่อนถือว่าสระแก้วหรือตราดเป็นการเดิมพันชายแดน นำเข้าที่สังขละบุรี ซึ่งอยู่ในตัวเลขกาญจนบุรี น่าจะรวมก๊าซทางท่อ",
+          zh: "2024 年经陆路和河路海关关口的出口加进口，单位百万铢，来自海关厅。只有设有这类关口的 25 个府有数字。其余留空，不是零。不含海港和机场。佛历 2568 年 12 月，外贸厅记录对柬埔寨边境贸易为零，所以把沙缴或达叻当成边境赌注之前，要先核对当下的口岸状态。桑卡拉武里的进口算在北碧府的数字里，很可能包括管道天然气。",
+        },
   );
+  if (missingAsZero) component.missingAsZero = true;
+  return component;
+}
 
 const sez = (weight) =>
   flag("economy.sez", weight, { en: "Border special economic zone", th: "เขตเศรษฐกิจพิเศษชายแดน", zh: "边境经济特区" }, {
@@ -359,9 +368,9 @@ function decree(weight) {
       zh: "府内部分地区的紧急状态",
     },
     note: {
-      en: "1 if the Cabinet announcement still covers any district, otherwise 0, for every province. Lower is better. A 0 is not a crime rate and it is not a claim that the province is safe. Provincial crime is a different line and it is still missing. Yala, Pattani and Narathiwat are 1. Songkhla is 0, because this decree does not cover it.",
-      th: "เป็น 1 ถ้าประกาศของคณะรัฐมนตรียังครอบคลุมอำเภอใด ไม่เช่นนั้นเป็น 0 ครบทุกจังหวัด ค่าน้อยกว่าดีกว่า ค่า 0 ไม่ใช่อัตราอาชญากรรม และไม่ใช่ข้ออ้างว่าจังหวัดปลอดภัย อาชญากรรมรายจังหวัดเป็นบรรทัดคนละบรรทัดและยังขาด ยะลา ปัตตานี และนราธิวาสเป็น 1 สงขลาเป็น 0 เพราะประกาศนี้ไม่ครอบคลุมสงขลา",
-      zh: "如果内阁宣布仍覆盖任何一个县，记为 1，否则记为 0，每个府都有值。越低越好。0 不是犯罪率，也不是在说这个府安全。分府犯罪是另一行，仍然缺失。也拉、北大年、那拉提瓦是 1。宋卡是 0，因为这项宣布不包括宋卡。",
+      en: "1 if the Cabinet announcement still covers any district, otherwise 0, for every province. Lower is better. Extension 86 is in force 20 October 2569 through 19 January 2570 (Cabinet, 6 October 2569): Narathiwat except Yi-ngo, Waeng and Sukhirin; Pattani except Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan; Yala except Betong, Yaha, Kabang, Krong Pinang and Raman. A 0 is not a crime rate and it is not a claim that the province is safe. Provincial crime is a different line and it is still missing. Yala, Pattani and Narathiwat are 1. Songkhla is 0, because this decree does not cover it.",
+      th: "เป็น 1 ถ้าประกาศของคณะรัฐมนตรียังครอบคลุมอำเภอใด ไม่เช่นนั้นเป็น 0 ครบทุกจังหวัด ค่าน้อยกว่าดีกว่า การขยายครั้งที่ 86 มีผลตั้งแต่วันที่ 20 ตุลาคม 2569 ถึงวันที่ 19 มกราคม 2570 (มติคณะรัฐมนตรี 6 ตุลาคม 2569) นราธิวาสยกเว้นยี่งอ แว้ง และสุคิริน ปัตตานียกเว้นยะหริ่ง ปะนาเระ มายอ ไม้แก่น ทุ่งยางแดง กะพ้อ และแม่ลาน ยะลายกเว้นเบตง ยะหา กาบัง กรงปินัง และรามัน ค่า 0 ไม่ใช่อัตราอาชญากรรม และไม่ใช่ข้ออ้างว่าจังหวัดปลอดภัย อาชญากรรมรายจังหวัดเป็นบรรทัดคนละบรรทัดและยังขาด ยะลา ปัตตานี และนราธิวาสเป็น 1 สงขลาเป็น 0 เพราะประกาศนี้ไม่ครอบคลุมสงขลา",
+      zh: "如果内阁宣布仍覆盖任何一个县，记为 1，否则记为 0，每个府都有值。越低越好。第 86 次延长自佛历 2569 年 10 月 20 日起至 2570 年 1 月 19 日有效（内阁，2569 年 10 月 6 日）：那拉提瓦除外伊戈、瓦英、素奇林；北大年除外亚灵、巴纳雷、玛腰、迈干、通央登、卡坡、湄兰；也拉除外勿洞、亚哈、甲邦、格龙披南和拉曼。0 不是犯罪率，也不是在说这个府安全。分府犯罪是另一行，仍然缺失。也拉、北大年、那拉提瓦是 1。宋卡是 0，因为这项宣布不包括宋卡。",
     },
   };
 }
@@ -408,28 +417,45 @@ export const LENSES = [
       zh: "哪里空气更干净、医生更近、道路死亡更少、官方地价更低，并且在密度公布之后没那么挤？",
     },
     caveat: {
-      en: "Security data missing. The order uses 2025 bad-air days, doctors per 10,000 people, road deaths per 100,000, the Treasury appraisal, and whether any district is under the emergency decree. Parts of Yala, Pattani and Narathiwat are designated through 19 October 2569, so those three provinces are marked and moved down. That designation is not a count of violent incidents. Songkhla is not under the decree. Four of its districts, Chana, Thepha, Na Thawi and Saba Yoi, were internal-security areas through 30 September 2569, and a later extension is not in this file, so Songkhla is not scored as a security zone. Sixteen provinces have no PM2.5 station and stay blank. The doctor series may leave out private hospitals. Provincial crime, density and hospital beds are named and missing. The appraisal is not a market price.",
-      th: "ข้อมูลความปลอดภัยยังขาด ลำดับใช้วันที่อากาศแย่ปี 2025 แพทย์ต่อหมื่นคน ผู้เสียชีวิตบนถนนต่อแสนคน ราคาประเมินของกรมธนารักษ์ และว่ามีอำเภอใดอยู่ใต้ประกาศสถานการณ์ฉุกเฉินหรือไม่ ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศถึงวันที่ 19 ตุลาคม 2569 ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง การประกาศไม่ใช่จำนวนเหตุรุนแรง สงขลาไม่อยู่ใต้ประกาศนี้ สี่อำเภอ คือจะนะ เทพา นาทวี และสะบ้าย้อย เป็นพื้นที่ความมั่นคงถึงวันที่ 30 กันยายน 2569 และยังไม่มีการขยายหลังวันนั้นในไฟล์นี้ จึงไม่ได้ให้คะแนนสงขลาเป็นเขตความมั่นคง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างไว้ ชุดข้อมูลแพทย์อาจไม่รวมโรงพยาบาลเอกชน อาชญากรรมรายจังหวัด ความหนาแน่น และเตียงผู้ป่วยถูกตั้งชื่อไว้และยังขาด ราคาประเมินไม่ใช่ราคาตลาด",
-      zh: "安全数据缺失。名次用的是 2025 年超标天数、每万人医生数、每十万人道路死亡、国库厅评估价，以及是否有县处于紧急状态。也拉、北大年、那拉提瓦的部分地区被划入，直至佛历 2569 年 10 月 19 日，所以这三个府被标出并下移。这项划定不是暴力事件的计数。宋卡不在这项宣布里。它的四个县——乍那、特帕、那他威、沙拜依——曾是内部安全区，到佛历 2569 年 9 月 30 日为止，这份文件里没有之后的延长，所以宋卡不按安全区计分。十六个府没有 PM2.5 站点，保持空白。医生序列可能不包括私立医院。分府犯罪、密度和医院床位有名字，但还缺。评估价不是市场价。",
+      en: "Security data missing. The order uses 2025 bad-air days, doctors per 10,000 people, road deaths per 100,000, the Treasury appraisal, and whether any district is under the emergency decree. Parts of Yala, Pattani and Narathiwat are designated under extension 86, in force 20 October 2569 through 19 January 2570 (Cabinet, 6 October 2569). Raman is among Yala's exceptions, so those three provinces are marked and moved down. That designation is not a count of violent incidents. Songkhla is not under the decree. Four of its districts, Chana, Thepha, Na Thawi and Saba Yoi, were internal-security areas through 30 September 2569, and a later extension is not in this file, so Songkhla is not scored as a security zone. Sixteen provinces have no PM2.5 station and stay blank. The doctor series may leave out private hospitals. Provincial crime, density and hospital beds are named and missing. The appraisal is not a market price.",
+      th: "ข้อมูลความปลอดภัยยังขาด ลำดับใช้วันที่อากาศแย่ปี 2025 แพทย์ต่อหมื่นคน ผู้เสียชีวิตบนถนนต่อแสนคน ราคาประเมินของกรมธนารักษ์ และว่ามีอำเภอใดอยู่ใต้ประกาศสถานการณ์ฉุกเฉินหรือไม่ ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศตามการขยายครั้งที่ 86 มีผลตั้งแต่วันที่ 20 ตุลาคม 2569 ถึงวันที่ 19 มกราคม 2570 (มติคณะรัฐมนตรี 6 ตุลาคม 2569) และรามันอยู่ในอำเภอยกเว้นของยะลา ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง การประกาศไม่ใช่จำนวนเหตุรุนแรง สงขลาไม่อยู่ใต้ประกาศนี้ สี่อำเภอ คือจะนะ เทพา นาทวี และสะบ้าย้อย เป็นพื้นที่ความมั่นคงถึงวันที่ 30 กันยายน 2569 และยังไม่มีการขยายหลังวันนั้นในไฟล์นี้ จึงไม่ได้ให้คะแนนสงขลาเป็นเขตความมั่นคง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างไว้ ชุดข้อมูลแพทย์อาจไม่รวมโรงพยาบาลเอกชน อาชญากรรมรายจังหวัด ความหนาแน่น และเตียงผู้ป่วยถูกตั้งชื่อไว้และยังขาด ราคาประเมินไม่ใช่ราคาตลาด",
+      zh: "安全数据缺失。名次用的是 2025 年超标天数、每万人医生数、每十万人道路死亡、国库厅评估价，以及是否有县处于紧急状态。也拉、北大年、那拉提瓦的部分地区被划入，按第 86 次延长，自佛历 2569 年 10 月 20 日起至 2570 年 1 月 19 日（内阁，2569 年 10 月 6 日）。拉曼列入也拉的除外县，所以这三个府被标出并下移。这项划定不是暴力事件的计数。宋卡不在这项宣布里。它的四个县——乍那、特帕、那他威、沙拜依——曾是内部安全区，到佛历 2569 年 9 月 30 日为止，这份文件里没有之后的延长，所以宋卡不按安全区计分。十六个府没有 PM2.5 站点，保持空白。医生序列可能不包括私立医院。分府犯罪、密度和医院床位有名字，但还缺。评估价不是市场价。",
     },
     components: [badAir(20, true), doctors(20, true), deaths(20, true), land(20, true), decree(40), density],
   },
   {
-    id: "talent",
+    id: "talent-border",
     proposed: false,
     rankGate: "decisive",
-    name: { en: "Talent and the border", th: "คนมีฝีมือกับชายแดน", zh: "人才与边境" },
+    name: { en: "Talent and border investment", th: "คนมีฝีมือและการลงทุนชายแดน", zh: "人才与边境投资" },
     question: {
-      en: "Where are there tertiary students, and where does a border checkpoint, a Border SEZ, or the Eastern Economic Corridor show up in the file?",
-      th: "ที่ไหนมีนักศึกษา และที่ไหนด่านชายแดน เขตเศรษฐกิจพิเศษชายแดน หรือระเบียงเศรษฐกิจภาคตะวันออกโผล่ในไฟล์",
-      zh: "哪里有高等教育在校生，哪里的边境关口、边境经济特区或东部经济走廊出现在文件里？",
+      en: "Where do tertiary students, a border checkpoint, a Border SEZ, or the Eastern Economic Corridor show up together?",
+      th: "นักศึกษา ด่านชายแดน เขตเศรษฐกิจพิเศษชายแดน หรือระเบียงเศรษฐกิจภาคตะวันออก อยู่พร้อมกันที่ไหน",
+      zh: "高等教育在校生、边境关口、边境经济特区或东部经济走廊，在哪里同时出现？",
     },
     caveat: {
-      en: "The order uses tertiary students per 1,000 people, 2024 border customs trade where a land or river checkpoint exists, and the SEZ and EEC flags. No checkpoint is not stored as zero. In December 2568 border trade with Cambodia was zero in the Department of Foreign Trade file, so Sa Kaeo and Trat carry a current-status note. Sangkhla Buri imports, in the Kanchanaburi total, likely include pipeline gas. Graduates and average wages are not in the file. A flag does not rank the map by itself.",
-      th: "ลำดับใช้นักศึกษาต่อพันคน การค้าผ่านด่านศุลกากรปี 2024 เฉพาะจังหวัดที่มีด่านบกหรือด่านน้ำ และธงเขตเศรษฐกิจพิเศษกับอีอีซี จังหวัดที่ไม่มีด่านไม่ได้ถูกเก็บเป็นศูนย์ เดือนธันวาคม 2568 การค้าชายแดนกับกัมพูชาเป็นศูนย์ในไฟล์กรมการค้าต่างประเทศ ดังนั้นสระแก้วและตราดมีหมายเหตุสถานะปัจจุบัน นำเข้าที่สังขละบุรีในยอดกาญจนบุรี น่าจะรวมก๊าซทางท่อ ผู้สำเร็จการศึกษาและค่าจ้างเฉลี่ยยังไม่อยู่ในไฟล์ ธงเพียงอย่างเดียวไม่จัดลำดับแผนที่",
-      zh: "名次用的是每千人高等教育在校生、2024 年有陆路或河路关口的府的边境海关贸易，以及特区和东部经济走廊的标记。没有关口不会被存成零。佛历 2568 年 12 月，外贸厅文件里对柬埔寨的边境贸易是零，所以沙缴和达叻带有一条当下状态的说明。北碧合计里的桑卡拉武里进口，很可能包括管道气。毕业生和平均工资还不在文件里。单独一个标记不会给地图排序。",
+      en: "This is the talent-plus-border persona. The order uses tertiary students per 1,000 people, 2024 border customs trade, and the SEZ and EEC flags. A province with no land or river checkpoint scores 0 on the border line, and that 0 counts as present, so a missing checkpoint does not drop the province out of the order. The 0 is not written into the file. In December 2568 border trade with Cambodia was zero in the Department of Foreign Trade file, so Sa Kaeo and Trat keep their 2024 customs year and carry a status mark. Sangkhla Buri imports, in the Kanchanaburi total, likely include pipeline gas. Graduates and average wages are not in the file. A flag does not rank the map by itself. The students-only order is the Talent lens.",
+      th: "นี่คือเลนส์คนมีฝีมือบวกการลงทุนชายแดน ลำดับใช้นักศึกษาต่อพันคน การค้าผ่านด่านศุลกากรปี 2024 และธงเขตเศรษฐกิจพิเศษกับอีอีซี จังหวัดที่ไม่มีด่านบกหรือด่านน้ำได้ 0 ในบรรทัดชายแดน และ 0 นั้นนับว่ามีตัวป้อน ดังนั้นด่านที่ไม่มีไม่ได้ทำให้จังหวัดหลุดจากลำดับ ไฟล์ไม่ได้เก็บ 0 นั้น เดือนธันวาคม 2568 การค้าชายแดนกับกัมพูชาเป็นศูนย์ในไฟล์กรมการค้าต่างประเทศ ดังนั้นสระแก้วและตราดคงยอดศุลกากรปี 2024 และมีเครื่องหมายสถานะ นำเข้าที่สังขละบุรีในยอดกาญจนบุรี น่าจะรวมก๊าซทางท่อ ผู้สำเร็จการศึกษาและค่าจ้างเฉลี่ยยังไม่อยู่ในไฟล์ ธงเพียงอย่างเดียวไม่จัดลำดับแผนที่ ลำดับที่ใช้แต่นักศึกษาคือเลนส์คนมีฝีมือ",
+      zh: "这是人才加边境投资这个人物。名次用每千人高等教育在校生、2024 年边境海关贸易，以及特区和东部经济走廊的标记。没有陆路或河路关口的府，在边境这一行记 0，这个 0 算作已有输入，所以缺少关口不会把该府挤出名次。这个 0 不写进文件。佛历 2568 年 12 月，外贸厅文件里对柬埔寨的边境贸易是零，所以沙缴和达叻保留 2024 年的海关全年数字，并带有状态标记。北碧合计里的桑卡拉武里进口，很可能包括管道气。毕业生和平均工资还不在文件里。单独一个标记不会给地图排序。只用在校生的名次是人才镜头。",
     },
-    components: [students(40, true), borderTrade(30), sez(15), eec(15)],
+    components: [students(40, true), borderTrade(30, true), sez(15), eec(15)],
+  },
+  {
+    id: "talent",
+    proposed: true,
+    rankGate: "decisive",
+    name: { en: "Talent", th: "คนมีฝีมือ", zh: "人才" },
+    question: {
+      en: "Where are there tertiary students, with the border left out of the sum?",
+      th: "ที่ไหนมีนักศึกษา เมื่อไม่เอาชายแดนเข้าไปในผลรวม",
+      zh: "如果不把边境放进总和，哪里有高等教育在校生？",
+    },
+    caveat: {
+      en: "Proposed. The order uses tertiary students per 1,000 people and nothing else, so every province with that figure is ranked. Three provinces have no campus in the file and stay blank. A blank is not a zero. Border trade, the SEZ and the EEC are not inputs here. They live on Border trade and on Talent and border investment, where a province with no checkpoint scores 0. Graduates are not in the file.",
+      th: "ข้อเสนอ ลำดับใช้นักศึกษาต่อพันคนเพียงอย่างเดียว ดังนั้นทุกจังหวัดที่มีตัวเลขนั้นถูกจัดลำดับ สามจังหวัดไม่มีวิทยาเขตในไฟล์และว่างไว้ ช่องว่างไม่ใช่ศูนย์ การค้าชายแดน เขตเศรษฐกิจพิเศษ และอีอีซีไม่ใช่ตัวป้อนที่นี่ สิ่งเหล่านั้นอยู่ในเลนส์การค้าชายแดน และเลนส์คนมีฝีมือและการลงทุนชายแดน ซึ่งจังหวัดที่ไม่มีด่านได้ 0 ผู้สำเร็จการศึกษายังไม่อยู่ในไฟล์",
+      zh: "这是提议。名次只用每千人高等教育在校生，所以每一个有这个数字的府都进入名次。三个府在文件里没有校区，保持空白。空白不是零。边境贸易、经济特区和东部经济走廊不是这里的输入。它们在边境贸易镜头，以及人才与边境投资镜头里，没有关口的府在那里记 0。毕业生还不在文件里。",
+    },
+    components: [students(100, true)],
   },
   {
     id: "families",
@@ -442,28 +468,45 @@ export const LENSES = [
       zh: "已经公布的医生、空气、道路、互联网、在校生、官方地价和失业数字，会把一个家庭指向哪里？",
     },
     caveat: {
-      en: "Proposed. Security data missing. The figures that are in the file do order the map, including the emergency-decree line: parts of Yala, Pattani and Narathiwat are designated through 19 October 2569, and those three are marked and moved down. That is not a crime count. Songkhla is not under the decree. Four districts, Chana, Thepha, Na Thawi and Saba Yoi, were internal-security areas through 30 September 2569, and no later extension is in this file. School quality, childcare, provincial crime and hospital beds are still missing, so this is not a complete answer for a family. The doctor series may leave out private hospitals. The appraisal is not a market price.",
-      th: "ข้อเสนอ ข้อมูลความปลอดภัยยังขาด ตัวเลขที่อยู่ในไฟล์จัดลำดับแผนที่ได้ รวมบรรทัดประกาศสถานการณ์ฉุกเฉิน ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศถึงวันที่ 19 ตุลาคม 2569 และสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง นั่นไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ สี่อำเภอ จะนะ เทพา นาทวี และสะบ้าย้อย เป็นพื้นที่ความมั่นคงถึงวันที่ 30 กันยายน 2569 และไม่มีการขยายหลังวันนั้นในไฟล์นี้ คุณภาพโรงเรียน สถานเลี้ยงเด็ก อาชญากรรมรายจังหวัด และเตียงผู้ป่วยยังขาด ดังนั้นนี่ไม่ใช่คำตอบครบสำหรับครอบครัว ชุดข้อมูลแพทย์อาจไม่รวมโรงพยาบาลเอกชน ราคาประเมินไม่ใช่ราคาตลาด",
-      zh: "这是提议。安全数据缺失。文件里已有的数字会给地图排序，其中包括紧急状态这一行：也拉、北大年、那拉提瓦的部分地区被划入，直至佛历 2569 年 10 月 19 日，这三个府被标出并下移。这不是犯罪计数。宋卡不在这项宣布里。乍那、特帕、那他威、沙拜依四个县曾是内部安全区，到佛历 2569 年 9 月 30 日为止，文件里没有之后的延长。学校质量、托幼、分府犯罪和医院床位仍然缺失，所以这不是给一个家庭的完整答案。医生序列可能不包括私立医院。评估价不是市场价。",
+      en: "Proposed. Security data missing. The figures that are in the file do order the map, including the emergency-decree line: parts of Yala, Pattani and Narathiwat are designated under extension 86, in force 20 October 2569 through 19 January 2570 (Cabinet, 6 October 2569). Raman is among Yala's exceptions, and those three are marked and moved down. That is not a crime count. Songkhla is not under the decree. Four districts, Chana, Thepha, Na Thawi and Saba Yoi, were internal-security areas through 30 September 2569, and no later extension is in this file. School quality, childcare, provincial crime and hospital beds are still missing, so this is not a complete answer for a family. The doctor series may leave out private hospitals. The appraisal is not a market price.",
+      th: "ข้อเสนอ ข้อมูลความปลอดภัยยังขาด ตัวเลขที่อยู่ในไฟล์จัดลำดับแผนที่ได้ รวมบรรทัดประกาศสถานการณ์ฉุกเฉิน ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศตามการขยายครั้งที่ 86 มีผลตั้งแต่วันที่ 20 ตุลาคม 2569 ถึงวันที่ 19 มกราคม 2570 (มติคณะรัฐมนตรี 6 ตุลาคม 2569) และรามันอยู่ในอำเภอยกเว้นของยะลา และสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง นั่นไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ สี่อำเภอ จะนะ เทพา นาทวี และสะบ้าย้อย เป็นพื้นที่ความมั่นคงถึงวันที่ 30 กันยายน 2569 และไม่มีการขยายหลังวันนั้นในไฟล์นี้ คุณภาพโรงเรียน สถานเลี้ยงเด็ก อาชญากรรมรายจังหวัด และเตียงผู้ป่วยยังขาด ดังนั้นนี่ไม่ใช่คำตอบครบสำหรับครอบครัว ชุดข้อมูลแพทย์อาจไม่รวมโรงพยาบาลเอกชน ราคาประเมินไม่ใช่ราคาตลาด",
+      zh: "这是提议。安全数据缺失。文件里已有的数字会给地图排序，其中包括紧急状态这一行：也拉、北大年、那拉提瓦的部分地区被划入，按第 86 次延长，自佛历 2569 年 10 月 20 日起至 2570 年 1 月 19 日（内阁，2569 年 10 月 6 日）。拉曼列入也拉的除外县，这三个府被标出并下移。这不是犯罪计数。宋卡不在这项宣布里。乍那、特帕、那他威、沙拜依四个县曾是内部安全区，到佛历 2569 年 9 月 30 日为止，文件里没有之后的延长。学校质量、托幼、分府犯罪和医院床位仍然缺失，所以这不是给一个家庭的完整答案。医生序列可能不包括私立医院。评估价不是市场价。",
     },
     components: [doctors(15, true), badAir(15, true), deaths(15, true), internet(15), students(10, true), land(15, true), unemployment, decree(40), schools, beds, crime],
   },
   {
-    id: "logistics",
+    id: "industry",
     proposed: true,
     rankGate: "decisive",
-    name: { en: "Logistics and industry", th: "โลจิสติกส์และอุตสาหกรรม", zh: "物流与产业" },
+    name: { en: "Industry and ports", th: "อุตสาหกรรมและท่าเรือ", zh: "产业与港口" },
     question: {
-      en: "Where do border trade, approved investment, electricity, a labour pool and a lower statutory wage show up together?",
-      th: "การค้าชายแดน เงินลงทุนที่ได้รับส่งเสริม ไฟฟ้า กลุ่มแรงงาน และค่าจ้างตามกฎหมายที่ต่ำกว่า อยู่พร้อมกันที่ไหน",
-      zh: "边境贸易、获批投资、用电、劳动力规模和更低的法定工资，在哪里同时出现？",
+      en: "Where do approved investment, electricity, a labour pool and a lower statutory wage show up, with the border left out?",
+      th: "เงินลงทุนที่ได้รับส่งเสริม ไฟฟ้า กลุ่มแรงงาน และค่าจ้างตามกฎหมายที่ต่ำกว่า อยู่ที่ไหน เมื่อไม่เอาชายแดนเข้าไป",
+      zh: "如果不计入边境，获批投资、用电、劳动力规模和更低的法定工资出现在哪里？",
     },
     caveat: {
-      en: "Proposed. The order uses border trade, BOI investment per person, 2023 electricity per person, the labour force and the January 2568 minimum wage, plus the SEZ and EEC flags. Port distance, rail distance, truck volumes and industrial-estate prices are not in the file. Electricity is all use, not factories alone. The Cambodia note on Sa Kaeo and Trat, and the pipeline note on Kanchanaburi, apply here too. The wage is a statutory floor as of January 2568, not an average wage.",
-      th: "ข้อเสนอ ลำดับใช้การค้าชายแดน เงินลงทุนบีโอไอต่อคน ไฟฟ้าต่อคนปี 2023 กำลังแรงงาน และค่าจ้างขั้นต่ำเดือนมกราคม 2568 พร้อมธงเขตเศรษฐกิจพิเศษและอีอีซี ระยะทางถึงท่าเรือ ระยะทางรถไฟ ปริมาณรถบรรทุก และราคาที่ดินนิคม ยังไม่อยู่ในไฟล์ ไฟฟ้าคือการใช้ทั้งหมด ไม่ใช่เฉพาะโรงงาน หมายเหตุกัมพูชาของสระแก้วและตราด และหมายเหตุท่อก๊าซของกาญจนบุรี ใช้ที่นี่ด้วย ค่าจ้างเป็นขั้นต่ำตามกฎหมาย ณ มกราคม 2568 ไม่ใช่ค่าจ้างเฉลี่ย",
-      zh: "这是提议。名次用边境贸易、人均 BOI 投资、2023 年人均用电、劳动力，以及佛历 2568 年 1 月的最低工资，再加上特区和东部经济走廊的标记。到港口的距离、铁路距离、货车运量和工业区地价还不在文件里。用电是全部用电，不是只有工厂。沙缴和达叻的柬埔寨说明，以及北碧的管道气说明，在这里同样适用。工资是截至 2568 年 1 月的法定下限，不是平均工资。",
+      en: "Proposed. The order uses BOI investment per person, 2023 electricity per person, the labour force and the January 2568 minimum wage, plus the SEZ and EEC flags. Border customs trade is not an input, so a province with no checkpoint is not dropped behind a smaller border province. That comparison lives on Border trade, where no checkpoint scores 0. Port distance, rail distance, truck volumes and industrial-estate prices are not in the file. Electricity is all use, not factories alone. A province the BOI table omits is blank on the investment line, not zero. The wage is a statutory floor as of January 2568, not an average wage.",
+      th: "ข้อเสนอ ลำดับใช้เงินลงทุนบีโอไอต่อคน ไฟฟ้าต่อคนปี 2023 กำลังแรงงาน และค่าจ้างขั้นต่ำเดือนมกราคม 2568 พร้อมธงเขตเศรษฐกิจพิเศษและอีอีซี การค้าผ่านด่านศุลกากรไม่ใช่ตัวป้อน ดังนั้นจังหวัดที่ไม่มีด่านจะไม่ถูกดันไปอยู่หลังจังหวัดชายแดนที่เล็กกว่า การเทียบนั้นอยู่ในเลนส์การค้าชายแดน ซึ่งจังหวัดที่ไม่มีด่านได้ 0 ระยะทางถึงท่าเรือ ระยะทางรถไฟ ปริมาณรถบรรทุก และราคาที่ดินนิคม ยังไม่อยู่ในไฟล์ ไฟฟ้าคือการใช้ทั้งหมด ไม่ใช่เฉพาะโรงงาน จังหวัดที่ตารางบีโอไอไม่ได้ลง จะว่างในบรรทัดการลงทุน ไม่ใช่ศูนย์ ค่าจ้างเป็นขั้นต่ำตามกฎหมาย ณ มกราคม 2568 ไม่ใช่ค่าจ้างเฉลี่ย",
+      zh: "这是提议。名次用人均 BOI 投资、2023 年人均用电、劳动力，以及佛历 2568 年 1 月的最低工资，再加上特区和东部经济走廊的标记。边境海关贸易不是输入，所以没有关口的府不会被排到较小的边境府后面。那个比较在边境贸易镜头里，没有关口记 0。到港口的距离、铁路距离、货车运量和工业区地价还不在文件里。用电是全部用电，不是只有工厂。BOI 表上没有的府，投资这一行是空白，不是零。工资是截至 2568 年 1 月的法定下限，不是平均工资。",
     },
-    components: [borderTrade(25), { ...investmentPerPerson, weight: 20 }, electricityPerPerson, labour, wage(15), sez(5), eec(5)],
+    components: [{ ...investmentPerPerson, weight: 30 }, { ...electricityPerPerson, weight: 20 }, { ...labour, weight: 20 }, wage(20), sez(5), eec(5)],
+  },
+  {
+    id: "border",
+    proposed: true,
+    rankGate: "decisive",
+    name: { en: "Border trade", th: "การค้าชายแดน", zh: "边境贸易" },
+    question: {
+      en: "Where does land and river customs trade show up, once a province with no checkpoint is allowed to score zero?",
+      th: "การค้าผ่านด่านศุลกากรทางบกและทางน้ำอยู่ที่ไหน เมื่อจังหวัดที่ไม่มีด่านได้ศูนย์ได้",
+      zh: "当没有关口的府可以记零时，陆路和河路海关贸易出现在哪里？",
+    },
+    caveat: {
+      en: "Proposed. The order uses 2024 border customs trade. A province with no land or river checkpoint scores 0, and that 0 counts as present, so it is not a missing input and it cannot lift another province by being blank. The 0 is not written into the customs file. Sa Kaeo and Trat keep the 2024 customs totals and are marked because, in December 2568, the Department of Foreign Trade recorded no border trade with Cambodia. Sangkhla Buri imports, inside the Kanchanaburi total, likely include pipeline gas. The Border SEZ flag is a yes or no beside the trade figure. Seaports and airports are not included.",
+      th: "ข้อเสนอ ลำดับใช้การค้าผ่านด่านศุลกากรปี 2024 จังหวัดที่ไม่มีด่านบกหรือด่านน้ำได้ 0 และ 0 นั้นนับว่ามีตัวป้อน ดังนั้นมันไม่ใช่ตัวป้อนที่หายไป และช่องว่างจะยกจังหวัดอื่นขึ้นไม่ได้ ไฟล์ศุลกากรไม่ได้เก็บ 0 นั้น สระแก้วและตราดคงยอดศุลกากรปี 2024 และถูกทำเครื่องหมาย เพราะเดือนธันวาคม 2568 กรมการค้าต่างประเทศบันทึกการค้าชายแดนกับกัมพูชาเป็นศูนย์ นำเข้าที่สังขละบุรีในยอดกาญจนบุรี น่าจะรวมก๊าซทางท่อ ธงเขตเศรษฐกิจพิเศษชายแดนเป็นใช่หรือไม่คู่กับตัวเลขการค้า ไม่รวมท่าเรือและสนามบิน",
+      zh: "这是提议。名次用 2024 年的边境海关贸易。没有陆路或河路关口的府记 0，这个 0 算作已有输入，所以它不是缺失的输入，空白也不能把别的府抬上去。海关文件里不写这个 0。沙缴和达叻保留 2024 年的海关合计，并被标出，因为佛历 2568 年 12 月外贸厅记录对柬埔寨的边境贸易为零。北碧合计里的桑卡拉武里进口很可能包括管道气。边境经济特区的标记是贸易数字旁边的是否。不含海港和机场。",
+    },
+    components: [borderTrade(80, true), sez(20)],
   },
   {
     id: "remote",
@@ -476,9 +519,9 @@ export const LENSES = [
       zh: "家庭互联网、更干净的空气、更低的官方评估价、新公司、外国游客和医生，在哪里碰在一起？",
     },
     caveat: {
-      en: "Proposed. Those figures are in the file, and so is the emergency-decree line. Parts of Yala, Pattani and Narathiwat are designated through 19 October 2569, so those three are marked and moved down. That designation is not a crime count. Songkhla is not under the decree. Household internet is not a measured broadband speed, and the Treasury appraisal is not a rent. Coworking counts, market rents and provincial crime are not in the file.",
-      th: "ข้อเสนอ ตัวเลขเหล่านั้นอยู่ในไฟล์ และมีบรรทัดประกาศสถานการณ์ฉุกเฉินด้วย ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศถึงวันที่ 19 ตุลาคม 2569 ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง การประกาศไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ อินเทอร์เน็ตในครัวเรือนไม่ใช่ความเร็วบรอดแบนด์ที่วัดได้ และราคาประเมินของกรมธนารักษ์ไม่ใช่ค่าเช่า จำนวนโคเวิร์กกิง ค่าเช่าตลาด และอาชญากรรมรายจังหวัดยังไม่อยู่ในไฟล์",
-      zh: "这是提议。那些数字在文件里，紧急状态这一行也在。也拉、北大年、那拉提瓦的部分地区被划入，直至佛历 2569 年 10 月 19 日，所以这三个府被标出并下移。这项划定不是犯罪计数。宋卡不在这项宣布里。家庭互联网不是测得的宽带速率，国库厅评估价也不是租金。联合办公的数量、市场租金和分府犯罪还不在文件里。",
+      en: "Proposed. Those figures are in the file, and so is the emergency-decree line. Parts of Yala, Pattani and Narathiwat are designated under extension 86, in force 20 October 2569 through 19 January 2570 (Cabinet, 6 October 2569). Raman is among Yala's exceptions, so those three are marked and moved down. That designation is not a crime count. Songkhla is not under the decree. Household internet is not a measured broadband speed, and the Treasury appraisal is not a rent. Coworking counts, market rents and provincial crime are not in the file.",
+      th: "ข้อเสนอ ตัวเลขเหล่านั้นอยู่ในไฟล์ และมีบรรทัดประกาศสถานการณ์ฉุกเฉินด้วย ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศตามการขยายครั้งที่ 86 มีผลตั้งแต่วันที่ 20 ตุลาคม 2569 ถึงวันที่ 19 มกราคม 2570 (มติคณะรัฐมนตรี 6 ตุลาคม 2569) และรามันอยู่ในอำเภอยกเว้นของยะลา ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง การประกาศไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ อินเทอร์เน็ตในครัวเรือนไม่ใช่ความเร็วบรอดแบนด์ที่วัดได้ และราคาประเมินของกรมธนารักษ์ไม่ใช่ค่าเช่า จำนวนโคเวิร์กกิง ค่าเช่าตลาด และอาชญากรรมรายจังหวัดยังไม่อยู่ในไฟล์",
+      zh: "这是提议。那些数字在文件里，紧急状态这一行也在。也拉、北大年、那拉提瓦的部分地区被划入，按第 86 次延长，自佛历 2569 年 10 月 20 日起至 2570 年 1 月 19 日（内阁，2569 年 10 月 6 日）。拉曼列入也拉的除外县，所以这三个府被标出并下移。这项划定不是犯罪计数。宋卡不在这项宣布里。家庭互联网不是测得的宽带速率，国库厅评估价也不是租金。联合办公的数量、市场租金和分府犯罪还不在文件里。",
     },
     components: [internet(25), badAir(20, true), land(20, true), { ...newFirms, weight: 15 }, visitorsForeign(10), doctors(10, true), decree(40)],
   },
@@ -493,9 +536,9 @@ export const LENSES = [
       zh: "收入、外国游客、酒店入住率、森林和更干净的空气，出现在哪一份已公布的文件里？",
     },
     caveat: {
-      en: "Proposed. Receipts per person, foreign visitors, occupancy, forest cover, bad-air days and the emergency-decree line are in the order. Parts of Yala, Pattani and Narathiwat are designated through 19 October 2569, so those three are marked and moved down. That is not a crime count. Songkhla is not under the decree. Seasonality and airport seats are not in the file. Forest cover is not a coastline. Sixteen provinces have no PM2.5 station and stay blank on that line. A blank does not lift them above a province that has every input.",
-      th: "ข้อเสนอ รายได้ต่อคน ผู้มาเยือนชาวต่างชาติ อัตราเข้าพัก พื้นที่ป่า วันที่อากาศแย่ และบรรทัดประกาศสถานการณ์ฉุกเฉินอยู่ในลำดับ ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศถึงวันที่ 19 ตุลาคม 2569 ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง นั่นไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ ฤดูกาลและที่นั่งบนเครื่องบินยังไม่อยู่ในไฟล์ พื้นที่ป่าไม่ใช่ชายฝั่ง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างในบรรทัดนั้น ช่องว่างไม่ได้ยกจังหวัดนั้นให้อยู่เหนือจังหวัดที่มีครบทุกตัวป้อน",
-      zh: "这是提议。人均收入、外国游客、入住率、森林覆盖、超标天数和紧急状态这一行都进入名次。也拉、北大年、那拉提瓦的部分地区被划入，直至佛历 2569 年 10 月 19 日，所以这三个府被标出并下移。这不是犯罪计数。宋卡不在这项宣布里。淡旺季和机场座位还不在文件里。森林覆盖不是海岸线。十六个府没有 PM2.5 站点，那一行保持空白。空白不会把这个府抬到一项输入都齐的府上面。",
+      en: "Proposed. Receipts per person, foreign visitors, occupancy, forest cover, bad-air days and the emergency-decree line are in the order. Parts of Yala, Pattani and Narathiwat are designated under extension 86, in force 20 October 2569 through 19 January 2570 (Cabinet, 6 October 2569). Raman is among Yala's exceptions, so those three are marked and moved down. That is not a crime count. Songkhla is not under the decree. Seasonality and airport seats are not in the file. Forest cover is not a coastline. Sixteen provinces have no PM2.5 station and stay blank on that line. A blank does not lift them above a province that has every input.",
+      th: "ข้อเสนอ รายได้ต่อคน ผู้มาเยือนชาวต่างชาติ อัตราเข้าพัก พื้นที่ป่า วันที่อากาศแย่ และบรรทัดประกาศสถานการณ์ฉุกเฉินอยู่ในลำดับ ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศตามการขยายครั้งที่ 86 มีผลตั้งแต่วันที่ 20 ตุลาคม 2569 ถึงวันที่ 19 มกราคม 2570 (มติคณะรัฐมนตรี 6 ตุลาคม 2569) และรามันอยู่ในอำเภอยกเว้นของยะลา ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง นั่นไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ ฤดูกาลและที่นั่งบนเครื่องบินยังไม่อยู่ในไฟล์ พื้นที่ป่าไม่ใช่ชายฝั่ง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างในบรรทัดนั้น ช่องว่างไม่ได้ยกจังหวัดนั้นให้อยู่เหนือจังหวัดที่มีครบทุกตัวป้อน",
+      zh: "这是提议。人均收入、外国游客、入住率、森林覆盖、超标天数和紧急状态这一行都进入名次。也拉、北大年、那拉提瓦的部分地区被划入，按第 86 次延长，自佛历 2569 年 10 月 20 日起至 2570 年 1 月 19 日（内阁，2569 年 10 月 6 日）。拉曼列入也拉的除外县，所以这三个府被标出并下移。这不是犯罪计数。宋卡不在这项宣布里。淡旺季和机场座位还不在文件里。森林覆盖不是海岸线。十六个府没有 PM2.5 站点，那一行保持空白。空白不会把这个府抬到一项输入都齐的府上面。",
     },
     components: [{ ...tourismPerPerson, weight: 25 }, visitorsForeign(25), occupancy, forest, badAir(15, true), decree(40)],
   },

@@ -1,16 +1,17 @@
 // Legal geography of the serious emergency decree. Not a crime series.
-// In force on 19 October 2569: Cabinet, 14 July 2569, extension 85.
-// https://www.thaigov.go.th/th/news/166390
+// Extension 86, Cabinet 6 October 2569, in force 20 October 2569 through 19 January 2570.
+// https://www.thaigov.go.th/th/news/169828
 
-const SOURCE_URL = "https://www.thaigov.go.th/th/news/166390";
-const AS_OF = "2026-10-19";
-const PERIOD = "2026-10-19";
+const SOURCE_URL = "https://www.thaigov.go.th/th/news/169828";
+const AS_OF = "2026-10-20";
+const PERIOD = "2026-10-20";
 
 // Any district still designated. A 0 is not a claim that the province is safe.
+// Raman is an additional Yala exception. The province stays 1.
 const DESIGNATED = new Set(["th-94", "th-95", "th-96"]);
 
 const NOTE =
-  "1 if any district is inside the serious-emergency area in force on 19 October 2569 (Cabinet extension 85, 20 July through 19 October 2569): Narathiwat except Yi-ngo, Waeng and Sukhirin; Pattani except Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan; Yala except Betong, Yaha, Kabang and Krong Pinang. The 6 October 2569 Cabinet resolution continues the three provinces from 20 October 2569 and adds Raman to Yala's exceptions. Songkhla is 0. This is not a count of incidents.";
+  "1 if any district is inside the serious-emergency area under extension 86, in force 20 October 2569 through 19 January 2570 (Cabinet, 6 October 2569): Narathiwat except Yi-ngo, Waeng and Sukhirin; Pattani except Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan; Yala except Betong, Yaha, Kabang, Krong Pinang and Raman. Songkhla is 0. This is not a count of incidents.";
 
 export function decreeObservations(placeIds) {
   const ids = [...new Set(placeIds)].filter((id) => /^th-\d{2}$/.test(id)).sort();
@@ -27,7 +28,7 @@ export function decreeObservations(placeIds) {
     sourceUrl: SOURCE_URL,
     publisher: "Cabinet of Thailand",
     licence: "not stated",
-    sourceName: "Cabinet resolution, 14 July 2569, emergency-decree extension 85",
+    sourceName: "Cabinet resolution, 6 October 2569, emergency-decree extension 86",
     note: NOTE,
     fetchedAt: "2026-10-19T12:00:00.000Z",
   }));

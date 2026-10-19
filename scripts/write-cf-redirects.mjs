@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PROVINCE_ALIASES } from "../src/lib/legacy.mjs";
+import { LENSES } from "../src/lib/lenses.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const redirects = JSON.parse(readFileSync(path.join(root, "src/data/redirects.json"), "utf8"));
@@ -50,9 +51,8 @@ const toAbout = [
 ];
 for (const from of toAbout) addStatic(from, "/about", 302);
 
-for (const from of ["/rankings", "/discover", "/story", "/map", "/sitemap.xml"]) {
-  if (isFile(from)) staticRules.push(rule(from, "/", 302));
-  else addStatic(from, "/", 302);
+for (const from of ["/rankings", "/discover", "/story", "/map"]) {
+  addStatic(from, "/", 302);
 }
 
 for (const from of ["/methodology", "/sources", "/references"]) addStatic(from, "/methods", 302);
@@ -102,3 +102,18 @@ const plain = staticRules.length;
 if (dynamic > 100) throw new Error(`${dynamic} dynamic rules, cap is 100`);
 if (plain > 2000) throw new Error(`${plain} static rules, cap is 2,000`);
 console.log(`wrote ${plain} static and ${dynamic} dynamic rules (${plain + dynamic} total)`);
+
+const origin = "https://sciti.nonarkara.org";
+const paths = ["/", "/about", "/methods", "/compare", "/coverage"];
+for (const place of baseline.places) paths.push(`/place/${place.id}`);
+for (const indicator of baseline.indicators) paths.push(`/indicator/${indicator.id}`);
+for (const lens of LENSES) paths.push(`/methods/${lens.id}`);
+const sitemap = [
+  `<?xml version="1.0" encoding="UTF-8"?>`,
+  `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+  ...paths.map((item) => `  <url><loc>${origin}${item}</loc></url>`),
+  `</urlset>`,
+  "",
+].join("\n");
+writeFileSync(path.join(root, "public/sitemap.xml"), sitemap);
+console.log(`wrote sitemap.xml with ${paths.length} urls`);

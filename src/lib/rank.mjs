@@ -160,6 +160,16 @@ export function scoreLens({ placeIds, observations, components, rankGate }) {
       const resolved = resolvePlace(component, placeId, index);
       if (resolved && Number.isFinite(resolved.value)) found.set(placeId, resolved);
     }
+    if (component.missingAsZero && found.size > 0) {
+      const sample = found.values().next().value;
+      for (const placeId of placeIds) {
+        if (found.has(placeId)) continue;
+        found.set(placeId, {
+          value: 0,
+          evidence: { ...sample.evidence, stale: false, absentAsZero: true },
+        });
+      }
+    }
     byComponent.set(component.id, found);
   }
   const inFile = active.filter((c) => byComponent.get(c.id).size > 0);

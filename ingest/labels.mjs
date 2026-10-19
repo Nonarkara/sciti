@@ -53,27 +53,27 @@ export const LABELS = {
     direction: "higher",
     unit: u("million baht", "ล้านบาท", "百万铢"),
     method: m(
-      "BOI-approved investment. The file has 2024 and 2025. A province the BOI table does not list is blank, not zero.",
-      "มูลค่าการลงทุนที่บีโอไอให้การส่งเสริม ไฟล์มีปี 2024 และ 2025 จังหวัดที่ตารางไม่ได้ลงไว้จะว่าง ไม่ใช่ศูนย์",
-      "BOI 批准的投资。文件里有 2024 和 2025 年。表上没有的府是空白，不是零。",
+      "BOI-approved investment. The file has 2024 and 2025. A zero that the BOI table publishes is a real zero. A province the table does not list is blank, not zero.",
+      "มูลค่าการลงทุนที่บีโอไอให้การส่งเสริม ไฟล์มีปี 2024 และ 2025 ศูนย์ที่ตารางบีโอไอเผยแพร่คือศูนย์จริง จังหวัดที่ตารางไม่ได้ลงไว้จะว่าง ไม่ใช่ศูนย์",
+      "BOI 批准的投资。文件里有 2024 和 2025 年。表上公布的零是真正的零。表上没有的府是空白，不是零。",
     ),
   },
   "economy.boi_projects": {
     status: "ok",
     unit: u("projects", "โครงการ", "个项目"),
     method: m(
-      "Count of BOI-approved projects in 2025. A missing province is blank, not zero.",
-      "จำนวนโครงการที่บีโอไอให้การส่งเสริมปี 2025 จังหวัดที่ไม่มีจะว่าง ไม่ใช่ศูนย์",
-      "2025 年 BOI 批准的项目数。没有的府是空白，不是零。",
+      "Count of BOI-approved projects in 2025. A published zero is a real zero. A province the table omits is blank, not zero.",
+      "จำนวนโครงการที่บีโอไอให้การส่งเสริมปี 2025 ศูนย์ที่เผยแพร่คือศูนย์จริง จังหวัดที่ตารางไม่ได้ลงจะว่าง ไม่ใช่ศูนย์",
+      "2025 年 BOI 批准的项目数。公布的零是真正的零。表上没有的府是空白，不是零。",
     ),
   },
   "economy.boi_jobs": {
     status: "ok",
     unit: u("jobs", "ตำแหน่ง", "个岗位"),
     method: m(
-      "Jobs attached to BOI-approved projects in 2025. A missing province is blank, not zero.",
-      "งานที่ผูกกับโครงการซึ่งบีโอไอให้การส่งเสริมปี 2025 จังหวัดที่ไม่มีจะว่าง ไม่ใช่ศูนย์",
-      "2025 年 BOI 批准项目所附的岗位。没有的府是空白，不是零。",
+      "Planned employment on BOI-approved projects in 2025, Thai and foreign jobs added together where the table gives both. A published zero is a real zero. A province the table omits is blank, not zero.",
+      "การจ้างงานตามแผนของโครงการที่บีโอไอให้การส่งเสริมปี 2025 รวมคนไทยและคนต่างชาติเมื่อตารางให้ทั้งสองจำนวน ศูนย์ที่เผยแพร่คือศูนย์จริง จังหวัดที่ตารางไม่ได้ลงจะว่าง ไม่ใช่ศูนย์",
+      "2025 年 BOI 批准项目的计划就业，表上同时给出泰国人和外国人时，两者相加。公布的零是真正的零。表上没有的府是空白，不是零。",
     ),
   },
   "economy.new_firms": {
@@ -125,33 +125,37 @@ export const LABELS = {
     status: "ok",
     unit: u("million baht", "ล้านบาท", "百万铢"),
     method: m(
-      "Tourism receipts in 2025, from the Ministry of Tourism and Sports.",
-      "รายได้การท่องเที่ยวปี 2025 จากกระทรวงการท่องเที่ยวและกีฬา",
-      "2025 年旅游收入，来自旅游与体育部。",
+      "Tourism receipts in 2025, from the Ministry of Tourism and Sports. This is spending, not a visitor count, and it is not the foreign-only series.",
+      "รายได้การท่องเที่ยวปี 2025 จากกระทรวงการท่องเที่ยวและกีฬา เป็นค่าใช้จ่าย ไม่ใช่จำนวนผู้มาเยือน และไม่ใช่ชุดเฉพาะชาวต่างชาติ",
+      "2025 年旅游收入，来自旅游与体育部。这是花费，不是游客人数，也不是仅限外国游客的序列。",
     ),
   },
   "economy.tourism_receipts_foreign": {
     status: "ok",
     unit: u("million baht", "ล้านบาท", "百万铢"),
     method: m(
-      "Tourism receipts from foreign visitors in 2025.",
-      "รายได้การท่องเที่ยวจากผู้มาเยือนชาวต่างชาติปี 2025",
-      "2025 年外国游客带来的旅游收入。",
+      "Tourism receipts from foreign visitors only, in 2025. This is not the Thai plus foreign total.",
+      "รายได้การท่องเที่ยวจากผู้มาเยือนชาวต่างชาติเท่านั้น ปี 2025 ไม่ใช่ยอดไทยรวมต่างชาติ",
+      "2025 年仅外国游客带来的旅游收入。这不是泰国游客加外国游客的合计。",
     ),
   },
   "economy.visitors": {
     status: "ok",
     unit: u("person-trips", "ครั้ง", "人次"),
     method: m(
-      "Thai and foreign visitor trips in 2025. A trip is not a resident.",
-      "จำนวนครั้งการเดินทางของผู้มาเยือนชาวไทยและชาวต่างชาติปี 2025 หนึ่งครั้งไม่ใช่หนึ่งผู้อยู่อาศัย",
-      "2025 年泰国和外国游客人次。一次行程不是一名居民。",
+      "Thai and foreign visitor person-trips in 2025, overnight and same-day, added together. A trip is not a resident, and this is not the foreign-only series.",
+      "จำนวนครั้งการเดินทางของผู้มาเยือนชาวไทยและชาวต่างชาติปี 2025 ทั้งค้างคืนและไปเช้าเย็นกลับ รวมกัน หนึ่งครั้งไม่ใช่หนึ่งผู้อยู่อาศัย และนี่ไม่ใช่ชุดเฉพาะชาวต่างชาติ",
+      "2025 年泰国和外国游客的人次，过夜和当日往返加在一起。一次行程不是一名居民，这也不是仅限外国游客的序列。",
     ),
   },
   "economy.visitors_foreign": {
     status: "ok",
     unit: u("person-trips", "ครั้ง", "人次"),
-    method: m("Foreign visitor trips in 2025.", "จำนวนครั้งการเดินทางของผู้มาเยือนชาวต่างชาติปี 2025", "2025 年外国游客人次。"),
+    method: m(
+      "Foreign visitor person-trips only, in 2025. This is not the Thai plus foreign total, and a trip is not a resident.",
+      "จำนวนครั้งการเดินทางของผู้มาเยือนชาวต่างชาติเท่านั้น ปี 2025 ไม่ใช่ยอดไทยรวมต่างชาติ และหนึ่งครั้งไม่ใช่หนึ่งผู้อยู่อาศัย",
+      "2025 年仅外国游客的人次。这不是泰国游客加外国游客的合计，一次行程也不是一名居民。",
+    ),
   },
   "economy.unemployment": {
     status: "ok",
@@ -293,9 +297,9 @@ export const LABELS = {
     status: "ok",
     unit: u("%", "%", "%"),
     method: m(
-      "Hotel occupancy in 2025. A yearly rate, not a month-by-month season.",
-      "อัตราเข้าพักโรงแรมปี 2025 เป็นอัตราทั้งปี ไม่ใช่ฤดูกาลรายเดือน",
-      "2025 年酒店入住率。全年比率，不是逐月的淡旺季。",
+      "Hotel occupancy in 2025, a rate for the year. It is not a sum of Thai and foreign visitors, and it is not a month-by-month season.",
+      "อัตราเข้าพักโรงแรมปี 2025 เป็นอัตราทั้งปี ไม่ใช่ผลรวมผู้มาเยือนชาวไทยกับชาวต่างชาติ และไม่ใช่ฤดูกาลรายเดือน",
+      "2025 年酒店入住率，是全年的比率。不是泰国游客和外国游客的合计，也不是逐月的淡旺季。",
     ),
   },
   "mobility.road_deaths": {

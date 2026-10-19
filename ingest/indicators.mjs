@@ -8,9 +8,9 @@ export const INDICATORS = [
     status: "ok",
     unit: { en: "µg/m³", th: "มคก./ลบ.ม.", zh: "微克/立方米" },
     name: {
-      en: "PM2.5, this hour",
-      th: "PM2.5 ชั่วโมงนี้",
-      zh: "本小时 PM2.5",
+      en: "PM2.5",
+      th: "PM2.5",
+      zh: "PM2.5",
     },
     sourceName: {
       en: "Pollution Control Department, Air4Thai",
@@ -19,9 +19,9 @@ export const INDICATORS = [
     },
     sourceUrl: "https://air4thai.pcd.go.th/services/getNewAQI_JSON.php",
     method: {
-      en: "For each province, take the Air4Thai stations whose coordinates fall inside the province boundary and use the median PM2.5 of stations that reported a value of zero or higher. A reading of −1 is treated as no reading. The time on the figure is the earliest station stamp in that province for this pull. Provinces with no reporting station are left empty. This is one hour, not a year.",
-      th: "ในแต่ละจังหวัด ใช้สถานี Air4Thai ที่พิกัดตกในขอบเขตจังหวัด แล้วหาค่ามัธยฐานของ PM2.5 จากสถานีที่รายงานค่าตั้งแต่ศูนย์ขึ้นไป ค่า −1 ถือว่าไม่มีค่า เวลาที่กำกับคือเวลาที่เร็วที่สุดของสถานีในจังหวัดนั้นในการดึงครั้งนี้ จังหวัดที่ไม่มีสถานีรายงาน จะว่างไว้ นี่คือหนึ่งชั่วโมง ไม่ใช่ค่าทั้งปี",
-      zh: "每个府取落在府界内、且 PM2.5 读数大于或等于零的 Air4Thai 站点，用它们的中位数。读数为 −1 视为没有读数。时间取该府在这一次抓取里最早的站点时间。没有站点的府留空。这是一个小时，不是全年。",
+      en: "For each province, take the Air4Thai stations whose coordinates fall inside the province boundary. A station reading older than about three hours before the pull is dropped, and a reading of −1 is treated as no reading. The figure is the median PM2.5 of the stations that remain, and the time is the latest of those stamps, not the earliest. If none of the stations are current, the province has no current reading. This is one hour, not a year. An old stamp is not shown as the current hour.",
+      th: "ในแต่ละจังหวัด ใช้สถานี Air4Thai ที่พิกัดตกในขอบเขตจังหวัด ค่าที่เก่ากว่าประมาณสามชั่วโมงก่อนเวลาดึงจะถูกทิ้ง และค่า −1 ถือว่าไม่มีค่า ตัวเลขคือมัธยฐาน PM2.5 ของสถานีที่เหลือ และเวลาคือเวลาล่าสุดของสถานีเหล่านั้น ไม่ใช่เวลาที่เร็วที่สุด ถ้าไม่มีสถานีที่ยังเป็นปัจจุบัน จังหวัดนั้นไม่มีค่าปัจจุบัน นี่คือหนึ่งชั่วโมง ไม่ใช่ค่าทั้งปี เวลาที่เก่าจะไม่ถูกแสดงเป็นชั่วโมงปัจจุบัน",
+      zh: "每个府取落在府界内的 Air4Thai 站点。比这次抓取早大约三小时以上的读数会被丢掉，读数为 −1 视为没有读数。数字是剩下站点的 PM2.5 中位数，时间取这些站点里最晚的时间，不是最早的。如果没有站点仍是当前的，这个府就没有当前读数。这是一个小时，不是全年。旧的时间不会被显示成当前小时。",
     },
   },
   {
@@ -29,7 +29,7 @@ export const INDICATORS = [
     area: "environment",
     status: "ok",
     unit: { en: "AQI", th: "AQI", zh: "AQI" },
-    name: { en: "Air quality index, this hour", th: "ดัชนีคุณภาพอากาศชั่วโมงนี้", zh: "本小时空气质量指数" },
+    name: { en: "Air quality index", th: "ดัชนีคุณภาพอากาศ", zh: "空气质量指数" },
     sourceName: {
       en: "Pollution Control Department, Air4Thai",
       th: "กรมควบคุมมลพิษ Air4Thai",
@@ -37,9 +37,9 @@ export const INDICATORS = [
     },
     sourceUrl: "https://air4thai.pcd.go.th/services/getNewAQI_JSON.php",
     method: {
-      en: "Same stations and same hour as PM2.5. The figure is the median of the station AQI values that are zero or higher. It is the department’s index for that hour, not a yearly grade.",
-      th: "ใช้สถานีและชั่วโมงเดียวกับ PM2.5 ค่าคือมัธยฐานของ AQI ที่รายงานตั้งแต่ศูนย์ขึ้นไป เป็นดัชนีของกรมในชั่วโมงนั้น ไม่ใช่เกรดทั้งปี",
-      zh: "与 PM2.5 同一批站点、同一个小时。数值是大于或等于零的站点 AQI 的中位数。这是该小时的指数，不是全年评分。",
+      en: "Same stations and same hour as PM2.5. Station readings older than about three hours are dropped. The figure is the median of the AQI values that remain, and the time is the latest stamp. If none are current, there is no current reading. It is the department’s index for that hour, not a yearly grade. An old stamp is not shown as the current hour.",
+      th: "ใช้สถานีและชั่วโมงเดียวกับ PM2.5 ค่าที่เก่ากว่าประมาณสามชั่วโมงถูกทิ้ง ตัวเลขคือมัธยฐานของ AQI ที่เหลือ และเวลาคือเวลาล่าสุด ถ้าไม่มีค่าปัจจุบัน จะไม่มีค่าปัจจุบัน เป็นดัชนีของกรมในชั่วโมงนั้น ไม่ใช่เกรดทั้งปี เวลาที่เก่าจะไม่ถูกแสดงเป็นชั่วโมงปัจจุบัน",
+      zh: "与 PM2.5 同一批站点、同一个小时。早于大约三小时的读数会被丢掉。数字是剩下的 AQI 的中位数，时间是最晚的时间。如果没有当前读数，就不给出当前读数。这是该小时的指数，不是全年评分。旧的时间不会被显示成当前小时。",
     },
   },
   {
@@ -145,15 +145,15 @@ export const INDICATORS = [
       zh: "府内部分地区的紧急状态",
     },
     sourceName: {
-      en: "Cabinet of Thailand, extension 85",
-      th: "คณะรัฐมนตรี การขยายครั้งที่ 85",
-      zh: "泰国内阁，第 85 次延长",
+      en: "Cabinet of Thailand, extension 86",
+      th: "คณะรัฐมนตรี การขยายครั้งที่ 86",
+      zh: "泰国内阁，第 86 次延长",
     },
-    sourceUrl: "https://www.thaigov.go.th/th/news/166390",
+    sourceUrl: "https://www.thaigov.go.th/th/news/169828",
     method: {
-      en: "1 if any district of the province is inside the serious-emergency area in force on 19 October 2569, otherwise 0, for every province. The Cabinet resolution of 14 July 2569 (extension 85) runs from 20 July through 19 October 2569. Narathiwat except Yi-ngo, Waeng and Sukhirin. Pattani except Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan. Yala except Betong, Yaha, Kabang and Krong Pinang. On 6 October 2569 the Cabinet resolved to continue that area from 20 October 2569 through 19 January 2570 and to add Raman to Yala's exceptions (https://www.thaipbs.or.th/news/content/559232). The 1 does not change on that date, because other districts in each of the three provinces stay designated. Songkhla is 0: the decree does not cover it. This is a legal map, not a count of incidents. Provincial crime is still missing. Deep South Watch does not publish a current series for all 77 provinces, and the Royal Thai Police tables that were found are national totals. Neither is stored as zero.",
-      th: "เป็น 1 ถ้าอำเภอใดในจังหวัดอยู่ในพื้นที่สถานการณ์ฉุกเฉินที่มีความร้ายแรงซึ่งยังมีผลในวันที่ 19 ตุลาคม 2569 ไม่เช่นนั้นเป็น 0 ครบทุกจังหวัด มติคณะรัฐมนตรีวันที่ 14 กรกฎาคม 2569 (ครั้งที่ 85) มีผลตั้งแต่วันที่ 20 กรกฎาคมถึง 19 ตุลาคม 2569 นราธิวาสยกเว้นยี่งอ แว้ง และสุคิริน ปัตตานียกเว้นยะหริ่ง ปะนาเระ มายอ ไม้แก่น ทุ่งยางแดง กะพ้อ และแม่ลาน ยะลายกเว้นเบตง ยะหา กาบัง และกรงปินัง วันที่ 6 ตุลาคม 2569 คณะรัฐมนตรีมีมติต่อพื้นที่นี้ออกไปตั้งแต่วันที่ 20 ตุลาคม 2569 ถึง 19 มกราคม 2570 และเพิ่มรามันในข้อยกเว้นของยะลา (https://www.thaipbs.or.th/news/content/559232) ค่า 1 ไม่เปลี่ยนในวันนั้น เพราะแต่ละจังหวัดในสามจังหวัดยังมีอำเภออื่นที่ถูกประกาศอยู่ สงขลาเป็น 0 เพราะประกาศนี้ไม่ครอบคลุมสงขลา นี่คือแผนที่กฎหมาย ไม่ใช่จำนวนเหตุการณ์ อาชญากรรมรายจังหวัดยังขาด ศูนย์เฝ้าระวังสถานการณ์ภาคใต้ไม่ได้เผยแพร่ชุดข้อมูลปัจจุบันครบ 77 จังหวัด และตารางของสำนักงานตำรวจแห่งชาติที่พบเป็นยอดทั้งประเทศ ทั้งสองอย่างไม่ได้ถูกเก็บเป็นศูนย์",
-      zh: "如果该府有任何一个县处在佛历 2569 年 10 月 19 日仍有效的严重紧急状态区域内，记为 1，否则记为 0，77 个府都有值。2569 年 7 月 14 日的内阁决议（第 85 次延长）覆盖 7 月 20 日至 10 月 19 日。那拉提瓦除外县为伊戈、瓦英、素奇林。北大年除外县为亚灵、巴纳雷、玛腰、迈干、通央登、卡坡、湄兰。也拉除外县为勿洞、亚哈、甲邦、格龙披南。2569 年 10 月 6 日，内阁决议把同一区域从 2569 年 10 月 20 日续到 2570 年 1 月 19 日，并把拉曼加入也拉的除外县（https://www.thaipbs.or.th/news/content/559232）。到那一天，1 不会改，因为三省各自仍有其他县被划入。宋卡是 0：这项宣布不包括宋卡。这是法律地图，不是事件计数。分府犯罪仍然缺失。深南观察没有公布覆盖全部 77 府的当前序列，找得到的皇家警察表是全国合计。两者都不会被存成零。",
+      en: "1 if any district of the province is inside the serious-emergency area under extension 86, otherwise 0, for every province. The Cabinet resolution of 6 October 2569 runs from 20 October 2569 through 19 January 2570. Narathiwat except Yi-ngo, Waeng and Sukhirin. Pattani except Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan. Yala except Betong, Yaha, Kabang, Krong Pinang and Raman. Raman was added to Yala's exceptions in this extension. The 1 does not change, because other districts in each of the three provinces stay designated. Songkhla is 0: the decree does not cover it. This is a legal map, not a count of incidents. Provincial crime is still missing. Deep South Watch does not publish a current series for all 77 provinces, and the Royal Thai Police tables that were found are national totals. Neither is stored as zero.",
+      th: "เป็น 1 ถ้าอำเภอใดในจังหวัดอยู่ในพื้นที่สถานการณ์ฉุกเฉินที่มีความร้ายแรงตามการขยายครั้งที่ 86 ไม่เช่นนั้นเป็น 0 ครบทุกจังหวัด มติคณะรัฐมนตรีวันที่ 6 ตุลาคม 2569 มีผลตั้งแต่วันที่ 20 ตุลาคม 2569 ถึงวันที่ 19 มกราคม 2570 นราธิวาสยกเว้นยี่งอ แว้ง และสุคิริน ปัตตานียกเว้นยะหริ่ง ปะนาเระ มายอ ไม้แก่น ทุ่งยางแดง กะพ้อ และแม่ลาน ยะลายกเว้นเบตง ยะหา กาบัง กรงปินัง และรามัน รามันถูกเพิ่มในข้อยกเว้นของยะลาในการขยายครั้งนี้ ค่า 1 ไม่เปลี่ยน เพราะแต่ละจังหวัดในสามจังหวัดยังมีอำเภออื่นที่ถูกประกาศอยู่ สงขลาเป็น 0 เพราะประกาศนี้ไม่ครอบคลุมสงขลา นี่คือแผนที่กฎหมาย ไม่ใช่จำนวนเหตุการณ์ อาชญากรรมรายจังหวัดยังขาด ศูนย์เฝ้าระวังสถานการณ์ภาคใต้ไม่ได้เผยแพร่ชุดข้อมูลปัจจุบันครบ 77 จังหวัด และตารางของสำนักงานตำรวจแห่งชาติที่พบเป็นยอดทั้งประเทศ ทั้งสองอย่างไม่ได้ถูกเก็บเป็นศูนย์",
+      zh: "如果该府有任何一个县处在严重紧急状态第 86 次延长的区域内，记为 1，否则记为 0，77 个府都有值。2569 年 10 月 6 日的内阁决议覆盖 2569 年 10 月 20 日至 2570 年 1 月 19 日。那拉提瓦除外县为伊戈、瓦英、素奇林。北大年除外县为亚灵、巴纳雷、玛腰、迈干、通央登、卡坡、湄兰。也拉除外县为勿洞、亚哈、甲邦、格龙披南和拉曼。拉曼是这次延长新增的除外县。1 不会改，因为三省各自仍有其他县被划入。宋卡是 0：这项宣布不包括宋卡。这是法律地图，不是事件计数。分府犯罪仍然缺失。深南观察没有公布覆盖全部 77 府的当前序列，找得到的皇家警察表是全国合计。两者都不会被存成零。",
     },
   },
   {

@@ -297,6 +297,12 @@ test("the emergency decree marks the deep south and is not a crime count", async
   assert.equal(decree.find((row) => row.placeId === "th-90").value, 0);
   assert.equal(decree.find((row) => row.placeId === "th-10").value, 0);
   assert.equal(decree.filter((row) => row.value === 1).length, 3);
+  assert.match(decree[0].note, /extension 86/);
+  assert.match(decree[0].note, /Raman/);
+  assert.doesNotMatch(decree[0].note, /extension 85/);
+  assert.doesNotMatch(decree[0].note, /19 October 2569/);
+  assert.equal(decree[0].sourceUrl, "https://www.thaigov.go.th/th/news/169828");
+  assert.equal(decree[0].period, "2026-10-20");
   const observations = incoming.concat(decree);
   assert.equal(observations.some((row) => row.indicatorId === "governance.crime"), false);
   for (const lensId of ["quiet", "families", "remote", "tourism"]) {
@@ -321,8 +327,15 @@ test("the emergency decree marks the deep south and is not a crime count", async
   }
 });
 
-test("a province with no border checkpoint is not scored as zero trade", () => {
+test("talent ranks on students, and a missing checkpoint scores zero only on the border lenses", () => {
   const talent = LENSES.find((lens) => lens.id === "talent");
+  const combo = LENSES.find((lens) => lens.id === "talent-border");
+  const border = LENSES.find((lens) => lens.id === "border");
+  const industry = LENSES.find((lens) => lens.id === "industry");
+  assert.equal(talent.components.some((item) => item.id === "economy.border_trade"), false);
+  assert.equal(industry.components.some((item) => item.id === "economy.border_trade"), false);
+  assert.equal(combo.components.find((item) => item.id === "economy.border_trade").missingAsZero, true);
+  assert.equal(border.components.find((item) => item.id === "economy.border_trade").missingAsZero, true);
   const observations = [
     obs({ indicatorId: "people.tertiary_per_1000", placeId: "th-10", period: "2025", value: 80, sourceUrl: "https://data.go.th/dataset/univ_std_11_011" }),
     obs({ indicatorId: "people.tertiary_per_1000", placeId: "th-27", period: "2025", value: 10, sourceUrl: "https://data.go.th/dataset/univ_std_11_011" }),
@@ -331,13 +344,36 @@ test("a province with no border checkpoint is not scored as zero trade", () => {
     obs({ indicatorId: "economy.sez", placeId: "th-27", period: "2026", value: 1, sourceUrl: "https://www.boi.go.th/th/SEZ_policy" }),
     obs({ indicatorId: "economy.eec", placeId: "th-10", period: "2026", value: 0, sourceUrl: "https://www.eeco.or.th/th" }),
     obs({ indicatorId: "economy.eec", placeId: "th-27", period: "2026", value: 0, sourceUrl: "https://www.eeco.or.th/th" }),
+    obs({ indicatorId: "economy.investment", placeId: "th-10", period: "2025", value: 10, sourceUrl: "https://www.boi.go.th/" }),
+    obs({ indicatorId: "economy.investment", placeId: "th-27", period: "2025", value: 5, sourceUrl: "https://www.boi.go.th/" }),
+    obs({ indicatorId: "people.population", placeId: "th-10", period: "2025", value: 100, sourceUrl: "https://stat.bora.dopa.go.th/" }),
+    obs({ indicatorId: "people.population", placeId: "th-27", period: "2025", value: 100, sourceUrl: "https://stat.bora.dopa.go.th/" }),
+    obs({ indicatorId: "energy.electricity", placeId: "th-10", period: "2023", value: 10, sourceUrl: "https://www.eppo.go.th/" }),
+    obs({ indicatorId: "energy.electricity", placeId: "th-27", period: "2023", value: 5, sourceUrl: "https://www.eppo.go.th/" }),
+    obs({ indicatorId: "people.labour_force", placeId: "th-10", period: "2025", value: 10, sourceUrl: "https://www.nso.go.th/" }),
+    obs({ indicatorId: "people.labour_force", placeId: "th-27", period: "2025", value: 5, sourceUrl: "https://www.nso.go.th/" }),
+    obs({ indicatorId: "economy.minimum_wage", placeId: "th-10", period: "2025", value: 400, sourceUrl: "https://www.mol.go.th/" }),
+    obs({ indicatorId: "economy.minimum_wage", placeId: "th-27", period: "2025", value: 350, sourceUrl: "https://www.mol.go.th/" }),
   ];
-  const result = scoreLens({ placeIds: ["th-10", "th-27"], observations, components: talent.components, rankGate: talent.rankGate });
-  const bangkok = result.rows.find((row) => row.placeId === "th-10");
-  assert.equal(bangkok.parts.find((part) => part.id === "economy.border_trade").state, "missing-here");
-  assert.equal(bangkok.parts.find((part) => part.id === "economy.border_trade").value, null);
-  assert.equal(bangkok.score, null);
-  assert.equal(bangkok.rank, null);
+  const talentScore = scoreLens({ placeIds: ["th-10", "th-27"], observations, components: talent.components, rankGate: talent.rankGate });
+  assert.notEqual(talentScore.rows.find((row) => row.placeId === "th-10").rank, null);
+  const borderScore = scoreLens({ placeIds: ["th-10", "th-27"], observations, components: border.components, rankGate: border.rankGate });
+  const bangkok = borderScore.rows.find((row) => row.placeId === "th-10");
+  const part = bangkok.parts.find((item) => item.id === "economy.border_trade");
+  assert.equal(part.state, "used");
+  assert.equal(part.value, 0);
+  assert.equal(part.evidence.absentAsZero, true);
+  assert.notEqual(bangkok.score, null);
+  const sakaeo = borderScore.rows.find((row) => row.placeId === "th-27");
+  assert.equal(sakaeo.parts.find((item) => item.id === "economy.border_trade").value, 100);
+  assert.equal(sakaeo.parts.find((item) => item.id === "economy.border_trade").evidence.absentAsZero, undefined);
+  const comboScore = scoreLens({ placeIds: ["th-10", "th-27"], observations, components: combo.components, rankGate: combo.rankGate });
+  const comboBangkok = comboScore.rows.find((row) => row.placeId === "th-10");
+  assert.equal(comboBangkok.parts.find((item) => item.id === "economy.border_trade").value, 0);
+  assert.notEqual(comboBangkok.rank, null);
+  const industryScore = scoreLens({ placeIds: ["th-10", "th-27"], observations, components: industry.components, rankGate: industry.rankGate });
+  assert.equal(industryScore.rows.every((row) => row.parts.every((item) => item.id !== "economy.border_trade")), true);
+  assert.notEqual(industryScore.rows.find((row) => row.placeId === "th-10").rank, null);
 });
 
 test("csv quoting keeps a comma inside the publisher", () => {

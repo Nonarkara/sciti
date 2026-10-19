@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { legacyTarget } from "./lib/legacy.mjs";
 import { LENSES, lensById, withWeights } from "./lib/lenses.mjs";
 import { scoreLens } from "./lib/rank.mjs";
@@ -80,8 +80,7 @@ export default function App() {
   const path = rawPath.startsWith("/city/") && !baseline ? rawPath : legacyTarget(rawPath, baseline?.places || [], redirectTable) || rawPath;
   const lang = readLang(search);
   const lensId = readLens(search);
-  const lens = useMemo(() => withWeights(lensById(lensId), weights[lensId]) as Lens, [lensId, weights]);
-  if (typeof document !== "undefined") document.documentElement.lang = lang;
+  const lens = withWeights(lensById(lensId), weights[lensId]) as Lens;
 
   useEffect(() => {
     const onPop = () => setLoc(window.location.pathname + window.location.search);
@@ -120,18 +119,14 @@ export default function App() {
     if (window.location.pathname + window.location.search !== next) window.history.replaceState(null, "", next);
   }, [path, rawPath, lang, lensId]);
 
-  const scored: ScoreCard | null = useMemo(
-    () =>
-      baseline
-        ? (scoreLens({
-            placeIds: baseline.places.map((place) => place.id),
-            observations: baseline.observations,
-            components: lens.components,
-            rankGate: lens.rankGate,
-          }) as ScoreCard)
-        : null,
-    [baseline, lens],
-  );
+  const scored: ScoreCard | null = baseline
+    ? (scoreLens({
+        placeIds: baseline.places.map((place) => place.id),
+        observations: baseline.observations,
+        components: lens.components,
+        rankGate: lens.rankGate,
+      }) as ScoreCard)
+    : null;
 
   function go(next: string) {
     window.history.pushState(null, "", next);

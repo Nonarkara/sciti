@@ -2,9 +2,9 @@
 
 Which cities? sciti lines up figures that Thai offices have already published, for all 77 provinces, and it leaves a blank where a number was never published. It is not a government index.
 
-The question on the first page is the product. A lens is a weighting you can read and move. Growth, quiet retirement, and talent at the border publish an order from the cited file. Families, logistics, remote work and tourism stay marked proposed. They publish an order only from the figures that are actually in the file, and the page says what is still missing.
+The question on the first page is the product. A lens is a weighting you can read and move. Growth, quiet retirement, and talent and border investment publish an order from the cited file. Talent, industry and ports, border trade, families, remote work and tourism stay marked proposed. They publish an order only from the figures that are actually in the file, and the page says what is still missing.
 
-Quiet retirement and families also carry a legal line, not a crime rate. Provincial crime is still missing. Parts of Yala, Pattani and Narathiwat are under the emergency decree through 19 October 2569, so those three are marked and moved down on those two lenses. Songkhla is not under that decree.
+Quiet retirement, families, remote work and tourism also carry a legal line, not a crime rate. Provincial crime is still missing. Parts of Yala, Pattani and Narathiwat are under emergency-decree extension 86, in force 20 October 2569 through 19 January 2570, so those three are marked and moved down on those four lenses. Songkhla is not under that decree. Industry and ports does not use border trade. Border trade scores a province with no checkpoint as 0.
 
 ## What a number is
 

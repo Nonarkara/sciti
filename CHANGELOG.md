@@ -14,3 +14,6 @@ The site is a chooser. It asks which cities, and it answers with published figur
 - A province missing an input is shown as, for example, 5 of 7 inputs. It is ranked after every province with the full set, and below 80 percent it is not ranked. A blank is not a zero. An n.a. cell is missing, including Si Sa Ket's unregistered share.
 - New companies are cited from data.go.th dataset_12_0111. The 2568 monthly totals match the figures in the file.
 - The public pages are in English, Thai and Chinese.
+- Industry and ports leaves border trade out, so a missing checkpoint cannot sink Chon Buri or Rayong. Border trade scores no checkpoint as 0, and that 0 is not stored in the file. Talent ranks on students. Talent and border investment is the persona that adds the border zero.
+- An Air4Thai station older than about three hours is dropped. The province hour is the latest stamp that remains. An old hour is not labelled as this hour.
+- The emergency-decree line cites extension 86, in force 20 October 2569 through 19 January 2570, including Raman among Yala's exceptions.

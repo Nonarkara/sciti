@@ -89,6 +89,16 @@ export function Home({
   const ranked = scored.rows.filter((row) => row.rank != null).slice().sort((a, b) => (a.rank || 0) - (b.rank || 0) || a.placeId.localeCompare(b.placeId));
   const held = scored.rows.filter((row) => row.rank == null);
   const decreeOn = (row: ScoreRow) => row.parts.some((part) => part.id === "governance.emergency_decree" && part.value === 1);
+  const borderLens = lens.components.some((component) => component.id === "economy.border_trade" && component.weight > 0);
+  const cambodiaOn = (row: ScoreRow) => borderLens && (row.placeId === "th-23" || row.placeId === "th-27");
+  const airGap = (row: ScoreRow) => row.missingInFile.includes("env.pm25_bad_days");
+  const marks = (row: ScoreRow) => {
+    const bits = [];
+    if (decreeOn(row)) bits.push(t(lang, "decreeMark"));
+    if (cambodiaOn(row)) bits.push(t(lang, "cambodiaMark"));
+    if (airGap(row)) bits.push(t(lang, "noAirStation"));
+    return bits.length ? ` · ${bits.join(" · ")}` : "";
+  };
 
   useEffect(() => {
     if (!selected || window.innerWidth >= 801) return;
@@ -120,7 +130,7 @@ export function Home({
                   <li key={row.placeId}>
                     <a href={hrefFor(`/place/${row.placeId}`)}>
                       {row.rank}. {placeName(place, lang)}
-                      {decreeOn(row) ? ` · ${t(lang, "decreeMark")}` : ""}
+                      {marks(row)}
                     </a>
                     <span className="meta"> {coveragePhrase(lang, row.coverage.have, row.coverage.of)}</span>
                   </li>
@@ -186,7 +196,7 @@ export function Home({
                   <li key={row.placeId}>
                     <a href={hrefFor(`/place/${row.placeId}`)}>
                       {row.rank}. {placeName(place, lang)}
-                      {decreeOn(row) ? ` · ${t(lang, "decreeMark")}` : ""}
+                      {marks(row)}
                     </a>
                     <p className="meta">{coveragePhrase(lang, row.coverage.have, row.coverage.of)}</p>
                     {lead ? (
@@ -195,9 +205,10 @@ export function Home({
                         {lead.evidence ? <a href={lead.evidence.sourceUrl}>{t(lang, "source")}</a> : null}
                       </p>
                     ) : null}
-                    {row.missingInFile.length ? (
+                    {airGap(row) ? <p className="meta">{t(lang, "noAirStation")}.</p> : null}
+                    {row.missingInFile.filter((id) => id !== "env.pm25_bad_days").length ? (
                       <p className="meta">
-                        {t(lang, "notHere")}: {namesFor(lang, lens, row.missingInFile)}.
+                        {t(lang, "notHere")}: {namesFor(lang, lens, row.missingInFile.filter((id) => id !== "env.pm25_bad_days"))}.
                       </p>
                     ) : null}
                   </li>
@@ -212,7 +223,9 @@ export function Home({
                 {held.map((row) => (
                   <li key={row.placeId}>
                     <a href={hrefFor(`/place/${row.placeId}`)}>{names.get(row.placeId)}</a>
+                    {marks(row)}
                     <span className="meta"> {coveragePhrase(lang, row.coverage.have, row.coverage.of)}</span>
+                    {airGap(row) ? <span className="meta"> {t(lang, "noAirStation")}.</span> : null}
                   </li>
                 ))}
               </ul>

@@ -3,7 +3,7 @@ import { LENSES } from "./lib/lenses.mjs";
 import { fillFor } from "./fill";
 import { Profile } from "./profile";
 import { MISSING_SERIES, RECORD_NOTES, SOURCES } from "./lib/sources.mjs";
-import { day, indicatorLabel, methodParagraphs, num, placeName, t, tr } from "./text";
+import { figurePhrase, indicatorLabel, methodParagraphs, num, placeName, t, tr, whenPhrase } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreRow } from "./types";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
@@ -89,8 +89,8 @@ export function CompareScreen({
             {baseline.indicators.map((indicator) => {
               const left = latest(baseline, indicator.id, a);
               const right = latest(baseline, indicator.id, b);
-              const cell = (value: typeof left) =>
-                value ? `${num(value.value, Number.isInteger(value.value) ? 0 : 1)} ${tr(lang, indicator.unit)}, ${value.period}` : baseline.observations.some((item) => item.indicatorId === indicator.id) ? t(lang, "notHere") : t(lang, "notInFile");
+              const published = baseline.observations.some((item) => item.indicatorId === indicator.id);
+              const cell = (value: typeof left) => figurePhrase(lang, indicator, value, published);
               return (
                 <tr key={indicator.id}>
                   <td>
@@ -187,7 +187,7 @@ export function CoverageScreen({ baseline, geo, lang, hrefFor }: { baseline: Bas
                   <td>
                     {lang === "th" ? `${places.size} จาก ${baseline.places.length}` : lang === "zh" ? `${places.size} / ${baseline.places.length}` : `${places.size} of ${baseline.places.length}`}
                   </td>
-                  <td>{newest ? day(newest.asOf) : t(lang, "notInFile")}</td>
+                  <td>{newest ? whenPhrase(lang, newest.asOf) : t(lang, "notInFile")}</td>
                 </tr>
               );
             })}
@@ -326,20 +326,24 @@ export function IndicatorScreen({
             <tbody>
               {[...byPlace.entries()]
                 .sort((a, b) => a[0].localeCompare(b[0]))
-                .map(([placeId, row]) => (
+                .map(([placeId, row]) => {
+                  const phrase = figurePhrase(lang, indicator, row, true);
+                  const current = phrase !== t(lang, "noCurrentReading");
+                  return (
                   <tr key={placeId}>
                     <td>
                       <a href={hrefFor(`/place/${placeId}`)}>{placeName(baseline.places.find((place) => place.id === placeId), lang)}</a>
                     </td>
                     <td>
-                      {num(row.value, Number.isInteger(row.value) ? 0 : 1)} {tr(lang, indicator.unit)}, {row.period}. {day(row.asOf)}.
+                      {current ? `${phrase}. ${whenPhrase(lang, row.asOf)}.` : `${phrase}.`}
                     </td>
                     <td>
                       <a href={row.sourceUrl}>{t(lang, "source")}</a>
-                      {row.stale ? ` ${t(lang, "lastGood")}` : ""}
+                      {row.stale && current ? ` ${t(lang, "lastGood")}` : ""}
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
             </tbody>
           </table>
         </div>
@@ -351,7 +355,7 @@ export function IndicatorScreen({
 }
 
 export function AboutScreen({ baseline, lang, asset }: { baseline: Baseline | null; lang: Lang; asset: (path: string) => string }) {
-  const when = baseline ? day(baseline.generatedAt) : "";
+  const when = baseline ? whenPhrase(lang, baseline.generatedAt) : "";
   return (
     <article className="page">
       <h1>sciti</h1>

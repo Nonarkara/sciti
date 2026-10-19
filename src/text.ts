@@ -1,4 +1,5 @@
-import type { Indicator, Lang, Lens, Part, ScoreRow, Tr } from "./types";
+import type { Indicator, Lang, Lens, Observation, Part, ScoreRow, Tr } from "./types";
+import { observationIsCurrent } from "./lib/fresh.mjs";
 
 export function tr(lang: Lang, text: Tr): string {
   return text[lang] || text.en;
@@ -11,9 +12,44 @@ export function placeName(place: { en: string; th: string; zh: string } | undefi
   return place.en;
 }
 
-export function day(value: string | undefined): string {
+const MONTHS: Record<Lang, string[]> = {
+  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+  th: ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"],
+  zh: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+};
+
+function dateParts(year: string, month: string, date: string | undefined, hour: string | undefined, lang: Lang): string {
+  const monthName = MONTHS[lang][Number(month) - 1] || month;
+  const y = lang === "th" ? String(Number(year) + 543) : year;
+  if (lang === "zh") {
+    const day = date ? `${y}年${Number(month)}月${Number(date)}日` : `${y}年${Number(month)}月`;
+    return hour ? `${day} ${hour}:00` : day;
+  }
+  if (!date) return lang === "th" ? `${monthName} ${y}` : `${monthName} ${y}`;
+  const day = lang === "th" ? `${Number(date)} ${monthName} ${y}` : `${Number(date)} ${monthName} ${y}`;
+  if (!hour) return day;
+  return lang === "th" ? `${day} เวลา ${hour}:00` : `${day}, ${hour}:00`;
+}
+
+export function whenPhrase(lang: Lang, value: string | undefined): string {
   if (!value) return "";
-  return value.slice(0, 10);
+  const raw = String(value).trim();
+  if (raw.includes(" / ")) return raw.split(" / ").map((part) => whenPhrase(lang, part) || part).join(" / ");
+  if (raw.includes(" to ")) {
+    const joiner = lang === "th" ? " ถึง " : lang === "zh" ? "至" : " to ";
+    return raw.split(" to ").map((part) => whenPhrase(lang, part) || part).join(joiner);
+  }
+  const hourly = /^(\d{4})-(\d{2})-(\d{2})T(\d{2})/.exec(raw);
+  if (hourly) return dateParts(hourly[1], hourly[2], hourly[3], hourly[4], lang);
+  const daily = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw);
+  if (daily) return dateParts(daily[1], daily[2], daily[3], undefined, lang);
+  const month = /^(\d{4})-(\d{2})$/.exec(raw);
+  if (month) return dateParts(month[1], month[2], undefined, undefined, lang);
+  return raw;
+}
+
+export function day(value: string | undefined): string {
+  return whenPhrase("en", value);
 }
 
 export function num(value: number, digits = 1): string {
@@ -121,6 +157,12 @@ const chrome = {
   },
   coverageLine: { en: "inputs", th: "ตัวป้อน", zh: "项输入" },
   decreeMark: { en: "Emergency decree", th: "ประกาศฉุกเฉิน", zh: "紧急状态" },
+  cambodiaMark: { en: "Cambodia border paused", th: "การค้าชายแดนกัมพูชาหยุด", zh: "对柬埔寨边境贸易暂停" },
+  noAirStation: { en: "No air station", th: "ไม่มีสถานีอากาศ", zh: "没有空气站点" },
+  noCurrentReading: { en: "No current reading", th: "ไม่มีค่าปัจจุบัน", zh: "没有当前读数" },
+  boiAbsent: { en: "Not in the BOI table", th: "ไม่อยู่ในตารางบีโอไอ", zh: "不在 BOI 表上" },
+  boiZero: { en: "Published zero in the BOI table", th: "ศูนย์ที่ตารางบีโอไอเผยแพร่", zh: "BOI 表上公布的零" },
+  noCheckpoint: { en: "No checkpoint, scored 0 on this lens. The file does not store a zero.", th: "ไม่มีด่าน ได้ 0 ในเลนส์นี้ ไฟล์ไม่ได้เก็บศูนย์", zh: "没有关口，在这个镜头里记 0。文件里不存零。" },
   zeroWeight: { en: "Weight zero, so it stays out", th: "น้ำหนักเป็นศูนย์ จึงไม่เข้าผลรวม", zh: "权重为零，所以不进总和" },
   reading: { en: "Reading the file.", th: "กำลังอ่านไฟล์", zh: "正在读取文件。" },
   failed: { en: "The baseline file did not load.", th: "ไฟล์ฐานไม่โหลด", zh: "基线文件没有载入。" },
@@ -160,9 +202,9 @@ export const methodParagraphs: Tr[] = [
     zh: "每个镜头都是可以读懂的权重，不是隐藏分数。在有这个数字的府里，每个府得到一个百分位。并列的取并列的中间：严格更低的府，加上数值相同的府的一半，再除以有数值的府数，乘以 100。越低越好的数字，百分位会被反过来，所以更干净的空气得到更高的分。",
   },
   {
-    en: "A province with no value is not given zero. The other figures it does have are reweighted so those weights still sum to the same total. A figure that is missing for every province is not in that total at all, and the page says it is not in the file. A weight you set to zero is left out. A yes or no, such as a special zone, does not by itself produce an order.",
-    th: "จังหวัดที่ไม่มีค่าจะไม่ถูกใส่ศูนย์ ตัวเลขอื่นที่จังหวัดนั้นมีจะถูกถ่วงน้ำหนักใหม่ให้ผลรวมเท่าเดิม ตัวเลขที่ขาดทุกจังหวัดจะไม่อยู่ในผลรวมนั้นเลย และหน้านี้บอกว่ายังไม่อยู่ในไฟล์ น้ำหนักที่ตั้งเป็นศูนย์จะถูกตัดออก ใช่หรือไม่ เช่น เขตพิเศษ จะไม่สร้างลำดับด้วยตัวเอง",
-    zh: "没有数值的府不会被记成零。它确实有的其他数字会重新分配权重，使这些权重的总和不变。每个府都缺的数字根本不进这个总和，页面会写明它还不在文件里。你设成零的权重会被留在外面。是否，比如一个特区，本身不会产生名次。",
+    en: "A province with no value is not given zero. The other figures it does have are reweighted so those weights still sum to the same total. A figure that is missing for every province is not in that total at all, and the page says it is not in the file. A weight you set to zero is left out. A yes or no, such as a special zone, does not by itself produce an order. Border trade, and talent and border investment, are the exception: a province with no land or river checkpoint scores 0 on those lenses, and that 0 counts as an input. The customs file still leaves the cell blank.",
+    th: "จังหวัดที่ไม่มีค่าจะไม่ถูกใส่ศูนย์ ตัวเลขอื่นที่จังหวัดนั้นมีจะถูกถ่วงน้ำหนักใหม่ให้ผลรวมเท่าเดิม ตัวเลขที่ขาดทุกจังหวัดจะไม่อยู่ในผลรวมนั้นเลย และหน้านี้บอกว่ายังไม่อยู่ในไฟล์ น้ำหนักที่ตั้งเป็นศูนย์จะถูกตัดออก ใช่หรือไม่ เช่น เขตพิเศษ จะไม่สร้างลำดับด้วยตัวเอง การค้าชายแดน และคนมีฝีมือกับการลงทุนชายแดน เป็นข้อยกเว้น จังหวัดที่ไม่มีด่านบกหรือด่านน้ำได้ 0 ในเลนส์เหล่านั้น และ 0 นั้นนับเป็นตัวป้อน ไฟล์ศุลกากรยังเว้นช่องนั้นว่าง",
+    zh: "没有数值的府不会被记成零。它确实有的其他数字会重新分配权重，使这些权重的总和不变。每个府都缺的数字根本不进这个总和，页面会写明它还不在文件里。你设成零的权重会被留在外面。是否，比如一个特区，本身不会产生名次。边境贸易，以及人才与边境投资，是例外：没有陆路或河路关口的府在这两个镜头里记 0，这个 0 算作一项输入。海关文件里那个格子仍然留空。",
   },
   {
     en: "The mark beside a province is the weighted mean of those percentiles, from 0 to 100, using only the figures that province actually has. A figure published for only one province sits at 50, the middle of a distribution of one, and it cannot separate cities until a second province has the same figure. This is not an official index.",
@@ -196,6 +238,33 @@ export function coveragePhrase(lang: Lang, have: number, of: number): string {
   return `${have} of ${of} inputs`;
 }
 
+const FLAG_IDS = new Set(["economy.sez", "economy.eec", "governance.emergency_decree"]);
+const BOI_IDS = new Set(["economy.investment", "economy.boi_projects", "economy.boi_jobs"]);
+const HOURLY_AIR = new Set(["env.pm25", "env.aqi"]);
+
+export function isFlagIndicator(indicator: { id: string; unit: Tr }): boolean {
+  if (FLAG_IDS.has(indicator.id)) return true;
+  return /^1 or 0$/i.test(indicator.unit.en) || /^1 =/.test(indicator.unit.en);
+}
+
+export function figurePhrase(lang: Lang, indicator: Indicator, value: Observation | null, published: boolean): string {
+  if (!value) {
+    if (BOI_IDS.has(indicator.id) && published) return t(lang, "boiAbsent");
+    return published ? t(lang, "notHere") : t(lang, "notInFile");
+  }
+  if (HOURLY_AIR.has(indicator.id) && !observationIsCurrent(value)) return t(lang, "noCurrentReading");
+  const when = whenPhrase(lang, value.period);
+  if (isFlagIndicator(indicator)) {
+    const word = value.value > 0 ? t(lang, "yes") : t(lang, "no");
+    return `${word}, ${when}`;
+  }
+  const unit = tr(lang, indicator.unit);
+  const shown = Number.isInteger(value.value) ? num(value.value, 0) : num(value.value, 1);
+  const base = `${shown} ${unit}, ${when}`.replace(/\s+/g, " ").trim();
+  if (BOI_IDS.has(indicator.id) && value.value === 0) return `${base}. ${t(lang, "boiZero")}`;
+  return base;
+}
+
 export function indicatorLabel(lang: Lang, indicator: { id: string; name: Tr }): string {
   const label = tr(lang, indicator.name).trim();
   if (label && label !== indicator.id) return label;
@@ -208,14 +277,17 @@ export function partSentence(lang: Lang, part: Part, lens: Lens, indicators: Ind
   const evidence = part.evidence;
   if (!evidence || part.value == null) return name;
   const publisher = evidence.publisher || "";
-  const when = day(evidence.asOf);
+  const when = whenPhrase(lang, evidence.asOf);
+  if (evidence.absentAsZero) {
+    return `${name}: ${t(lang, "noCheckpoint")} ${publisher}, ${whenPhrase(lang, evidence.period)}.`;
+  }
   if (part.kind === "cagr") {
     const base = `${name}: ${ratePhrase(lang, part.value)}, ${evidence.fromYear} to ${evidence.toYear}. ${publisher}, ${when}.`;
     return part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
   }
   if (part.kind === "flag") {
     const word = part.value && part.value > 0 ? t(lang, "yes") : t(lang, "no");
-    const base = `${name}: ${word}, ${evidence.period}. ${publisher}, ${when}.`;
+    const base = `${name}: ${word}, ${whenPhrase(lang, evidence.period)}. ${publisher}, ${when}.`;
     return evidence.stale ? `${base} ${t(lang, "lastGood")}` : base;
   }
   if (part.kind === "ratio") {
@@ -229,7 +301,7 @@ export function partSentence(lang: Lang, part: Part, lens: Lens, indicators: Ind
   const indicator = indicators.find((item) => item.id === indicatorId);
   const unit = indicator ? tr(lang, indicator.unit) : "";
   const shown = Number.isInteger(part.value) ? num(part.value, 0) : num(part.value, 1);
-  const base = `${name}: ${shown} ${unit}, ${evidence.period}. ${publisher}, ${when}.`.replace(/\s+/g, " ").trim();
+  const base = `${name}: ${shown} ${unit}, ${whenPhrase(lang, evidence.period)}. ${publisher}, ${when}.`.replace(/\s+/g, " ").trim();
   const withMiddle = part.places === 1 ? `${base} ${t(lang, "oneProvince")}` : base;
   return evidence.stale ? `${withMiddle} ${t(lang, "lastGood")}` : withMiddle;
 }
@@ -259,18 +331,18 @@ export function gapSentence(lang: Lang, kind: "price" | "reputation" | "appraisa
     const side = above ? "สูงกว่า" : "ต่ำกว่า";
     const what = kind === "reputation" ? "เปอร์เซ็นไทล์ของชื่อเสียง" : kind === "appraisal" ? "เปอร์เซ็นไทล์ของราคาประเมินราชการ" : "เปอร์เซ็นไทล์ของราคา";
     const tail = kind === "appraisal" ? " ราคาประเมินไม่ใช่ราคาตลาด." : "";
-    return `คะแนนเลนส์อยู่${side}${what} ${mag} คะแนน (${pct} จาก 100, ${places} จังหวัด). ${publisher}, ${day(asOf)}.${tail}`;
+    return `คะแนนเลนส์อยู่${side}${what} ${mag} คะแนน (${pct} จาก 100, ${places} จังหวัด). ${publisher}, ${whenPhrase(lang, asOf)}.${tail}`;
   }
   if (lang === "zh") {
     const side = above ? "高于" : "低于";
     const what = kind === "reputation" ? "名声百分位" : kind === "appraisal" ? "官方评估价的百分位" : "价格百分位";
     const tail = kind === "appraisal" ? "评估价不是市场价。" : "";
-    return `镜头分数${side}${what} ${mag} 分（百分位 ${pct}，${places} 个府）。${publisher}，${day(asOf)}。${tail}`;
+    return `镜头分数${side}${what} ${mag} 分（百分位 ${pct}，${places} 个府）。${publisher}，${whenPhrase(lang, asOf)}。${tail}`;
   }
   const side = above ? "above" : "below";
   const what = kind === "reputation" ? "the reputation percentile" : kind === "appraisal" ? "the official-appraisal percentile" : "the price percentile";
   const tail = kind === "appraisal" ? " The appraisal is not a market price." : "";
-  return `The lens mark sits ${mag} points ${side} ${what} (${pct} out of 100, ${places} provinces). ${publisher}, ${day(asOf)}.${tail}`;
+  return `The lens mark sits ${mag} points ${side} ${what} (${pct} out of 100, ${places} provinces). ${publisher}, ${whenPhrase(lang, asOf)}.${tail}`;
 }
 
 export function depaSentence(lang: Lang, status: string | undefined): string {

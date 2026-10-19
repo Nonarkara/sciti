@@ -1,6 +1,6 @@
 import type { Baseline, Lang, Lens, ScoreRow } from "./types";
 import { placeNote } from "./lib/notes.mjs";
-import { coveragePhrase, day, depaSentence, indicatorLabel, namesFor, num, outOf100, partSentence, placeName, regions, t, topParts, tr } from "./text";
+import { coveragePhrase, depaSentence, figurePhrase, indicatorLabel, namesFor, outOf100, partSentence, placeName, regions, t, topParts, tr, whenPhrase } from "./text";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
   const rows = baseline.observations.filter((item) => item.indicatorId === indicatorId && item.placeId === placeId);
@@ -108,20 +108,23 @@ export function Profile({
             <ul className="plain">
               {indicators.map((indicator) => {
                 const value = latest(baseline, indicator.id, placeId);
+                const phrase = figurePhrase(lang, indicator, value, anyHere(indicator.id));
+                const currentAir = value && (indicator.id === "env.pm25" || indicator.id === "env.aqi") ? phrase !== t(lang, "noCurrentReading") : true;
                 return (
                   <li key={indicator.id}>
                     <a href={hrefFor(`/indicator/${indicator.id}`)}>
                       {indicatorLabel(lang, indicator)}
                     </a>
-                    {value ? (
+                    {": "}
+                    {phrase}
+                    {value && currentAir ? (
                       <>
-                        {": "}
-                        {num(value.value, Number.isInteger(value.value) ? 0 : 1)} {tr(lang, indicator.unit)}, {value.period}. {value.publisher || tr(lang, indicator.sourceName)}, {day(value.asOf)}.{" "}
+                        . {value.publisher || tr(lang, indicator.sourceName)}, {whenPhrase(lang, value.asOf)}.{" "}
                         <a href={value.sourceUrl}>{t(lang, "source")}</a>
                         {value.stale ? ` ${t(lang, "lastGood")}` : ""}
                       </>
                     ) : (
-                      <>: {anyHere(indicator.id) ? t(lang, "notHere") : t(lang, "notInFile")}.</>
+                      "."
                     )}
                   </li>
                 );

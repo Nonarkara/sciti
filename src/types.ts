@@ -63,6 +63,7 @@ export type Observation = {
   licence?: string;
   stale?: boolean;
   note?: string;
+  fetchedAt?: string;
 };
 
 export type Baseline = {
@@ -91,6 +92,7 @@ export type ComponentSpec = {
   weight: number;
   decisive: boolean;
   sinceYear?: number;
+  missingAsZero?: boolean;
   display?: { mul: number; digits: number; unit: Tr };
   name: Tr;
   note: Tr;
@@ -113,6 +115,7 @@ export type Evidence = {
   publisher: string;
   licence: string;
   stale?: boolean;
+  absentAsZero?: boolean;
   fromYear?: number;
   toYear?: number;
   earlierSourceUrl?: string;
