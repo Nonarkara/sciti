@@ -1,128 +1,117 @@
-<p align="center">
-  <img src="docs/hero-banner.png" alt="SCITI — a civic studio around a map of Thailand. Scorecards and sticky notes in the drawing are illustration, not the app." width="100%">
-</p>
+# sciti
 
-# SCITI — Smart City Thailand Index
+Which cities? sciti lines up figures that Thai offices have already published, for all 77 provinces, and it leaves a blank where a number was never published. It is not a government index.
 
-**ดัชนีเมืองอัจฉริยะไทย** · SCITI 2026
+The question on the first page is the product. A lens is a weighting you can read and move. Growth, quiet retirement, and talent and border investment publish an order from the cited file. Talent, industry and ports, border trade, families, remote work and tourism stay marked proposed. They publish an order only from the figures that are actually in the file, and the page says what is still missing.
 
-Editorial interface for an independent ranking of Thai cities and smart-zones. The in-app argument (`src/i18n.ts`) is: **rank what is operating, not what was announced.**
+Quiet retirement, families, remote work and tourism also carry a legal line, not a crime rate. Provincial crime is still missing. Parts of Yala, Pattani and Narathiwat are under emergency-decree extension 86, in force 20 October 2569 through 19 January 2570, so those three are marked and moved down on those four lenses. Songkhla is not under that decree. Industry and ports does not use border trade. Border trade scores a province with no checkpoint as 0, on a log(1 + value) scale stretched up to the largest province, so a small checkpoint stays small.
 
-**Live:** [sciti.nonarkara.org](https://sciti.nonarkara.org) · **Pages:** [nonarkara.github.io/sciti](https://nonarkara.github.io/sciti/)
+## What a number is
 
-This repository is **not** an official government product and does not carry a government endorsement.
+Every figure has a source link, a publisher and a date. The ingest reads public files, retries, and on failure keeps the last good copy and marks it stale. It does not invent a zero. The cited file in `data/incoming/sciti_incoming.csv` fills investment, border trade, students, doctors, visitors, receipts, electricity, gross provincial product for 2021–2023, and the Treasury land appraisal. The emergency-decree line is filled by `ingest/sources/security.mjs` from extension 86, the Cabinet resolution of 6 October 2569, cited from the Thai PBS report, for all 77 provinces. A Royal Gazette notice for that extension was not found. Hospital beds, provincial crime, construction permits, average wages, graduates, market sale prices, gross provincial product for 2024, urban green space, transit use, broadband speed and governance quality stay empty. The appraisal is not a market price. A province is called undervalued for its fundamentals only when its lens mark sits at least 5 points above the appraisal's percentile.
 
----
+The map boundaries are [geoBoundaries](https://www.geoboundaries.org/) ADM1 for Thailand, built from OpenStreetMap, © OpenStreetMap contributors, under the ODbL.
 
-## What this is
+## Add a figure
 
-A bilingual (English / Thai) static SPA: 37 city dossiers, seven equal-weight outcome pillars, rankings, a schematic map, pairwise compare, methodology, sources, and a smart-city bingo board. City data is compiled in (`src/data.ts`). There is no backend and no API key.
-
-Figures below are **from this source**, not a government census.
-
-| In this tree | Source |
-|---|---|
-| **37** scored city/zone dossiers | `CITIES` in `src/data.ts` |
-| **118** self-declared smart-zones nationally; **81** did not meet the verifiable-data bar | Home copy in `src/i18n.ts` |
-| **7** outcome pillars, equal weight | `PILLARS` and `METHODOLOGY_EN` in `src/data.ts` |
-| Research notes (not a certification) | `public/Kimi_Agent_Smart City Site Audit/` |
-
-The manga hero above is art direction for this public front door. Notebooks, radar charts, and sticky notes in the drawing are **illustration only** — they are not in-app HUD, and they are not this index's pillar set.
-
-### Not SLIC-Index, not `smart-city-thailand-index`
-
-Three public repos share a research lineage (outcomes over press releases, scores that can be inspected). They are **different products** with different geographies, pillar sets, and datasets. A rank here is not a [SLIC Index](https://github.com/Nonarkara/SLIC-Index) rank and is not a score from [`smart-city-thailand-index`](https://github.com/Nonarkara/smart-city-thailand-index).
-
-| | [SLIC-Index](https://github.com/Nonarkara/SLIC-Index) | [smart-city-thailand-index](https://github.com/Nonarkara/smart-city-thailand-index) | This repo (`sciti`) |
-|---|---|---|---|
-| What the GitHub description says | Global city ranking (SLIC V3) | Thailand smart city index, built on SLIC methodology | Interface for measuring reality; sibling of SLIC methodology |
-| Geography | International (100+ cities) | Thailand Smart City programme | Thailand — 37 scored dossiers in this tree |
-| Pillars | 5 (Growth, Viability, Capability, Community, Creative) | 7, weighted composite | 7, **equal weight** (geometric mean of 4–7 indicators each) |
-| Languages in-repo | English, Thai, Chinese | English, Thai, Chinese | English and Thai |
-| Live | [slic.nonarkara.org](https://slic.nonarkara.org/) | [smart-city-thailand-index.vercel.app](https://smart-city-thailand-index.vercel.app) | [sciti.nonarkara.org](https://sciti.nonarkara.org) |
-
-This tree is a standalone React SPA. It is not a fork of `smart-city-thailand-index` and does not publish SLIC V3 scores.
-
-GitHub description for this repo: *Editorial Smart City Thailand interface (SCITI) — city narratives, not SLIC V3 scores. Sibling of smart-city-thailand-index.*
-
----
-
-## Philosophy
-
-From the methodology page (`METHODOLOGY_EN` in `src/data.ts`):
-
-1. **Outcomes over plans.** If a project hasn't moved dirt or moved data, it doesn't count. Operating or under construction — not a press conference.
-2. **Verified denominator.** Only cities with enough independently-verifiable data make the index. 118 self-declared; 37 scored; 81 out.
-3. **Seven pillars, equal weight.** Livability, Economy, Safety, Wellbeing, Environment, Civic, Digital. Each pillar is the geometric mean of 4–7 indicators. Equal-weighted by design.
-4. **Field verification.** Copy states every top-20 city was visited at least once in the past 18 months — operators, not only officials.
-5. **Public + private + people.** Government data reconciled against private-sector telemetry and citizen reports, then footnoted.
-6. **Open methodology.** Indicators, weights, and raw scores are meant to be public. Disagreements belong in GitHub issues. The index is described as annually updated.
-
-The editorial line on the home page: *We rank what works. Not what was announced.*
-
----
-
-## Ethical use
-
-This is an independent editorial ranking. Use it as a critique you can inspect — not as a government list, a procurement stamp, or a paid placement.
-
-- **No affiliation claimed.** About copy (`about_p2` in `src/i18n.ts`) states the project is not affiliated with depa, the Ministry of Interior (MOI), NESDC, or any city it ranks, and that cities and vendors cannot pay to be ranked.
-- **Agencies in `SOURCES` are data sources**, not publishers, funders, or endorsers of this index (DEPA, NSO, PCD, NESDC appear alongside World Bank and OECD).
-- **Do not treat a SCITI rank as a SLIC V3 rank**, or as a score from `smart-city-thailand-index`.
-- **Do not treat the hero illustration as the model.** The drawing's scorecards are not the seven pillars above.
-- **No secrets in this tree.** The SPA needs no environment variables. Do not commit `.env` files (see `.gitignore`). This README invents none.
-- **CSV honesty.** The About page says raw indicator scores are released as CSV under CC BY 4.0. **This tree has no CSV export**; scores live in TypeScript (`src/data.ts`).
-- **Contact strings in the footer** (`editors@sciti.in.th`, `@sciti_th`) are UI copy, not a verified inbox or account.
-
-If you reuse numbers, attribute Smart City Thailand Index (SCITI) and this repository. If you disagree with a score or a method, open an issue.
-
----
-
-## How it works
-
-Client-only React 19 + TypeScript + Vite. Routing is in-memory (`src/App.tsx`); there is no server.
-
-| Surface | What it does |
-|---|---|
-| Home | Editorial lede, 118 / 37 / 81 / 7 stats, pillar leaders, regional leaders, peer groups |
-| Rankings | Sortable table or cards; filter by region; sort by composite or a pillar |
-| City | Dossier: verdict, highlights, moves, seven-pillar bars |
-| Map | Schematic Thailand pin map (coordinates in `src/pages/MapPage.tsx`) |
-| Compare | Any two cities across all seven pillars |
-| Methodology | The six rules above, plus pillar cards |
-| Sources | Named sources with kind (Government / Multilateral / Local / Original) |
-| Bingo | 5×5 smart-city expo bingo from `BINGO_EN` / `BINGO_TH` |
-| About | Independence, annual cadence, open-data claim |
-
-`main` deploys to GitHub Pages via `.github/workflows/deploy.yml` (Node 20, `GITHUB_ACTIONS` sets Vite `base` to `/sciti/`). Custom domain in the GitHub homepage field: [sciti.nonarkara.org](https://sciti.nonarkara.org).
-
----
-
-## How to use
-
-Requires Node.js 20+ (GitHub Actions uses Node 20).
+Put a `.csv` or `.json` in `data/incoming`. The columns are in [data/SCHEMA.md](data/SCHEMA.md). The next ingest picks the file up. A row without a source URL is rejected.
 
 ```bash
-git clone https://github.com/Nonarkara/sciti.git
-cd sciti
-npm install
+npm test
+npm run build
 npm run dev
 ```
 
-Open the Vite URL printed in the terminal (typically `http://localhost:5173`). Switch English / Thai in the top bar.
+`npm test` checks the weighting, the last-good fallback, and the incoming file rules. Nothing here calls a paid API.
+
+## Languages
+
+The public pages are English, Thai and Chinese. Thai is set in Prompt, English in Jost, Chinese in a subset of Noto Sans SC. The fonts are files in the site, not a request to a font host at view time.
+
+## How this goes live
+
+Pushing `main` runs [.github/workflows/deploy.yml](.github/workflows/deploy.yml). The job builds with `GITHUB_ACTIONS=true`, which sets the Vite base to `/sciti/`, and publishes the `dist` folder to the `gh-pages` branch with [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages). `force_orphan` is false, so that branch keeps history.
+
+That publish is GitHub Pages, at `https://nonarkara.github.io/sciti/`.
+
+`https://sciti.nonarkara.org` is a different origin. It is served by Cloudflare and it is not updated by this workflow. Merging to `main` changes the GitHub Pages site only. The custom domain changes when whoever runs DNS points that hostname at the new build. Do not add a `CNAME` file here unless that cutover is deliberate. A `CNAME` would also mean the site is served from the domain root, and the build would need `VITE_BASE=/` instead of `/sciti/`.
+
+This repo does not create a Cloudflare Worker and it does not attach a card to anything. GitHub Actions on a public repository is the compute. There is no spend cap to set because there is no paid meter in this pipeline.
+
+A weekly workflow, [.github/workflows/ingest.yml](.github/workflows/ingest.yml), refreshes the figures and commits them on `main`. A push made with the default Actions token does not start another workflow, so that commit does not publish the site by itself. The new figures reach GitHub Pages on the next push to `main` that is not made by that token. The deploy workflow can also be run by hand. This repo does not add a separate token to make the refresh publish on its own. Disable the ingest workflow if you do not want it to commit.
+
+### Rollback
+
+The `gh-pages` branch keeps the previous publish. To roll back:
+
+1. Revert the bad commit on `main` and push. The deploy workflow builds that older tree and publishes it again.
+2. Or, on `gh-pages`, revert the publish commit and push `gh-pages`. The site returns to the previous files immediately. The next push to `main` will publish the current `main` again, so revert `main` too if the bad change is still there.
+
+### What to check after a publish
+
+On `https://nonarkara.github.io/sciti/`:
+
+- The first screen asks which cities, in English, Thai and Chinese.
+- The map loads, and a dashed province is one that is not scored.
+- `/rankings`, `/discover`, `/story` and `/map` open the chooser. `/methodology` and `/sources` open Methods. `/bingo`, `/partners` and `/audit` open About, without the old award pages.
+- `/city/phuket` opens Phuket.
+- A missing path shows the site's own not-found page, via `404.html`, rather than a blank host error.
+- Styles and scripts come from `/sciti/assets/`. A 404 on those means the base path is wrong.
+- JSON and CSV downloads open.
+- No award page, bingo page, or invented score remains.
+
+Then look at `https://sciti.nonarkara.org` separately. Until its origin is this build, it will keep serving the previous site. Do not treat a green GitHub Pages deploy as a green custom domain.
+
+### Custom domain
+
+`https://sciti.nonarkara.org` is the Cloudflare Pages project `smart-city-thailand-index`. Today that project is built from [github.com/Nonarkara/smart-city-thailand-index](https://github.com/Nonarkara/smart-city-thailand-index): `public/CNAME` is `sciti.nonarkara.org`, and `scripts/cdpt.sh` deploys with wrangler to that project after its own tests. This repository does not deploy that hostname. Merging here publishes GitHub Pages only. Do not add a `CNAME` file here. A `CNAME` would also attach the hostname to GitHub Pages, and this project's Pages base path is `/sciti/`.
+
+The live project is not only static. It has Pages Functions at `functions/api/cities.ts` and `functions/api/[[catchall]].ts`. Those functions read a generated city index and return the old composite scores. It also has a Supabase client and a visitor log. None of that is in this build.
+
+`scripts/deploy-cf.sh` is the cutover script for a later day. It is not run by CI. It reads `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` from the environment and does not contain a secret. It runs the tests, lint, and a root build (`GITHUB_ACTIONS` unset, so the base path is `/`), then:
 
 ```bash
-npm run lint
-npm run build    # tsc -b && vite build
-npm run preview
+npx wrangler pages deploy dist --project-name smart-city-thailand-index --branch preview-v2
 ```
 
-No environment variables are required. Do not add secrets to run the index.
+It uploads `dist` only, so the preview has no Pages Functions. It then checks the preview URL: the new script is served as JavaScript, real app routes and a sample of the 135 live sitemap URLs end at HTTP 200, an unknown path is a 404, and `/api/cities` is a 404 that does not return `compositeScore`. It runs `tools/slop-lint.mjs` against the preview. It stops there. It does not deploy branch `main`, which is what would replace production.
 
----
+`public/_redirects` is the map of the old site. It was written from the live sitemap (118 `/city/` pages, plus `/about`, `/rankings`, `/methodology`, `/story`, `/why`, `/showcase`, `/creative-economy`, `/partners`, `/map`, `/program`, `/knowledge`, `/discover`, `/invest`, `/compare`, `/references`, `/audit`) and from the routes that answer 200 because the old shell catches them (`/bingo`, `/asus`, `/canvas/:id`, `/kimi`, `/data/cities.json`, `/downloads/SCITI-2026-cities-dataset.csv`). Award and chat addresses go to About. Rankings, the story and the map go to the chooser. Methodology and references go to Methods. Each known city and canvas slug goes to its province, including the trailing-slash form. Plain rules are written first, under the 2,000 static cap. The only wildcards are last, under the 100 dynamic cap: `/place/* / 200` rewrites a province to the root index, and the same form covers methods and indicators. There is no status-404 rule. `/api/cities` is not a file and not a rule, so it falls through to `404.html`.
 
-## License
+Promote only after the preview has been read in English, Thai and Chinese:
 
-- **Source code** — [MIT](LICENSE). Copyright (c) 2026 Non Arkaraprasertkul.
-- **Published scores** — the About page states CC BY 4.0 for raw indicator scores. If you reuse numbers from this repo, attribute Smart City Thailand Index (SCITI) and this repository.
-- **Hero illustration** (`docs/hero-banner.png`) — bundled with this repository for the public README; HUD elements in the drawing are illustration only.
+```bash
+npx wrangler pages deploy dist --project-name smart-city-thailand-index --branch main --commit-dirty=true
+```
+
+The new deployment carries `public/_headers`. That policy is `'self'` plus `'unsafe-inline'` for the small path-restore script. It does not allow `unpkg` or Google Fonts. The deployment that is live now keeps the old policy until this one is promoted. Promoting does not change DNS. The hostname already points at the project.
+
+Rollback is the previous Cloudflare deployment. In the project `smart-city-thailand-index`, open Deployments and roll production back to the deployment that was live before the promotion. Do not delete it. Rolling back GitHub Pages does not restore this hostname.
+
+Caps, from Cloudflare's Pages limits (updated 5 Sep 2026) and Pages Functions pricing (updated 8 Sep 2026). This plan stays on static Pages:
+
+- Static requests and bandwidth are not billed.
+- Free plan: 500 builds a month, one at a time, 20 minutes each, 20,000 files, 25 MiB a file, 100 custom domains, 2,000 static redirects and 100 dynamic ones.
+- Pages Functions are billed as Workers. The free Workers allowance is 100,000 requests a day. This upload does not include a Function, a Worker, KV, D1, Durable Objects, R2, or paid image resizing. Do not turn those on to keep the old city API.
+
+### Proposed note for the other repository
+
+Do not push this. It is the text for a later pull request on `Nonarkara/smart-city-thailand-index`, after the preview above has been promoted.
+
+Title: The live site now ships from Nonarkara/sciti
+
+```markdown
+# This repository is no longer the live site
+
+https://sciti.nonarkara.org is built from https://github.com/Nonarkara/sciti and deployed to the Cloudflare Pages project `smart-city-thailand-index`.
+
+This repository is the previous site. It is not the place to change the public pages. The `cea-submission/` award pack, the bingo page, the city composite scores, the Gemini chat and the visitor log are not part of the new site.
+
+`scripts/cdpt.sh` still knows how to deploy this tree to the same Pages project. Do not run it. A deploy from here would replace the new site with this one. Leave the last production deployment in the Cloudflare dashboard so it can be rolled back to.
+
+The new site's old-address map lives in `sciti/public/_redirects`.
+```
+
+## Colour
+
+The light ground is pale lemon yellow `#ffefae` and the ink is dark Tyrian blue `#12354e`, from plate 060 of the palette, as a screen conversion of the printed inks.

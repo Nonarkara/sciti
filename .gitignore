@@ -27,3 +27,6 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Full-resolution boundary cache. The simplified map is committed.
+data/cache/
