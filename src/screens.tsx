@@ -3,7 +3,7 @@ import { LENSES } from "./lib/lenses.mjs";
 import { fillFor } from "./fill";
 import { Profile } from "./profile";
 import { MISSING_SERIES, RECORD_NOTES, SOURCES } from "./lib/sources.mjs";
-import { day, methodParagraphs, num, placeName, t, tr } from "./text";
+import { day, indicatorLabel, methodParagraphs, num, placeName, t, tr } from "./text";
 import type { Baseline, GeoFile, Lang, Lens, ScoreRow } from "./types";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
@@ -94,7 +94,7 @@ export function CompareScreen({
               return (
                 <tr key={indicator.id}>
                   <td>
-                    <a href={hrefFor(`/indicator/${indicator.id}`)}>{tr(lang, indicator.name)}</a>
+                    <a href={hrefFor(`/indicator/${indicator.id}`)}>{indicatorLabel(lang, indicator)}</a>
                   </td>
                   <td>{cell(left)}</td>
                   <td>{cell(right)}</td>
@@ -182,7 +182,7 @@ export function CoverageScreen({ baseline, geo, lang, hrefFor }: { baseline: Bas
               return (
                 <tr key={indicator.id}>
                   <td>
-                    <a href={hrefFor(`/indicator/${indicator.id}`)}>{tr(lang, indicator.name)}</a>
+                    <a href={hrefFor(`/indicator/${indicator.id}`)}>{indicatorLabel(lang, indicator)}</a>
                   </td>
                   <td>
                     {lang === "th" ? `${places.size} จาก ${baseline.places.length}` : lang === "zh" ? `${places.size} / ${baseline.places.length}` : `${places.size} of ${baseline.places.length}`}
@@ -204,7 +204,7 @@ export function MethodsScreen({
   lensId,
   hrefFor,
 }: {
-  baseline: Baseline;
+  baseline: Baseline | null;
   lang: Lang;
   lensId: string;
   hrefFor: (path: string) => string;
@@ -247,14 +247,18 @@ export function MethodsScreen({
               <a href={source.url}>{tr(lang, source.publisher)}</a>. {tr(lang, source.dataset)}. {tr(lang, source.usedFor)}. {tr(lang, source.licence)}
             </p>
           ))}
-          <h2>{t(lang, "profile")}</h2>
-          <ul className="plain">
-            {baseline.indicators.map((indicator) => (
-              <li key={indicator.id}>
-                <a href={hrefFor(`/indicator/${indicator.id}`)}>{tr(lang, indicator.name)}</a>
-              </li>
-            ))}
-          </ul>
+          {baseline ? (
+            <div>
+              <h2>{t(lang, "profile")}</h2>
+              <ul className="plain">
+                {baseline.indicators.map((indicator) => (
+                  <li key={indicator.id}>
+                    <a href={hrefFor(`/indicator/${indicator.id}`)}>{indicatorLabel(lang, indicator)}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       ) : (
         <div>
@@ -306,7 +310,7 @@ export function IndicatorScreen({
   const tls = baseline.runs?.some((run) => run.tlsRelaxed) && (indicator.id === "env.pm25" || indicator.id === "env.aqi");
   return (
     <article className="page">
-      <h1>{tr(lang, indicator.name)}</h1>
+      <h1>{indicatorLabel(lang, indicator)}</h1>
       <p>{tr(lang, indicator.method)}</p>
       <p>
         <a href={indicator.sourceUrl}>{tr(lang, indicator.sourceName)}</a>
@@ -346,20 +350,24 @@ export function IndicatorScreen({
   );
 }
 
-export function AboutScreen({ baseline, lang, asset }: { baseline: Baseline; lang: Lang; asset: (path: string) => string }) {
-  const when = day(baseline.generatedAt);
+export function AboutScreen({ baseline, lang, asset }: { baseline: Baseline | null; lang: Lang; asset: (path: string) => string }) {
+  const when = baseline ? day(baseline.generatedAt) : "";
   return (
     <article className="page">
       <h1>sciti</h1>
       <p>{t(lang, "tenetShort")}</p>
       <p>{t(lang, "tenetLong")}</p>
-      <p>
-        {lang === "th"
-          ? `ไฟล์นี้จัดเมื่อ ${when} รุ่น ${baseline.version} แต่ละตัวเลขมีแหล่งและวันที่ ถ้าไม่มีไฟล์ จะเว้นว่างไว้`
-          : lang === "zh"
-            ? `这份文件生成于 ${when}，版本 ${baseline.version}。每个数字都有来源和日期。没有文件的地方就空着。`
-            : `This file was built on ${when}, version ${baseline.version}. Every figure has a source and a date. Where no file was read, the cell stays empty.`}
-      </p>
+      {baseline ? (
+        <p>
+          {lang === "th"
+            ? `ไฟล์นี้จัดเมื่อ ${when} รุ่น ${baseline.version} แต่ละตัวเลขมีแหล่งและวันที่ ถ้าไม่มีไฟล์ จะเว้นว่างไว้`
+            : lang === "zh"
+              ? `这份文件生成于 ${when}，版本 ${baseline.version}。每个数字都有来源和日期。没有文件的地方就空着。`
+              : `This file was built on ${when}, version ${baseline.version}. Every figure has a source and a date. Where no file was read, the cell stays empty.`}
+        </p>
+      ) : (
+        <p>{t(lang, "reading")}</p>
+      )}
       <p>
         <a href={asset("data/baseline.json")}>{t(lang, "json")}</a> · <a href={asset("data/baseline.csv")}>{t(lang, "csv")}</a>
       </p>

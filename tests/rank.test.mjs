@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { computeCagr, moneyballGap, percentile, scoreLens } from "../src/lib/rank.mjs";
 import { LENSES } from "../src/lib/lenses.mjs";
-import { applySource, toCsv } from "../ingest/lib.mjs";
+import { applySource, sumComplete, toCsv } from "../ingest/lib.mjs";
 import { acceptRows, mergeByKey, rowsFromCsv, rowsFromJson } from "../ingest/incoming.mjs";
 
 function obs(partial) {
@@ -68,11 +68,36 @@ test("missing figures are left out of the weight, never scored as zero", () => {
   assert.equal(nst.coverage.have, 1);
   assert.equal(nst.coverage.of, 2);
   assert.ok(nst.missingInFile.includes("economy.gpp_cagr"));
-  assert.notEqual(nst.score, 0);
-  assert.ok(nst.score > bangkok.score);
+  assert.equal(nst.score, null);
+  assert.equal(nst.rank, null);
+  assert.equal(bangkok.rank, 1);
   const gppPart = nst.parts.find((part) => part.id === "economy.gpp_cagr");
   assert.equal(gppPart.state, "missing-here");
   assert.equal(gppPart.value, null);
+});
+
+test("a partial row cannot outrank a province with every input", () => {
+  const components = [1, 2, 3, 4, 5].map((n) => ({
+    id: `c${n}`,
+    kind: "raw",
+    indicatorId: `c${n}`,
+    direction: "higher",
+    weight: 20,
+    decisive: true,
+  }));
+  const observations = [];
+  for (const n of [1, 2, 3, 4, 5]) {
+    observations.push(obs({ indicatorId: `c${n}`, placeId: "th-10", period: "2024", value: 10, sourceUrl: "https://example.go.th/a" }));
+    if (n < 5) observations.push(obs({ indicatorId: `c${n}`, placeId: "th-80", period: "2024", value: 100, sourceUrl: "https://example.go.th/a" }));
+  }
+  const result = scoreLens({ placeIds: ["th-10", "th-80"], observations, components, rankGate: "decisive" });
+  const full = result.rows.find((row) => row.placeId === "th-10");
+  const partial = result.rows.find((row) => row.placeId === "th-80");
+  assert.equal(partial.coverage.have, 4);
+  assert.equal(partial.coverage.of, 5);
+  assert.ok(partial.score > full.score);
+  assert.ok(partial.rank > full.rank);
+  assert.equal(full.rank, 1);
 });
 
 test("a figure nobody has is not in the denominator", () => {
@@ -175,6 +200,17 @@ test("a real zero is allowed when the source is intact", () => {
   assert.equal(applied.observations[0].value, 0);
 });
 
+test("n.a. is missing and is never summed as zero", () => {
+  assert.equal(sumComplete(["n.a.", "n.a.", "n.a.", "n.a."]), null);
+  assert.equal(sumComplete([1403642, "n.a.", 1426598, "N/A"]), null);
+  assert.equal(sumComplete([1, 2, 3]), 6);
+  assert.equal(sumComplete([0, 0]), 0);
+  const csv = rowsFromCsv("place_id,indicator_id,period,value,unit,as_of,source_url,publisher,licence\nth-33,people.unregistered_share,2025,n.a.,percent,2025-12-31,https://catalogapi.nso.go.th/api/index?table=MIG_01_0049_3&format=json,NSO,not stated\n");
+  const bad = acceptRows(csv);
+  assert.equal(bad.accepted.length, 0);
+  assert.match(bad.rejected[0].reason, /n\.a\./);
+});
+
 test("incoming rows without a source url are rejected and not stored as zero", () => {
   const csv = rowsFromCsv("place_id,indicator_id,period,value,unit,as_of,source_url,publisher,licence\nth-10,people.tertiary,2024,1000,people,2024-12-31,,A university,not stated\n");
   const bad = acceptRows(csv);
@@ -221,7 +257,11 @@ test("the cited incoming file is accepted in full", async () => {
   const text = await readFile(new URL("../data/incoming/sciti_incoming.csv", import.meta.url), "utf8");
   const result = acceptRows(rowsFromCsv(text));
   assert.equal(result.rejected.length, 0);
-  assert.equal(result.accepted.length, 3400);
+  assert.equal(result.accepted.length, 3394);
+  assert.equal(result.accepted.some((row) => row.indicatorId === "people.unregistered_share" && row.placeId === "th-33"), false);
+  assert.equal(result.accepted.some((row) => row.indicatorId === "people.unregistered_share" && row.value === 0), false);
+  assert.equal(result.accepted.some((row) => String(row.sourceUrl).includes("dataset_12_026")), false);
+  assert.ok(result.accepted.some((row) => String(row.sourceUrl).includes("dataset_12_0111")));
   const growth = LENSES.find((lens) => lens.id === "growth");
   const scored = scoreLens({
     placeIds: ["th-10", "th-83"],
@@ -259,8 +299,9 @@ test("the emergency decree marks the deep south and is not a crime count", async
   assert.equal(decree.filter((row) => row.value === 1).length, 3);
   const observations = incoming.concat(decree);
   assert.equal(observations.some((row) => row.indicatorId === "governance.crime"), false);
-  for (const lensId of ["quiet", "families"]) {
+  for (const lensId of ["quiet", "families", "remote", "tourism"]) {
     const lens = LENSES.find((item) => item.id === lensId);
+    assert.equal(lens.components.some((item) => item.id === "governance.emergency_decree" && item.weight === 40), true);
     const scored = scoreLens({ placeIds, observations, components: lens.components, rankGate: lens.rankGate });
     if (lensId === "families") assert.equal(scored.notInFile.includes("governance.crime"), true);
     if (lensId === "quiet") assert.equal(scored.notInFile.includes("living.density"), true);
@@ -276,6 +317,7 @@ test("the emergency decree marks the deep south and is not a crime count", async
     assert.ok(pattani.rank > 10);
     assert.ok(nst.rank < yala.rank);
     assert.ok(nst.score > yala.score);
+    if (lensId === "remote") assert.ok(yala.rank >= 30 && yala.rank <= 45);
   }
 });
 
@@ -294,7 +336,8 @@ test("a province with no border checkpoint is not scored as zero trade", () => {
   const bangkok = result.rows.find((row) => row.placeId === "th-10");
   assert.equal(bangkok.parts.find((part) => part.id === "economy.border_trade").state, "missing-here");
   assert.equal(bangkok.parts.find((part) => part.id === "economy.border_trade").value, null);
-  assert.notEqual(bangkok.score, null);
+  assert.equal(bangkok.score, null);
+  assert.equal(bangkok.rank, null);
 });
 
 test("csv quoting keeps a comma inside the publisher", () => {

@@ -18,12 +18,37 @@ export function beToCe(year) {
   return null;
 }
 
+const MISSING_TOKEN = /^(n\.?a\.?|n\/a|na|null|none|—|-|\.{1,3})$/i;
+
+/** n.a., N/A, a blank, or a dash. Never a number, and never coerced to 0. */
+export function missingToken(raw) {
+  if (raw == null) return true;
+  const s = String(raw).trim();
+  if (!s) return true;
+  return MISSING_TOKEN.test(s);
+}
+
 export function parseNumber(raw) {
-  if (raw == null) return null;
+  if (missingToken(raw)) return null;
   const s = String(raw).trim().replace(/,/g, "").replace(/"/g, "");
-  if (!s || s === "-" || s === "—") return null;
   const n = Number(s);
   return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * Sum only when every cell is a real number.
+ * One n.a. makes the whole sum missing. It is not skipped, and it is not zero.
+ */
+export function sumComplete(raws) {
+  if (!raws || !raws.length) return null;
+  let total = 0;
+  for (const raw of raws) {
+    if (missingToken(raw)) return null;
+    const n = parseNumber(raw);
+    if (n == null) return null;
+    total += n;
+  }
+  return total;
 }
 
 // RFC-style CSV, enough for the Thai open-data files we read.

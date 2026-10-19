@@ -1,9 +1,9 @@
 import { readFile } from "node:fs/promises";
-import { parseCsv } from "./lib.mjs";
+import { missingToken, parseCsv, parseNumber } from "./lib.mjs";
 
 function num(value) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : null;
+  if (missingToken(value)) return null;
+  return parseNumber(value);
 }
 
 export function citiesFromCsv(text) {

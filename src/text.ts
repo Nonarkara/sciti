@@ -119,7 +119,8 @@ const chrome = {
     th: "สำเนาล่าสุดที่ใช้ได้ การดึงใหม่ไม่สำเร็จ",
     zh: "这是上一份还能用的副本。这次刷新失败了。",
   },
-  coverageLine: { en: "figures in the file", th: "ตัวเลขในไฟล์", zh: "文件中的数字" },
+  coverageLine: { en: "inputs", th: "ตัวป้อน", zh: "项输入" },
+  decreeMark: { en: "Emergency decree", th: "ประกาศฉุกเฉิน", zh: "紧急状态" },
   zeroWeight: { en: "Weight zero, so it stays out", th: "น้ำหนักเป็นศูนย์ จึงไม่เข้าผลรวม", zh: "权重为零，所以不进总和" },
   reading: { en: "Reading the file.", th: "กำลังอ่านไฟล์", zh: "正在读取文件。" },
   failed: { en: "The baseline file did not load.", th: "ไฟล์ฐานไม่โหลด", zh: "基线文件没有载入。" },
@@ -168,6 +169,11 @@ export const methodParagraphs: Tr[] = [
     th: "ค่าข้างจังหวัดคือค่าเฉลี่ยถ่วงน้ำหนักของเปอร์เซ็นไทล์เหล่านั้น จาก 0 ถึง 100 โดยใช้เฉพาะตัวเลขที่จังหวัดนั้นมีจริง ตัวเลขที่มีจังหวัดเดียวจะอยู่ที่ 50 คือตรงกลางของการกระจายที่มีสมาชิกเดียว และจะแยกเมืองไม่ออกจนกว่าจะมีจังหวัดที่สองที่มีตัวเลขเดียวกัน ที่นี่ไม่ใช่ดัชนีทางการ",
     zh: "府旁边的分数是这些百分位的加权平均，从 0 到 100，只用该府真正有的数字。只公布了一个府的数字会落在 50，也就是只有一个成员的分布的中点，在第二个府有同一个数字之前，它分不出城市。这不是官方指数。",
   },
+  {
+    en: "Each row says how many of the inputs in the file that province has, for example 5 of 7 inputs. A blank is not a zero. A province missing an input is placed after every province that has the full set, so a missing border total or a missing PM2.5 station cannot lift it. A province with fewer than 80 percent of those inputs is not ranked.",
+    th: "แต่ละแถวบอกว่าจังหวัดนั้นมีตัวป้อนกี่ตัวจากตัวที่อยู่ในไฟล์ เช่น 5 จาก 7 ตัวป้อน ช่องว่างไม่ใช่ศูนย์ จังหวัดที่ขาดตัวป้อนจะถูกวางไว้หลังจังหวัดที่มีครบทุกตัว ดังนั้นยอดการค้าชายแดนที่หายไป หรือสถานี PM2.5 ที่ไม่มี จะยกจังหวัดนั้นขึ้นไม่ได้ จังหวัดที่มีตัวป้อนไม่ถึง 80 เปอร์เซ็นต์ของชุดนั้นจะไม่ถูกจัดลำดับ",
+    zh: "每一行写明该府拥有文件里多少项输入，例如 7 项输入里的 5 项。空白不是零。缺一项输入的府排在输入齐全的府后面，所以缺少的边境贸易额或缺少的 PM2.5 站点不能把它抬上去。这些输入不足 80% 的府不进入名次。",
+  },
 ];
 
 export function ratePhrase(lang: Lang, rate: number): string {
@@ -185,9 +191,15 @@ export function outOf100(lang: Lang, score: number): string {
 }
 
 export function coveragePhrase(lang: Lang, have: number, of: number): string {
-  if (lang === "th") return `${have} จาก ${of} ${t(lang, "coverageLine")}`;
-  if (lang === "zh") return `${of} 项里的 ${have} 项`;
-  return `${have} of ${of} ${t(lang, "coverageLine")}`;
+  if (lang === "th") return `${have} จาก ${of} ตัวป้อน`;
+  if (lang === "zh") return `${of} 项输入里的 ${have} 项`;
+  return `${have} of ${of} inputs`;
+}
+
+export function indicatorLabel(lang: Lang, indicator: { id: string; name: Tr }): string {
+  const label = tr(lang, indicator.name).trim();
+  if (label && label !== indicator.id) return label;
+  return tr(lang, indicator.name);
 }
 
 export function partSentence(lang: Lang, part: Part, lens: Lens, indicators: Indicator[]): string {

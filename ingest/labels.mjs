@@ -348,9 +348,9 @@ export const LABELS = {
     status: "ok",
     unit: u("% of registered population", "% ของประชากรตามทะเบียน", "占户籍人口的百分比"),
     method: m(
-      "Unregistered residents relative to the house register, 2025. It is context. It is not a lens score. Where it is high, per-person figures come out high.",
-      "ผู้ไม่ได้อยู่ในทะเบียนเทียบกับทะเบียนบ้าน ปี 2025 เป็นบริบท ไม่ใช่คะแนนเลนส์ ที่ซึ่งค่านี้สูง ตัวเลขต่อคนจะออกมาสูง",
-      "2025 年未登记居民相对户籍的比例。这是背景，不是镜头分数。这个比例高的地方，人均数字会偏高。",
+      "Unregistered residents relative to the house register, 2025. It is context. It is not a lens score. Night-time latent population is summed only when every sex and municipal cell is a number. An n.a. cell makes the share missing, including for Bangkok and Si Sa Ket. It is not stored as zero. Where the share is high, per-person figures come out high.",
+      "ผู้ไม่ได้อยู่ในทะเบียนเทียบกับทะเบียนบ้าน ปี 2025 เป็นบริบท ไม่ใช่คะแนนเลนส์ ประชากรแฝงกลางคืนจะถูกรวมก็ต่อเมื่อทุกช่องเพศและเขตเทศบาลเป็นตัวเลข ช่อง n.a. ทำให้สัดส่วนหายไป รวมกรุงเทพฯ และศรีสะเกษ ไม่ได้ถูกเก็บเป็นศูนย์ ที่ซึ่งสัดส่วนสูง ตัวเลขต่อคนจะออกมาสูง",
+      "2025 年未登记居民相对户籍的比例。这是背景，不是镜头分数。夜间隐性人口只有在每个性别和市镇单元格都是数字时才加总。任何一个 n.a. 单元格都会让这个比例缺失，包括曼谷和四色菊。不会被存成零。这个比例高的地方，人均数字会偏高。",
     ),
   },
   "governance.digital_trainees_per_1000": {

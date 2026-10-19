@@ -1,4 +1,4 @@
-import { fetchText, normTh } from "../lib.mjs";
+import { fetchText, parseNumber, normTh } from "../lib.mjs";
 
 const LIST = "https://gdcatalog.go.th/api/3/action/organization_list?all_fields=true&limit=300";
 
@@ -21,7 +21,7 @@ export async function loadCatalog(places) {
     if (!title.startsWith("จังหวัด") && title !== "กรุงเทพมหานคร") continue;
     const place = byName.get(normTh(title));
     if (!place || seen.has(place.code)) continue;
-    const count = Number(org.package_count);
+    const count = parseNumber(org.package_count);
     if (!Number.isFinite(count) || count < 0 || count > 100000) continue;
     seen.add(place.code);
     const orgUrl = `https://gdcatalog.go.th/organization/${org.name}`;

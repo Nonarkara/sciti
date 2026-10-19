@@ -1,4 +1,4 @@
-import { fetchText } from "../lib.mjs";
+import { fetchText, parseNumber } from "../lib.mjs";
 
 const SPARQL = `SELECT ?code ?en ?th ?zh ?zh2 ?pop ?date ?ref WHERE {
   ?item wdt:P300 ?code .
@@ -53,7 +53,7 @@ export async function loadPopulation() {
     const date = (val(b, "date") || "").slice(0, 10);
     const year = Number(date.slice(0, 4));
     if (!year || year < 2014 || year > 2035) continue;
-    const pop = Number(val(b, "pop"));
+    const pop = parseNumber(val(b, "pop"));
     if (!Number.isFinite(pop) || pop < 50000 || pop > 20000000) continue;
     const key = `${code}|${year}`;
     if (!buckets.has(key)) buckets.set(key, []);

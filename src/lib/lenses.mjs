@@ -391,9 +391,9 @@ export const LENSES = [
       zh: "如果总和里不计生态，产出、人口、获批投资、新公司和旅游花费在哪里增长？",
     },
     caveat: {
-      en: "Ecology is left out on purpose. The order uses 2023 real output growth, registered-population growth from 2022 on, 2025 BOI investment per person, 2025 new companies per 10,000 people, and 2025 tourism receipts per person. A province the BOI table omits is blank, not zero. Per-person figures use the house register, so Bangkok, Phuket, Chon Buri and Samut Sakhon, where many people are not on the register, come out high. This is not a depa index.",
-      th: "เลนส์นี้ตัดนิเวศออกโดยตั้งใจ ลำดับใช้การเติบโตของผลผลิตที่แท้จริงปี 2023 การเติบโตของประชากรตามทะเบียนตั้งแต่ปี 2022 เงินลงทุนบีโอไอต่อคนปี 2025 บริษัทใหม่ต่อหมื่นคนปี 2025 และรายได้ท่องเที่ยวต่อคนปี 2025 จังหวัดที่ตารางบีโอไอไม่ได้ลง จะว่าง ไม่ใช่ศูนย์ ตัวเลขต่อคนใช้ทะเบียนบ้าน ดังนั้นกรุงเทพฯ ภูเก็ต ชลบุรี และสมุทรสาคร ซึ่งมีคนนอกทะเบียนจำนวนมาก จะได้ค่าที่สูง ที่นี่ไม่ใช่ดัชนีของดีป้า",
-      zh: "这个镜头故意不计生态。名次用的是 2023 年实际产出增长、2022 年起的户籍人口增长、2025 年人均 BOI 投资、2025 年每万人新公司，以及 2025 年人均旅游收入。BOI 表上没有的府是空白，不是零。人均数字用的是户籍，所以曼谷、普吉、春武里和龙仔厝这几个未登记人口很多的地方，数字会偏高。这不是 depa 的指数。",
+      en: "Ecology is left out on purpose. The order uses 2023 real output growth, registered-population growth from 2022 on, 2025 BOI investment per person, 2025 new companies per 10,000 people, and 2025 tourism receipts per person. A province the BOI table omits is blank, not zero. Per-person figures use the house register. Where the latent-population survey is complete, a high unregistered share, as in Phuket, Chon Buri and Samut Sakhon, means those per-person figures come out high. Where any cell is n.a., including Bangkok and Si Sa Ket, that share is left blank and is not stored as zero. This is not a depa index.",
+      th: "เลนส์นี้ตัดนิเวศออกโดยตั้งใจ ลำดับใช้การเติบโตของผลผลิตที่แท้จริงปี 2023 การเติบโตของประชากรตามทะเบียนตั้งแต่ปี 2022 เงินลงทุนบีโอไอต่อคนปี 2025 บริษัทใหม่ต่อหมื่นคนปี 2025 และรายได้ท่องเที่ยวต่อคนปี 2025 จังหวัดที่ตารางบีโอไอไม่ได้ลง จะว่าง ไม่ใช่ศูนย์ ตัวเลขต่อคนใช้ทะเบียนบ้าน ที่ซึ่งการสำรวจประชากรแฝงครบ ภูเก็ต ชลบุรี และสมุทรสาครมีสัดส่วนผู้ไม่ได้อยู่ในทะเบียนสูง ตัวเลขต่อคนจึงออกมาสูง ที่ซึ่งมีช่อง n.a. รวมกรุงเทพฯ และศรีสะเกษ สัดส่วนนั้นถูกเว้นว่าง และไม่ได้ถูกเก็บเป็นศูนย์ ที่นี่ไม่ใช่ดัชนีของดีป้า",
+      zh: "这个镜头故意不计生态。名次用的是 2023 年实际产出增长、2022 年起的户籍人口增长、2025 年人均 BOI 投资、2025 年每万人新公司，以及 2025 年人均旅游收入。BOI 表上没有的府是空白，不是零。人均数字用的是户籍。隐性人口调查完整的地方，比如普吉、春武里和龙仔厝，未登记比例高，人均数字就会偏高。任何一个单元格是 n.a. 的府，包括曼谷和四色菊，这个比例留空，不会被存成零。这不是 depa 的指数。",
     },
     components: [gppGrowth, popCagr, investmentPerPerson, newFirms, tourismPerPerson],
   },
@@ -476,11 +476,11 @@ export const LENSES = [
       zh: "家庭互联网、更干净的空气、更低的官方评估价、新公司、外国游客和医生，在哪里碰在一起？",
     },
     caveat: {
-      en: "Proposed. Those figures are in the file. Household internet is not a measured broadband speed, and the Treasury appraisal is not a rent. Coworking counts and market rents are not in the file, so this does not answer a nomad's actual bill. This lens does not include the emergency decree or provincial crime. Yala can rank high here while quiet retirement moves it down.",
-      th: "ข้อเสนอ ตัวเลขเหล่านั้นอยู่ในไฟล์ อินเทอร์เน็ตในครัวเรือนไม่ใช่ความเร็วบรอดแบนด์ที่วัดได้ และราคาประเมินของกรมธนารักษ์ไม่ใช่ค่าเช่า จำนวนโคเวิร์กกิงและค่าเช่าตลาดยังไม่อยู่ในไฟล์ ดังนั้นนี่ไม่ได้ตอบบิลจริงของคนทำงานนอกสถานที่ เลนส์นี้ไม่มีประกาศสถานการณ์ฉุกเฉินหรืออาชญากรรมรายจังหวัด ยะลาอาจอยู่อันดับสูงที่นี่ ในขณะที่เลนส์เกษียณแบบสงบดันลง",
-      zh: "这是提议。那些数字在文件里。家庭互联网不是测得的宽带速率，国库厅评估价也不是租金。联合办公的数量和市场租金还不在文件里，所以这回答不了一个远程工作者的实际账单。这个镜头不包括紧急状态，也不包括分府犯罪。也拉在这里可以排得高，而安静退休会把它下移。",
+      en: "Proposed. Those figures are in the file, and so is the emergency-decree line. Parts of Yala, Pattani and Narathiwat are designated through 19 October 2569, so those three are marked and moved down. That designation is not a crime count. Songkhla is not under the decree. Household internet is not a measured broadband speed, and the Treasury appraisal is not a rent. Coworking counts, market rents and provincial crime are not in the file.",
+      th: "ข้อเสนอ ตัวเลขเหล่านั้นอยู่ในไฟล์ และมีบรรทัดประกาศสถานการณ์ฉุกเฉินด้วย ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศถึงวันที่ 19 ตุลาคม 2569 ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง การประกาศไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ อินเทอร์เน็ตในครัวเรือนไม่ใช่ความเร็วบรอดแบนด์ที่วัดได้ และราคาประเมินของกรมธนารักษ์ไม่ใช่ค่าเช่า จำนวนโคเวิร์กกิง ค่าเช่าตลาด และอาชญากรรมรายจังหวัดยังไม่อยู่ในไฟล์",
+      zh: "这是提议。那些数字在文件里，紧急状态这一行也在。也拉、北大年、那拉提瓦的部分地区被划入，直至佛历 2569 年 10 月 19 日，所以这三个府被标出并下移。这项划定不是犯罪计数。宋卡不在这项宣布里。家庭互联网不是测得的宽带速率，国库厅评估价也不是租金。联合办公的数量、市场租金和分府犯罪还不在文件里。",
     },
-    components: [internet(25), badAir(20, true), land(20, true), { ...newFirms, weight: 15 }, visitorsForeign(10), doctors(10, true)],
+    components: [internet(25), badAir(20, true), land(20, true), { ...newFirms, weight: 15 }, visitorsForeign(10), doctors(10, true), decree(40)],
   },
   {
     id: "tourism",
@@ -493,11 +493,11 @@ export const LENSES = [
       zh: "收入、外国游客、酒店入住率、森林和更干净的空气，出现在哪一份已公布的文件里？",
     },
     caveat: {
-      en: "Proposed. Receipts per person, foreign visitors, occupancy, forest cover and bad-air days are published for the provinces that have them, and they do order the map. Seasonality and airport seats are not in the file. Forest cover is not a coastline. Sixteen provinces have no PM2.5 station and stay blank on that line. This lens does not include the emergency decree. Yala can rank high on visitors and forest while quiet retirement moves it down.",
-      th: "ข้อเสนอ รายได้ต่อคน ผู้มาเยือนชาวต่างชาติ อัตราเข้าพัก พื้นที่ป่า และวันที่อากาศแย่ ถูกเผยแพร่สำหรับจังหวัดที่มี และจัดลำดับแผนที่ได้ ฤดูกาลและที่นั่งบนเครื่องบินยังไม่อยู่ในไฟล์ พื้นที่ป่าไม่ใช่ชายฝั่ง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างในบรรทัดนั้น เลนส์นี้ไม่มีประกาศสถานการณ์ฉุกเฉิน ยะลาอาจอยู่อันดับสูงจากผู้มาเยือนและป่า ในขณะที่เลนส์เกษียณแบบสงบดันลง",
-      zh: "这是提议。人均收入、外国游客、入住率、森林覆盖和超标天数，对有这些数字的府已经公布，也能给地图排序。淡旺季和机场座位还不在文件里。森林覆盖不是海岸线。十六个府没有 PM2.5 站点，那一行保持空白。这个镜头不包括紧急状态。也拉可以因游客和森林排得高，而安静退休会把它下移。",
+      en: "Proposed. Receipts per person, foreign visitors, occupancy, forest cover, bad-air days and the emergency-decree line are in the order. Parts of Yala, Pattani and Narathiwat are designated through 19 October 2569, so those three are marked and moved down. That is not a crime count. Songkhla is not under the decree. Seasonality and airport seats are not in the file. Forest cover is not a coastline. Sixteen provinces have no PM2.5 station and stay blank on that line. A blank does not lift them above a province that has every input.",
+      th: "ข้อเสนอ รายได้ต่อคน ผู้มาเยือนชาวต่างชาติ อัตราเข้าพัก พื้นที่ป่า วันที่อากาศแย่ และบรรทัดประกาศสถานการณ์ฉุกเฉินอยู่ในลำดับ ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศถึงวันที่ 19 ตุลาคม 2569 ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง นั่นไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ ฤดูกาลและที่นั่งบนเครื่องบินยังไม่อยู่ในไฟล์ พื้นที่ป่าไม่ใช่ชายฝั่ง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างในบรรทัดนั้น ช่องว่างไม่ได้ยกจังหวัดนั้นให้อยู่เหนือจังหวัดที่มีครบทุกตัวป้อน",
+      zh: "这是提议。人均收入、外国游客、入住率、森林覆盖、超标天数和紧急状态这一行都进入名次。也拉、北大年、那拉提瓦的部分地区被划入，直至佛历 2569 年 10 月 19 日，所以这三个府被标出并下移。这不是犯罪计数。宋卡不在这项宣布里。淡旺季和机场座位还不在文件里。森林覆盖不是海岸线。十六个府没有 PM2.5 站点，那一行保持空白。空白不会把这个府抬到一项输入都齐的府上面。",
     },
-    components: [{ ...tourismPerPerson, weight: 25 }, visitorsForeign(25), occupancy, forest, badAir(15, true)],
+    components: [{ ...tourismPerPerson, weight: 25 }, visitorsForeign(25), occupancy, forest, badAir(15, true), decree(40)],
   },
 ];
 

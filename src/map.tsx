@@ -20,13 +20,19 @@ export function ProvinceMap({
   labelled: boolean;
 }) {
   const byId = new Map(rows.map((row) => [row.placeId, row]));
+  const rankedCount = rows.filter((row) => row.rank != null).length;
   return (
     <div id="map">
       {geo ? (
         <svg viewBox={geo.viewBox} role="group" aria-label={t(lang, "mapLabel")} preserveAspectRatio="xMidYMid meet">
           {geo.features.map((feature) => {
             const row = byId.get(feature.id);
-            const score = row ? row.score : null;
+            const shade =
+              !row || row.rank == null || rankedCount < 1
+                ? null
+                : rankedCount === 1
+                  ? 100
+                  : (100 * (rankedCount - row.rank)) / (rankedCount - 1);
             const name = names.get(feature.id) || feature.shapeName;
             return (
               <path
@@ -36,10 +42,10 @@ export function ProvinceMap({
                 role="link"
                 aria-label={name}
                 aria-current={selected === feature.id ? "true" : undefined}
-                fill={fillFor(score)}
+                fill={fillFor(shade)}
                 stroke="#12354e"
                 strokeWidth={selected === feature.id ? 2.6 : 0.8}
-                strokeDasharray={score == null ? "3 2" : undefined}
+                strokeDasharray={shade == null ? "3 2" : undefined}
                 onClick={() => onSelect(feature.id)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") {

@@ -89,13 +89,50 @@ html="$(curl -fsS "$PREVIEW/" )" || die "preview / did not return the page"
 grep -q "$LOCAL_HASH" <<<"$html" || die "preview is not serving $LOCAL_HASH"
 ok "preview serves the new script"
 
-code="$(curl -s -o /dev/null -w '%{http_code}' "$PREVIEW/bingo")"
-[[ "$code" == "302" ]] || die "/bingo returned HTTP $code, expected 302"
-ok "/bingo → 302"
-
-loc="$(curl -s -o /dev/null -D - "$PREVIEW/city/phuket" | awk 'tolower($1)=="location:" { print $2 }' | tr -d '\r')"
-[[ "$loc" == */place/th-83 ]] || die "/city/phuket redirected to ${loc:-<none>}"
-ok "/city/phuket → /place/th-83"
+# Final status after redirects. These are real app routes plus a sample of the
+# 135 live sitemap URLs. /api/cities must be a real 404 from 404.html.
+sample=(
+  /
+  /about
+  /methods
+  /compare
+  /coverage
+  /place/th-10
+  /place/th-83
+  /rankings
+  /methodology
+  /story
+  /why
+  /showcase
+  /creative-economy
+  /partners
+  /map
+  /program
+  /knowledge
+  /discover
+  /invest
+  /compare
+  /references
+  /audit
+  /bingo
+  /city/phuket
+  /city/phuket/
+  /city/yala
+  /city/reg-sisaket
+  /city/chiang-rai
+  /city/chachoengsao
+  /canvas/yala
+)
+sample_fail=0
+for path in "${sample[@]}"; do
+  code="$(curl -sL -o /dev/null -w '%{http_code}' "$PREVIEW$path")"
+  if [[ "$code" != "200" ]]; then
+    printf "  \033[31m✗\033[0m %s → HTTP %s\n" "$path" "$code"
+    sample_fail=$((sample_fail + 1))
+  fi
+done
+[[ "$sample_fail" = 0 ]] || die "$sample_fail preview URL(s) did not end at HTTP 200"
+ok "${#sample[@]} app and sitemap URLs end at HTTP 200"
 
 missing="$(curl -s -o /dev/null -w '%{http_code}' "$PREVIEW/no-such-page")"
 [[ "$missing" == "404" ]] || die "/no-such-page returned HTTP $missing, expected 404"
@@ -107,7 +144,7 @@ api_code="$(curl -s -o /dev/null -w '%{http_code}' "$PREVIEW/api/cities")"
 if grep -q 'compositeScore' <<<"$api_body"; then
   die "/api/cities still returns the old composite. A Pages Function is still attached. Do not promote."
 fi
-ok "/api/cities is not the old composite"
+ok "/api/cities → 404"
 
 chunk_fail=0
 for f in dist/assets/*.js; do

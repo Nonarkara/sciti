@@ -1,4 +1,4 @@
-import { fetchText, parseCsv, parseNumber, normTh, colIndex, beToCe } from "../lib.mjs";
+import { fetchText, missingToken, parseCsv, parseNumber, normTh, colIndex, beToCe } from "../lib.mjs";
 
 const SEARCH = "https://gdcatalog.go.th/api/3/action/package_search";
 const MAX_DATASETS = 40;
@@ -29,6 +29,7 @@ export async function loadGpp(places) {
   }
   const fetchedAt = new Date().toISOString();
   const bucket = new Map();
+  const poisoned = new Set();
   const filesRead = [];
   for (const file of found) {
     try {
@@ -51,10 +52,14 @@ export async function loadGpp(places) {
         if (!/มูลค่า/.test(item) && !/มูลค่า/.test(kind)) continue;
         if (/ร้อยละ|ต่อหัว|ต่อประชากร|เกษตร|สัดส่วน|อัตรา/.test(blob)) continue;
         const year = beToCe(String(r[iYear]).trim());
-        const value = parseNumber(r[iVal]);
-        if (!year || value == null || value < 1000 || value > 20000000) continue;
         const provName = iProv >= 0 ? r[iProv] : "";
         const place = byName.get(normTh(provName)) || byName.get(normTh(file.org)) || byName.get(normTh(file.title));
+        if (place && year && missingToken(r[iVal])) {
+          poisoned.add(`${place.code}|${year}`);
+          continue;
+        }
+        const value = parseNumber(r[iVal]);
+        if (!year || value == null || value < 1000 || value > 20000000) continue;
         if (!place) continue;
         const key = `${place.code}|${year}`;
         if (!bucket.has(key)) bucket.set(key, []);
@@ -68,6 +73,7 @@ export async function loadGpp(places) {
   }
   const observations = [];
   for (const [key, list] of bucket) {
+    if (poisoned.has(key)) continue;
     const values = [...new Set(list.map((x) => x.value))];
     if (values.length !== 1) continue;
     const [code, year] = key.split("|");

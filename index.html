@@ -7,6 +7,12 @@
     <meta name="description" content="Which cities? A plain reading of published figures for Thai provinces." />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <script>
+      (function () {
+        var q = new URLSearchParams(window.location.search).get("lang");
+        if (q === "en" || q === "th" || q === "zh") document.documentElement.lang = q;
+      })();
+    </script>
+    <script>
       (function (l) {
         if (l.search[1] === "/") {
           var decoded = l.search

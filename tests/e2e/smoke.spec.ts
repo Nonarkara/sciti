@@ -45,6 +45,11 @@ test("coverage, methods, compare, place and old addresses", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "Families (proposed)" })).toBeVisible();
   await page.goto("/compare");
   await expect(page.locator("table")).toBeVisible();
+  await expect(page.getByRole("link", { name: "New companies registered" })).toBeVisible();
+  await expect(page.locator("table")).not.toContainText("economy.new_firms");
+  await page.goto("/");
+  await page.locator("#map path").first().click();
+  await expect(page).toHaveURL(/\/place\/th-/);
   await page.goto("/place/th-10");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Bangkok");
   await page.goto("/indicator/env.pm25");

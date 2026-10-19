@@ -2,7 +2,7 @@
 
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { parseCsv } from "./lib.mjs";
+import { missingToken, parseNumber, parseCsv } from "./lib.mjs";
 
 const AREAS = new Set([
   "environment",
@@ -55,9 +55,9 @@ export function validateRow(row) {
     return { ok: false, reason: "period must be a year, a date, or an hour" };
   }
   const raw = row.value;
-  if (typeof raw === "string" && raw.trim() === "") return { ok: false, reason: "missing value" };
-  const value = typeof raw === "number" ? raw : Number(String(raw).replace(/,/g, "").trim());
-  if (!Number.isFinite(value)) return { ok: false, reason: "value is not a number" };
+  if (missingToken(raw)) return { ok: false, reason: "value is n.a. or blank, so it stays missing" };
+  const value = typeof raw === "number" ? raw : parseNumber(raw);
+  if (value == null) return { ok: false, reason: "value is not a number" };
   const asOf = asString(row, "as_of");
   if (!/^\d{4}-\d{2}-\d{2}/.test(asOf)) return { ok: false, reason: "as_of must be a date" };
   const sourceUrl = asString(row, "source_url");

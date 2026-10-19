@@ -1,4 +1,4 @@
-import { fetchText, parseCsv, parseNumber, normTh } from "../lib.mjs";
+import { fetchText, missingToken, parseCsv, parseNumber, sumComplete, normTh } from "../lib.mjs";
 
 const PACKAGE = "https://gdcatalog.dlt.go.th/api/3/action/package_show?id=gdpublish-dataset-1-1-04";
 const FALLBACK =
@@ -32,17 +32,33 @@ export async function loadVehicles(places) {
   const rows = parseCsv(text);
   if (rows.length < 2) throw new Error("DLT vehicle file was empty");
   const byName = new Map(places.map((p) => [normTh(p.th), p]));
-  const totals = new Map();
+  const parts = new Map();
+  const incomplete = new Set();
   for (const r of rows.slice(1)) {
     if (r.length < 5) continue;
     if (String(r[0]).trim() !== "รถยนต์") continue;
     if (!String(r[3]).trim()) continue;
     if (r.some((c) => String(c).includes("รวม"))) continue;
-    const value = parseNumber(r[4]);
-    if (value == null || value < 0) continue;
     const place = byName.get(normTh(r[2]));
     if (!place) continue;
-    totals.set(place.code, (totals.get(place.code) || 0) + value);
+    if (missingToken(r[4])) {
+      incomplete.add(place.code);
+      continue;
+    }
+    const value = parseNumber(r[4]);
+    if (value == null || value < 0) {
+      incomplete.add(place.code);
+      continue;
+    }
+    if (!parts.has(place.code)) parts.set(place.code, []);
+    parts.get(place.code).push(value);
+  }
+  const totals = new Map();
+  for (const [code, list] of parts) {
+    if (incomplete.has(code)) continue;
+    const value = sumComplete(list);
+    if (value == null) continue;
+    totals.set(code, value);
   }
   if (totals.size < 70) throw new Error(`DLT file matched only ${totals.size} provinces`);
   const fetchedAt = new Date().toISOString();

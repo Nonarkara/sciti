@@ -1,9 +1,10 @@
-import { fetchText, median, round1 } from "../lib.mjs";
+import { fetchText, median, missingToken, round1 } from "../lib.mjs";
 import { assignPoint } from "../geo.mjs";
 
 const URL = "https://air4thai.pcd.go.th/services/getNewAQI_JSON.php";
 
 function num(v) {
+  if (missingToken(v)) return null;
   const n = Number(v);
   return Number.isFinite(n) && n >= 0 ? n : null;
 }

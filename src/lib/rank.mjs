@@ -1,4 +1,9 @@
 // Transparent lens scores. Missing stays missing. A lone yes/no does not order the map.
+// A province is ranked only when it has at least this share of the inputs in the file.
+// Below that, it is listed and not ordered. At or above it, a blank still sorts after
+// every province that has the full set, so a missing input cannot lift the rank.
+
+export const COVERAGE_MIN = 0.8;
 
 function same(a, b) {
   return Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b));
@@ -179,7 +184,7 @@ export function scoreLens({ placeIds, observations, components, rankGate }) {
   const rows = placeIds.map((placeId) => {
     const present = scoring.filter((c) => byComponent.get(c.id).has(placeId));
     const weightSum = present.reduce((sum, c) => sum + c.weight, 0);
-    const score =
+    const rawScore =
       !contextOnly && weightSum > 0
         ? round4(
             present.reduce((sum, c) => {
@@ -188,6 +193,10 @@ export function scoreLens({ placeIds, observations, components, rankGate }) {
             }, 0),
           )
         : null;
+    const have = present.length;
+    const of = scoring.length;
+    const enough = of > 0 && have / of + 1e-9 >= COVERAGE_MIN;
+    const score = enough ? rawScore : null;
     const parts = (components || []).map((component) => {
       const found = byComponent.get(component.id);
       const resolved = found ? found.get(placeId) : null;
@@ -217,8 +226,6 @@ export function scoreLens({ placeIds, observations, components, rankGate }) {
         evidence: resolved ? resolved.evidence : null,
       };
     });
-    const have = present.length;
-    const of = scoring.length;
     return {
       placeId,
       score,
@@ -230,7 +237,12 @@ export function scoreLens({ placeIds, observations, components, rankGate }) {
       parts,
     };
   });
-  const ranked = rows.filter((row) => row.score != null).sort((a, b) => b.score - a.score || a.placeId.localeCompare(b.placeId));
+  const ranked = rows.filter((row) => row.score != null).sort((a, b) => {
+    const aFull = a.coverage.have === a.coverage.of ? 1 : 0;
+    const bFull = b.coverage.have === b.coverage.of ? 1 : 0;
+    if (aFull !== bFull) return bFull - aFull;
+    return b.score - a.score || a.placeId.localeCompare(b.placeId);
+  });
   let seen = 0;
   let previous = null;
   let rank = 0;

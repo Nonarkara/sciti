@@ -4,7 +4,7 @@ import { moneyballGap } from "./lib/rank.mjs";
 import { ProvinceMap } from "./map";
 import { Profile } from "./profile";
 import { coveragePhrase, gapSentence, namesFor, partSentence, placeName, t, topParts, tr } from "./text";
-import type { Baseline, GeoFile, Lang, Lens, ScoreCard } from "./types";
+import type { Baseline, GeoFile, Lang, Lens, ScoreCard, ScoreRow } from "./types";
 
 const APPRAISAL_ID = "living.land_price";
 const UNDERVALUED_GAP = 5;
@@ -68,6 +68,7 @@ export function Home({
   resetWeights,
   hrefFor,
   asset,
+  openPlace,
 }: {
   lang: Lang;
   baseline: Baseline;
@@ -81,11 +82,13 @@ export function Home({
   resetWeights: () => void;
   hrefFor: (path: string) => string;
   asset: (path: string) => string;
+  openPlace: (id: string) => void;
 }) {
   const names = new Map(baseline.places.map((place) => [place.id, placeName(place, lang)]));
   const selectedRow = scored.rows.find((row) => row.placeId === selected);
   const ranked = scored.rows.filter((row) => row.rank != null).slice().sort((a, b) => (a.rank || 0) - (b.rank || 0) || a.placeId.localeCompare(b.placeId));
   const held = scored.rows.filter((row) => row.rank == null);
+  const decreeOn = (row: ScoreRow) => row.parts.some((part) => part.id === "governance.emergency_decree" && part.value === 1);
 
   useEffect(() => {
     if (!selected || window.innerWidth >= 801) return;
@@ -109,6 +112,22 @@ export function Home({
               ))}
             </select>
           </label>
+          {ranked.length ? (
+            <ol className="ranks tight">
+              {ranked.slice(0, 3).map((row) => {
+                const place = baseline.places.find((item) => item.id === row.placeId);
+                return (
+                  <li key={row.placeId}>
+                    <a href={hrefFor(`/place/${row.placeId}`)}>
+                      {row.rank}. {placeName(place, lang)}
+                      {decreeOn(row) ? ` · ${t(lang, "decreeMark")}` : ""}
+                    </a>
+                    <span className="meta"> {coveragePhrase(lang, row.coverage.have, row.coverage.of)}</span>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : null}
         </div>
         <div className="rail">
           <p>{t(lang, "tenetLong")}</p>
@@ -167,6 +186,7 @@ export function Home({
                   <li key={row.placeId}>
                     <a href={hrefFor(`/place/${row.placeId}`)}>
                       {row.rank}. {placeName(place, lang)}
+                      {decreeOn(row) ? ` · ${t(lang, "decreeMark")}` : ""}
                     </a>
                     <p className="meta">{coveragePhrase(lang, row.coverage.have, row.coverage.of)}</p>
                     {lead ? (
@@ -192,6 +212,7 @@ export function Home({
                 {held.map((row) => (
                   <li key={row.placeId}>
                     <a href={hrefFor(`/place/${row.placeId}`)}>{names.get(row.placeId)}</a>
+                    <span className="meta"> {coveragePhrase(lang, row.coverage.have, row.coverage.of)}</span>
                   </li>
                 ))}
               </ul>
@@ -202,7 +223,7 @@ export function Home({
           </p>
         </div>
       </div>
-      <ProvinceMap geo={geo} rows={scored.rows} names={names} selected={selected} onSelect={setSelected} lang={lang} labelled />
+      <ProvinceMap geo={geo} rows={scored.rows} names={names} selected={selected} onSelect={openPlace} lang={lang} labelled />
     </div>
   );
 }

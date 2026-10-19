@@ -1,6 +1,6 @@
 import type { Baseline, Lang, Lens, ScoreRow } from "./types";
 import { placeNote } from "./lib/notes.mjs";
-import { coveragePhrase, day, depaSentence, namesFor, num, outOf100, partSentence, placeName, regions, t, topParts, tr } from "./text";
+import { coveragePhrase, day, depaSentence, indicatorLabel, namesFor, num, outOf100, partSentence, placeName, regions, t, topParts, tr } from "./text";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
   const rows = baseline.observations.filter((item) => item.indicatorId === indicatorId && item.placeId === placeId);
@@ -111,7 +111,7 @@ export function Profile({
                 return (
                   <li key={indicator.id}>
                     <a href={hrefFor(`/indicator/${indicator.id}`)}>
-                      {tr(lang, indicator.name)}
+                      {indicatorLabel(lang, indicator)}
                     </a>
                     {value ? (
                       <>

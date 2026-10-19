@@ -32,13 +32,64 @@ test("old award and story addresses leave that copy behind", () => {
   assert.equal(legacyTarget("/map", places, redirects), "/");
 });
 
+function redirectRules(text) {
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .map((line) => {
+      const bits = line.split(/\s+/);
+      return { from: bits[0], to: bits[1], status: Number(bits[2]) };
+    });
+}
+
+function resolveRedirect(rules, start) {
+  let path = start;
+  for (let hop = 0; hop < 6; hop++) {
+    const exact = rules.find((rule) => !rule.from.includes("*") && rule.from === path);
+    const dynamic = rules.find((rule) => {
+      if (!rule.from.includes("*")) return false;
+      const body = rule.from.replace("*", "");
+      return path.startsWith(body) && path.length > body.length;
+    });
+    const rule = exact || dynamic;
+    if (!rule) return { path, status: path === "/" ? 200 : 404 };
+    if (rule.status === 200) return { path: rule.to === "/" ? path : rule.to, status: 200 };
+    path = rule.to;
+  }
+  return { path, status: 500 };
+}
+
 test("the cloudflare redirect file keeps the old addresses", () => {
   const text = readFileSync(new URL("../public/_redirects", import.meta.url), "utf8");
+  const rules = redirectRules(text);
+  const dynamicAt = rules.findIndex((rule) => rule.from.includes("*"));
+  assert.ok(dynamicAt > 0);
+  assert.ok(rules.slice(0, dynamicAt).every((rule) => !rule.from.includes("*")));
+  assert.ok(rules.slice(dynamicAt).every((rule) => rule.from.includes("*")));
+  assert.ok(rules.filter((rule) => rule.from.includes("*")).length < 100);
+  assert.ok(rules.filter((rule) => !rule.from.includes("*")).length <= 2000);
+  assert.equal(rules.some((rule) => rule.status === 404), false);
+  const place = rules.find((rule) => rule.from === "/place/*");
+  assert.equal(place.to, "/");
+  assert.equal(place.status, 200);
+  assert.ok(rules.some((rule) => rule.from === "/city/yala/" && rule.to === "/place/th-95" && rule.status === 302));
   assert.match(text, /\/city\/yala\s+\/place\/th-95\s+302/);
   assert.match(text, /\/city\/reg-ayutthaya\s+\/place\/th-14\s+302/);
   assert.match(text, /\/creative-economy\s+\/about\s+302/);
-  assert.match(text, /\/api\/\*\s+\/api-gone.json\s+404/);
+  assert.doesNotMatch(text, /\/api\/\*/);
   assert.doesNotMatch(text, /\/no-such-page/);
+
+  const pages = ["/", "/about", "/rankings", "/methodology", "/story", "/why", "/showcase", "/creative-economy", "/partners", "/map", "/program", "/knowledge", "/discover", "/invest", "/compare", "/references", "/audit"];
+  const cities = Object.keys(redirects).map((slug) => `/city/${slug}`);
+  const sitemap = pages.concat(cities);
+  assert.equal(sitemap.length, 135);
+  const failed = sitemap.filter((url) => resolveRedirect(rules, url).status !== 200);
+  assert.deepEqual(failed, []);
+  assert.equal(resolveRedirect(rules, "/api/cities").status, 404);
+  assert.equal(resolveRedirect(rules, "/place/th-10").status, 200);
+  assert.equal(resolveRedirect(rules, "/city/phuket/").status, 200);
+  console.log(`redirects: ${rules.length} rules, static ${dynamicAt}, dynamic ${rules.length - dynamicAt}, sitemap 135 -> 200, /api/cities -> 404`);
 });
 
 test("an old city slug opens the province, without the old score", () => {

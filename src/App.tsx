@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { legacyTarget } from "./lib/legacy.mjs";
 import { LENSES, lensById, withWeights } from "./lib/lenses.mjs";
 import { scoreLens } from "./lib/rank.mjs";
@@ -80,7 +80,8 @@ export default function App() {
   const path = rawPath.startsWith("/city/") && !baseline ? rawPath : legacyTarget(rawPath, baseline?.places || [], redirectTable) || rawPath;
   const lang = readLang(search);
   const lensId = readLens(search);
-  const lens = withWeights(lensById(lensId), weights[lensId]) as Lens;
+  const lens = useMemo(() => withWeights(lensById(lensId), weights[lensId]) as Lens, [lensId, weights]);
+  if (typeof document !== "undefined") document.documentElement.lang = lang;
 
   useEffect(() => {
     const onPop = () => setLoc(window.location.pathname + window.location.search);
@@ -119,14 +120,18 @@ export default function App() {
     if (window.location.pathname + window.location.search !== next) window.history.replaceState(null, "", next);
   }, [path, rawPath, lang, lensId]);
 
-  const scored: ScoreCard | null = baseline
-    ? (scoreLens({
-        placeIds: baseline.places.map((place) => place.id),
-        observations: baseline.observations,
-        components: lens.components,
-        rankGate: lens.rankGate,
-      }) as ScoreCard)
-    : null;
+  const scored: ScoreCard | null = useMemo(
+    () =>
+      baseline
+        ? (scoreLens({
+            placeIds: baseline.places.map((place) => place.id),
+            observations: baseline.observations,
+            components: lens.components,
+            rankGate: lens.rankGate,
+          }) as ScoreCard)
+        : null,
+    [baseline, lens],
+  );
 
   function go(next: string) {
     window.history.pushState(null, "", next);
@@ -201,17 +206,22 @@ export default function App() {
           ? "/about"
           : "/";
 
+  const needsData = path === "/" || path.startsWith("/place/") || path === "/compare" || path === "/coverage" || path.startsWith("/indicator/");
+  const ready = baseline && scored ? { baseline, scored } : null;
   let body: React.ReactNode;
-  if (error || (baseline && !scored)) body = <ReadingShell lang={lang} message="failed" />;
-  else if (!baseline || !scored) body = <ReadingShell lang={lang} message="reading" />;
-  else if (path === "/") {
+  if (path === "/about") body = <AboutScreen baseline={baseline} lang={lang} asset={asset} />;
+  else if (path === "/methods") body = <MethodsScreen baseline={baseline} lang={lang} lensId="" hrefFor={hrefFor} />;
+  else if (path.startsWith("/methods/")) body = <MethodsScreen baseline={baseline} lang={lang} lensId={path.slice("/methods/".length)} hrefFor={hrefFor} />;
+  else if (needsData && (error || (baseline && !scored))) body = <ReadingShell lang={lang} message="failed" />;
+  else if (needsData && !ready) body = <ReadingShell lang={lang} message="reading" />;
+  else if (path === "/" && ready) {
     body = (
       <Home
         lang={lang}
-        baseline={baseline}
+        baseline={ready.baseline}
         geo={geo}
         lens={lens}
-        scored={scored}
+        scored={ready.scored}
         selected={selected}
         setSelected={setSelected}
         setLens={setLens}
@@ -219,29 +229,27 @@ export default function App() {
         resetWeights={resetWeights}
         hrefFor={hrefFor}
         asset={asset}
+        openPlace={(id) => go(hrefFor(`/place/${id}`))}
       />
     );
-  } else if (path.startsWith("/place/")) {
+  } else if (path.startsWith("/place/") && ready) {
     const placeId = path.slice("/place/".length);
     body = (
       <PlaceScreen
-        baseline={baseline}
+        baseline={ready.baseline}
         lang={lang}
         lens={lens}
-        row={scored.rows.find((row) => row.placeId === placeId)}
+        row={ready.scored.rows.find((row) => row.placeId === placeId)}
         placeId={placeId}
         hrefFor={hrefFor}
       />
     );
-  } else if (path === "/compare") {
-    const first = baseline.places[0]?.id || "";
-    const second = baseline.places.find((place) => place.id === "th-80")?.id || baseline.places[1]?.id || first;
-    body = <CompareScreen baseline={baseline} lang={lang} hrefFor={hrefFor} initialA={search.get("a") || selected || first} initialB={search.get("b") || second} />;
-  } else if (path === "/coverage") body = <CoverageScreen baseline={baseline} geo={geo} lang={lang} hrefFor={hrefFor} />;
-  else if (path === "/methods") body = <MethodsScreen baseline={baseline} lang={lang} lensId="" hrefFor={hrefFor} />;
-  else if (path.startsWith("/methods/")) body = <MethodsScreen baseline={baseline} lang={lang} lensId={path.slice("/methods/".length)} hrefFor={hrefFor} />;
-  else if (path.startsWith("/indicator/")) body = <IndicatorScreen baseline={baseline} lang={lang} indicatorId={path.slice("/indicator/".length)} hrefFor={hrefFor} />;
-  else if (path === "/about") body = <AboutScreen baseline={baseline} lang={lang} asset={asset} />;
+  } else if (path === "/compare" && ready) {
+    const first = ready.baseline.places[0]?.id || "";
+    const second = ready.baseline.places.find((place) => place.id === "th-80")?.id || ready.baseline.places[1]?.id || first;
+    body = <CompareScreen baseline={ready.baseline} lang={lang} hrefFor={hrefFor} initialA={search.get("a") || selected || first} initialB={search.get("b") || second} />;
+  } else if (path === "/coverage" && ready) body = <CoverageScreen baseline={ready.baseline} geo={geo} lang={lang} hrefFor={hrefFor} />;
+  else if (path.startsWith("/indicator/") && ready) body = <IndicatorScreen baseline={ready.baseline} lang={lang} indicatorId={path.slice("/indicator/".length)} hrefFor={hrefFor} />;
   else body = <Missing lang={lang} hrefFor={hrefFor} />;
 
   const links = [
