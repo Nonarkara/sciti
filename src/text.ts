@@ -158,9 +158,11 @@ const chrome = {
   coverageLine: { en: "inputs", th: "ตัวป้อน", zh: "项输入" },
   decreeMark: { en: "Emergency decree", th: "ประกาศฉุกเฉิน", zh: "紧急状态" },
   cambodiaMark: { en: "Cambodia border paused", th: "การค้าชายแดนกัมพูชาหยุด", zh: "对柬埔寨边境贸易暂停" },
+  cambodiaQuietMark: { en: "Cambodia border", th: "ชายแดนกัมพูชา", zh: "柬埔寨边境" },
   noAirStation: { en: "No air station", th: "ไม่มีสถานีอากาศ", zh: "没有空气站点" },
   noCurrentReading: { en: "No current reading", th: "ไม่มีค่าปัจจุบัน", zh: "没有当前读数" },
   boiAbsent: { en: "Not in the BOI table", th: "ไม่อยู่ในตารางบีโอไอ", zh: "不在 BOI 表上" },
+  boiJobsUnreported: { en: "Jobs not reported", th: "ไม่รายงานตำแหน่งงาน", zh: "岗位未报告" },
   boiZero: { en: "Published zero in the BOI table", th: "ศูนย์ที่ตารางบีโอไอเผยแพร่", zh: "BOI 表上公布的零" },
   noCheckpoint: { en: "No checkpoint, scored 0 on this lens. The file does not store a zero.", th: "ไม่มีด่าน ได้ 0 ในเลนส์นี้ ไฟล์ไม่ได้เก็บศูนย์", zh: "没有关口，在这个镜头里记 0。文件里不存零。" },
   zeroWeight: { en: "Weight zero, so it stays out", th: "น้ำหนักเป็นศูนย์ จึงไม่เข้าผลรวม", zh: "权重为零，所以不进总和" },
@@ -202,9 +204,9 @@ export const methodParagraphs: Tr[] = [
     zh: "每个镜头都是可以读懂的权重，不是隐藏分数。在有这个数字的府里，每个府得到一个百分位。并列的取并列的中间：严格更低的府，加上数值相同的府的一半，再除以有数值的府数，乘以 100。越低越好的数字，百分位会被反过来，所以更干净的空气得到更高的分。",
   },
   {
-    en: "A province with no value is not given zero. The other figures it does have are reweighted so those weights still sum to the same total. A figure that is missing for every province is not in that total at all, and the page says it is not in the file. A weight you set to zero is left out. A yes or no, such as a special zone, does not by itself produce an order. Border trade, and talent and border investment, are the exception: a province with no land or river checkpoint scores 0 on those lenses, and that 0 counts as an input. The customs file still leaves the cell blank.",
-    th: "จังหวัดที่ไม่มีค่าจะไม่ถูกใส่ศูนย์ ตัวเลขอื่นที่จังหวัดนั้นมีจะถูกถ่วงน้ำหนักใหม่ให้ผลรวมเท่าเดิม ตัวเลขที่ขาดทุกจังหวัดจะไม่อยู่ในผลรวมนั้นเลย และหน้านี้บอกว่ายังไม่อยู่ในไฟล์ น้ำหนักที่ตั้งเป็นศูนย์จะถูกตัดออก ใช่หรือไม่ เช่น เขตพิเศษ จะไม่สร้างลำดับด้วยตัวเอง การค้าชายแดน และคนมีฝีมือกับการลงทุนชายแดน เป็นข้อยกเว้น จังหวัดที่ไม่มีด่านบกหรือด่านน้ำได้ 0 ในเลนส์เหล่านั้น และ 0 นั้นนับเป็นตัวป้อน ไฟล์ศุลกากรยังเว้นช่องนั้นว่าง",
-    zh: "没有数值的府不会被记成零。它确实有的其他数字会重新分配权重，使这些权重的总和不变。每个府都缺的数字根本不进这个总和，页面会写明它还不在文件里。你设成零的权重会被留在外面。是否，比如一个特区，本身不会产生名次。边境贸易，以及人才与边境投资，是例外：没有陆路或河路关口的府在这两个镜头里记 0，这个 0 算作一项输入。海关文件里那个格子仍然留空。",
+    en: "A province with no value is not given zero. The other figures it does have are reweighted so those weights still sum to the same total. A figure that is missing for every province is not in that total at all, and the page says it is not in the file. A weight you set to zero is left out. A yes or no, such as a special zone, does not by itself produce an order. Border trade, and talent and border investment, are the exception: a province with no land or river checkpoint scores 0 on those lenses, and that 0 counts as an input. The customs file still leaves the cell blank. That border mark is not a percentile. It is log(1 + the million-baht total), stretched from no checkpoint at 0 to the largest province at 100, so a small checkpoint gets a small mark.",
+    th: "จังหวัดที่ไม่มีค่าจะไม่ถูกใส่ศูนย์ ตัวเลขอื่นที่จังหวัดนั้นมีจะถูกถ่วงน้ำหนักใหม่ให้ผลรวมเท่าเดิม ตัวเลขที่ขาดทุกจังหวัดจะไม่อยู่ในผลรวมนั้นเลย และหน้านี้บอกว่ายังไม่อยู่ในไฟล์ น้ำหนักที่ตั้งเป็นศูนย์จะถูกตัดออก ใช่หรือไม่ เช่น เขตพิเศษ จะไม่สร้างลำดับด้วยตัวเอง การค้าชายแดน และคนมีฝีมือกับการลงทุนชายแดน เป็นข้อยกเว้น จังหวัดที่ไม่มีด่านบกหรือด่านน้ำได้ 0 ในเลนส์เหล่านั้น และ 0 นั้นนับเป็นตัวป้อน ไฟล์ศุลกากรยังเว้นช่องนั้นว่าง คะแนนชายแดนนั้นไม่ใช่เปอร์เซ็นไทล์ มันคือ log(1 + ยอดล้านบาท) ยืดจากจังหวัดที่ไม่มีด่านที่ 0 ไปถึงจังหวัดที่มากที่สุดที่ 100 ดังนั้นด่านเล็กได้คะแนนเล็ก",
+    zh: "没有数值的府不会被记成零。它确实有的其他数字会重新分配权重，使这些权重的总和不变。每个府都缺的数字根本不进这个总和，页面会写明它还不在文件里。你设成零的权重会被留在外面。是否，比如一个特区，本身不会产生名次。边境贸易，以及人才与边境投资，是例外：没有陆路或河路关口的府在这两个镜头里记 0，这个 0 算作一项输入。海关文件里那个格子仍然留空。这个边境分数不是百分位。它是 log(1 + 百万铢总额)，从没有关口的 0 拉到贸易额最大的府的 100，所以小关口只得小分。",
   },
   {
     en: "The mark beside a province is the weighted mean of those percentiles, from 0 to 100, using only the figures that province actually has. A figure published for only one province sits at 50, the middle of a distribution of one, and it cannot separate cities until a second province has the same figure. This is not an official index.",
@@ -247,8 +249,9 @@ export function isFlagIndicator(indicator: { id: string; unit: Tr }): boolean {
   return /^1 or 0$/i.test(indicator.unit.en) || /^1 =/.test(indicator.unit.en);
 }
 
-export function figurePhrase(lang: Lang, indicator: Indicator, value: Observation | null, published: boolean): string {
+export function figurePhrase(lang: Lang, indicator: Indicator, value: Observation | null, published: boolean, jobsUnreported = false): string {
   if (!value) {
+    if (indicator.id === "economy.boi_jobs" && jobsUnreported) return t(lang, "boiJobsUnreported");
     if (BOI_IDS.has(indicator.id) && published) return t(lang, "boiAbsent");
     return published ? t(lang, "notHere") : t(lang, "notInFile");
   }
@@ -261,6 +264,7 @@ export function figurePhrase(lang: Lang, indicator: Indicator, value: Observatio
   const unit = tr(lang, indicator.unit);
   const shown = Number.isInteger(value.value) ? num(value.value, 0) : num(value.value, 1);
   const base = `${shown} ${unit}, ${when}`.replace(/\s+/g, " ").trim();
+  if (indicator.id === "economy.boi_jobs" && value.value === 0) return t(lang, "boiJobsUnreported");
   if (BOI_IDS.has(indicator.id) && value.value === 0) return `${base}. ${t(lang, "boiZero")}`;
   return base;
 }

@@ -29,6 +29,18 @@ export function percentile(value, values) {
   return ((less + 0.5 * equal) / n) * 100;
 }
 
+// log(1 + value), stretched from the smallest to the largest. A zero stays 0 when the
+// smallest is 0, and the largest is 100. A tiny positive stays near 0.
+export function log1pMinMax(value, values) {
+  if (!values.length) return null;
+  const logs = values.map((v) => Math.log1p(Math.max(0, v)));
+  const lo = Math.min(...logs);
+  const hi = Math.max(...logs);
+  const x = Math.log1p(Math.max(0, value));
+  if (!(hi > lo)) return x <= 0 ? 0 : 50;
+  return ((x - lo) / (hi - lo)) * 100;
+}
+
 export function orient(pct, direction) {
   if (pct == null) return null;
   return direction === "lower" ? 100 - pct : pct;
@@ -186,8 +198,9 @@ export function scoreLens({ placeIds, observations, components, rankGate }) {
   for (const component of scoring) {
     const values = [...byComponent.get(component.id).values()].map((r) => r.value);
     const table = new Map();
+    const scale = component.scale === "log1p-minmax" ? log1pMinMax : percentile;
     for (const [placeId, resolved] of byComponent.get(component.id)) {
-      table.set(placeId, percentile(resolved.value, values));
+      table.set(placeId, scale(resolved.value, values));
     }
     percentiles.set(component.id, table);
   }

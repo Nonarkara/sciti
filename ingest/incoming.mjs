@@ -58,6 +58,9 @@ export function validateRow(row) {
   if (missingToken(raw)) return { ok: false, reason: "value is n.a. or blank, so it stays missing" };
   const value = typeof raw === "number" ? raw : parseNumber(raw);
   if (value == null) return { ok: false, reason: "value is not a number" };
+  if (indicatorId === "economy.boi_jobs" && value === 0) {
+    return { ok: false, reason: "planned jobs of Thai 0 + foreign 0 are unreported, not a stored zero" };
+  }
   const asOf = asString(row, "as_of");
   if (!/^\d{4}-\d{2}-\d{2}/.test(asOf)) return { ok: false, reason: "as_of must be a date" };
   const sourceUrl = asString(row, "source_url");

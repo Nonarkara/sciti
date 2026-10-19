@@ -91,11 +91,13 @@ export function Home({
   const decreeOn = (row: ScoreRow) => row.parts.some((part) => part.id === "governance.emergency_decree" && part.value === 1);
   const borderLens = lens.components.some((component) => component.id === "economy.border_trade" && component.weight > 0);
   const cambodiaOn = (row: ScoreRow) => borderLens && (row.placeId === "th-23" || row.placeId === "th-27");
+  const quietCambodia = (row: ScoreRow) => lens.id === "quiet" && (row.placeId === "th-32" || row.placeId === "th-33");
   const airGap = (row: ScoreRow) => row.missingInFile.includes("env.pm25_bad_days");
   const marks = (row: ScoreRow) => {
     const bits = [];
     if (decreeOn(row)) bits.push(t(lang, "decreeMark"));
     if (cambodiaOn(row)) bits.push(t(lang, "cambodiaMark"));
+    if (quietCambodia(row)) bits.push(t(lang, "cambodiaQuietMark"));
     if (airGap(row)) bits.push(t(lang, "noAirStation"));
     return bits.length ? ` · ${bits.join(" · ")}` : "";
   };

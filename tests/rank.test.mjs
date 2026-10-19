@@ -257,7 +257,8 @@ test("the cited incoming file is accepted in full", async () => {
   const text = await readFile(new URL("../data/incoming/sciti_incoming.csv", import.meta.url), "utf8");
   const result = acceptRows(rowsFromCsv(text));
   assert.equal(result.rejected.length, 0);
-  assert.equal(result.accepted.length, 3394);
+  assert.equal(result.accepted.length, 3389);
+  assert.equal(result.accepted.some((row) => row.indicatorId === "economy.boi_jobs" && row.value === 0), false);
   assert.equal(result.accepted.some((row) => row.indicatorId === "people.unregistered_share" && row.placeId === "th-33"), false);
   assert.equal(result.accepted.some((row) => row.indicatorId === "people.unregistered_share" && row.value === 0), false);
   assert.equal(result.accepted.some((row) => String(row.sourceUrl).includes("dataset_12_026")), false);
@@ -301,7 +302,7 @@ test("the emergency decree marks the deep south and is not a crime count", async
   assert.match(decree[0].note, /Raman/);
   assert.doesNotMatch(decree[0].note, /extension 85/);
   assert.doesNotMatch(decree[0].note, /19 October 2569/);
-  assert.equal(decree[0].sourceUrl, "https://www.thaigov.go.th/th/news/169828");
+  assert.equal(decree[0].sourceUrl, "https://www.thaipbs.or.th/news/content/559232");
   assert.equal(decree[0].period, "2026-10-20");
   const observations = incoming.concat(decree);
   assert.equal(observations.some((row) => row.indicatorId === "governance.crime"), false);
@@ -335,7 +336,9 @@ test("talent ranks on students, and a missing checkpoint scores zero only on the
   assert.equal(talent.components.some((item) => item.id === "economy.border_trade"), false);
   assert.equal(industry.components.some((item) => item.id === "economy.border_trade"), false);
   assert.equal(combo.components.find((item) => item.id === "economy.border_trade").missingAsZero, true);
+  assert.equal(combo.components.find((item) => item.id === "economy.border_trade").scale, "log1p-minmax");
   assert.equal(border.components.find((item) => item.id === "economy.border_trade").missingAsZero, true);
+  assert.equal(border.components.find((item) => item.id === "economy.border_trade").scale, "log1p-minmax");
   const observations = [
     obs({ indicatorId: "people.tertiary_per_1000", placeId: "th-10", period: "2025", value: 80, sourceUrl: "https://data.go.th/dataset/univ_std_11_011" }),
     obs({ indicatorId: "people.tertiary_per_1000", placeId: "th-27", period: "2025", value: 10, sourceUrl: "https://data.go.th/dataset/univ_std_11_011" }),
@@ -374,6 +377,34 @@ test("talent ranks on students, and a missing checkpoint scores zero only on the
   const industryScore = scoreLens({ placeIds: ["th-10", "th-27"], observations, components: industry.components, rankGate: industry.rankGate });
   assert.equal(industryScore.rows.every((row) => row.parts.every((item) => item.id !== "economy.border_trade")), true);
   assert.notEqual(industryScore.rows.find((row) => row.placeId === "th-10").rank, null);
+});
+
+test("a BOI jobs cell of zero is unreported and is not stored", () => {
+  const csv = rowsFromCsv(
+    "place_id,indicator_id,period,value,unit,as_of,source_url,publisher,licence\nth-15,economy.boi_jobs,2025,0,jobs,2025-12-31,https://ipstat.boi.go.th/pubrpt/rep08qtrprovince.php,BOI,not stated\n",
+  );
+  const bad = acceptRows(csv);
+  assert.equal(bad.accepted.length, 0);
+  assert.match(bad.rejected[0].reason, /unreported/);
+});
+
+test("border trade uses log1p min-max so a tiny checkpoint stays small", () => {
+  const border = LENSES.find((lens) => lens.id === "border");
+  const zeros = Array.from({ length: 52 }, (_, i) => `z${String(i).padStart(2, "0")}`);
+  const placeIds = ["big", "tiny", ...zeros];
+  const observations = [
+    obs({ indicatorId: "economy.border_trade", placeId: "big", period: "2024", value: 1000000, sourceUrl: "https://data.go.th/dataset/ctm_06_08" }),
+    obs({ indicatorId: "economy.border_trade", placeId: "tiny", period: "2024", value: 1, sourceUrl: "https://data.go.th/dataset/ctm_06_08" }),
+    ...placeIds.map((placeId) =>
+      obs({ indicatorId: "economy.sez", placeId, period: "2026", value: 0, sourceUrl: "https://www.boi.go.th/th/SEZ_policy" }),
+    ),
+  ];
+  const scored = scoreLens({ placeIds, observations, components: border.components, rankGate: border.rankGate });
+  const mark = (id) => scored.rows.find((row) => row.placeId === id).parts.find((part) => part.id === "economy.border_trade").percentile;
+  assert.equal(mark("z00"), 0);
+  assert.equal(mark("big"), 100);
+  assert.ok(mark("tiny") > 0);
+  assert.ok(mark("tiny") < 15);
 });
 
 test("csv quoting keeps a comma inside the publisher", () => {

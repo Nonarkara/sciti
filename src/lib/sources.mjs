@@ -149,12 +149,12 @@ export const SOURCES = [
     id: "emergency-decree",
     publisher: { en: "Cabinet of Thailand", th: "คณะรัฐมนตรี", zh: "泰国内阁" },
     dataset: {
-      en: "Serious-emergency extension 86, in force 20 October 2569 through 19 January 2570, Cabinet 6 October 2569, with Raman among Yala's exceptions",
-      th: "การขยายสถานการณ์ฉุกเฉินที่มีความร้ายแรง ครั้งที่ 86 มีผล 20 ตุลาคม 2569 ถึง 19 มกราคม 2570 มติคณะรัฐมนตรี 6 ตุลาคม 2569 และรามันอยู่ในอำเภอยกเว้นของยะลา",
-      zh: "严重紧急状态第 86 次延长，佛历 2569 年 10 月 20 日至 2570 年 1 月 19 日有效，内阁 2569 年 10 月 6 日，拉曼列入也拉的除外县",
+      en: "Serious-emergency extension 86, in force 20 October 2569 through 19 January 2570, Cabinet 6 October 2569, with Raman among Yala's exceptions. Cited from the Thai PBS report. A Royal Gazette notice for this extension was not found.",
+      th: "การขยายสถานการณ์ฉุกเฉินที่มีความร้ายแรง ครั้งที่ 86 มีผล 20 ตุลาคม 2569 ถึง 19 มกราคม 2570 มติคณะรัฐมนตรี 6 ตุลาคม 2569 และรามันอยู่ในอำเภอยกเว้นของยะลา อ้างจากรายงานของไทยพีบีเอส ยังไม่พบประกาศในราชกิจจานุเบกษาสำหรับการขยายครั้งนี้",
+      zh: "严重紧急状态第 86 次延长，佛历 2569 年 10 月 20 日至 2570 年 1 月 19 日有效，内阁 2569 年 10 月 6 日，拉曼列入也拉的除外县。引自泰国公共广播的报道。没有找到这次延长的皇家公报。",
     },
     usedFor: { en: "The decree line on quiet retirement, families, remote workers and tourism", th: "บรรทัดประกาศฉุกเฉินในเลนส์เกษียณแบบสงบ ครอบครัว คนทำงานทางไกล และท่องเที่ยว", zh: "安静退休、家庭、远程工作和旅游镜头上的紧急状态一行" },
-    url: "https://www.thaigov.go.th/th/news/169828",
+    url: "https://www.thaipbs.or.th/news/content/559232",
     licence: { en: "not stated", th: "ไม่ได้ระบุ", zh: "未标明" },
   },
   {

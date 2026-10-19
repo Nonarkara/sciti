@@ -52,8 +52,9 @@ test("coverage, methods, compare, place and old addresses", async ({ page }) => 
   await expect(page.locator("table")).toContainText("yes");
   await expect(page.locator("table")).toContainText("no");
   await page.goto("/compare?a=th-15&b=th-35");
-  await expect(page.locator("table")).toContainText("Published zero in the BOI table");
+  await expect(page.locator("table")).toContainText("Jobs not reported");
   await expect(page.locator("table")).toContainText("Not in the BOI table");
+  await expect(page.locator("table")).not.toContainText("Published zero in the BOI table");
   await page.goto("/");
   await page.locator("#map path").first().click();
   await expect(page).toHaveURL(/\/place\/th-/);

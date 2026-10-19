@@ -93,6 +93,7 @@ export type ComponentSpec = {
   decisive: boolean;
   sinceYear?: number;
   missingAsZero?: boolean;
+  scale?: "log1p-minmax";
   display?: { mul: number; digits: number; unit: Tr };
   name: Tr;
   note: Tr;

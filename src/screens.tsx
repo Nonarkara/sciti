@@ -90,14 +90,19 @@ export function CompareScreen({
               const left = latest(baseline, indicator.id, a);
               const right = latest(baseline, indicator.id, b);
               const published = baseline.observations.some((item) => item.indicatorId === indicator.id);
-              const cell = (value: typeof left) => figurePhrase(lang, indicator, value, published);
+              const inBoi = (placeId: string) =>
+                baseline.observations.some(
+                  (item) => item.placeId === placeId && (item.indicatorId === "economy.investment" || item.indicatorId === "economy.boi_projects"),
+                );
+              const cell = (value: typeof left, placeId: string) =>
+                figurePhrase(lang, indicator, value, published, indicator.id === "economy.boi_jobs" && inBoi(placeId));
               return (
                 <tr key={indicator.id}>
                   <td>
                     <a href={hrefFor(`/indicator/${indicator.id}`)}>{indicatorLabel(lang, indicator)}</a>
                   </td>
-                  <td>{cell(left)}</td>
-                  <td>{cell(right)}</td>
+                  <td>{cell(left, a)}</td>
+                  <td>{cell(right, b)}</td>
                 </tr>
               );
             })}

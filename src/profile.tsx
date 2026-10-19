@@ -108,7 +108,12 @@ export function Profile({
             <ul className="plain">
               {indicators.map((indicator) => {
                 const value = latest(baseline, indicator.id, placeId);
-                const phrase = figurePhrase(lang, indicator, value, anyHere(indicator.id));
+                const inBoi =
+                  indicator.id === "economy.boi_jobs" &&
+                  baseline.observations.some(
+                    (item) => item.placeId === placeId && (item.indicatorId === "economy.investment" || item.indicatorId === "economy.boi_projects"),
+                  );
+                const phrase = figurePhrase(lang, indicator, value, anyHere(indicator.id), inBoi);
                 const currentAir = value && (indicator.id === "env.pm25" || indicator.id === "env.aqi") ? phrase !== t(lang, "noCurrentReading") : true;
                 return (
                   <li key={indicator.id}>

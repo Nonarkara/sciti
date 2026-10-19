@@ -52,5 +52,8 @@ test("the hourly air name does not say this hour, and a stale pull is marked", (
   assert.match(yala.note, /extension 86/);
   assert.match(yala.note, /Raman/);
   assert.equal(yala.value, 1);
-  assert.equal(yala.sourceUrl, "https://www.thaigov.go.th/th/news/169828");
+  assert.equal(yala.sourceUrl, "https://www.thaipbs.or.th/news/content/559232");
+  assert.equal(baseline.observations.some((row) => row.indicatorId === "economy.boi_jobs" && row.value === 0), false);
+  assert.equal(baseline.localities.filter((item) => !item.zh).length, 0);
+  assert.equal(baseline.localities.find((item) => item.id === "skh-sadao").zh, "沙道镇");
 });

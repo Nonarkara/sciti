@@ -71,9 +71,9 @@ export const LABELS = {
     status: "ok",
     unit: u("jobs", "ตำแหน่ง", "个岗位"),
     method: m(
-      "Planned employment on BOI-approved projects in 2025, Thai and foreign jobs added together where the table gives both. A published zero is a real zero. A province the table omits is blank, not zero.",
-      "การจ้างงานตามแผนของโครงการที่บีโอไอให้การส่งเสริมปี 2025 รวมคนไทยและคนต่างชาติเมื่อตารางให้ทั้งสองจำนวน ศูนย์ที่เผยแพร่คือศูนย์จริง จังหวัดที่ตารางไม่ได้ลงจะว่าง ไม่ใช่ศูนย์",
-      "2025 年 BOI 批准项目的计划就业，表上同时给出泰国人和外国人时，两者相加。公布的零是真正的零。表上没有的府是空白，不是零。",
+      "Planned employment on BOI-approved projects in 2025, Thai and foreign jobs added together where the table gives both. A cell that is Thai 0 + foreign 0 is unreported and is not stored. A province the table omits is blank. Neither is shown as zero.",
+      "การจ้างงานตามแผนของโครงการที่บีโอไอให้การส่งเสริมปี 2025 รวมคนไทยและคนต่างชาติเมื่อตารางให้ทั้งสองจำนวน ช่องที่เป็นคนไทย 0 บวกคนต่างชาติ 0 คือไม่ได้รายงาน และไม่ได้ถูกเก็บ จังหวัดที่ตารางไม่ได้ลงจะว่าง ทั้งสองอย่างไม่ถูกแสดงเป็นศูนย์",
+      "2025 年 BOI 批准项目的计划就业，表上同时给出泰国人和外国人时，两者相加。泰国人 0 加外国人 0 的格子视为未报告，不入库。表上没有的府留空。两者都不显示为零。",
     ),
   },
   "economy.new_firms": {

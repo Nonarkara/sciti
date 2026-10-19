@@ -1,8 +1,9 @@
 // Legal geography of the serious emergency decree. Not a crime series.
 // Extension 86, Cabinet 6 October 2569, in force 20 October 2569 through 19 January 2570.
-// https://www.thaigov.go.th/th/news/169828
+// Cited from the Thai PBS report. A Royal Gazette notice for extension 86 was not found.
+// https://www.thaipbs.or.th/news/content/559232
 
-const SOURCE_URL = "https://www.thaigov.go.th/th/news/169828";
+const SOURCE_URL = "https://www.thaipbs.or.th/news/content/559232";
 const AS_OF = "2026-10-20";
 const PERIOD = "2026-10-20";
 
@@ -28,7 +29,7 @@ export function decreeObservations(placeIds) {
     sourceUrl: SOURCE_URL,
     publisher: "Cabinet of Thailand",
     licence: "not stated",
-    sourceName: "Cabinet resolution, 6 October 2569, emergency-decree extension 86",
+    sourceName: "Thai PBS report of the Cabinet resolution, 6 October 2569, emergency-decree extension 86",
     note: NOTE,
     fetchedAt: "2026-10-19T12:00:00.000Z",
   }));
