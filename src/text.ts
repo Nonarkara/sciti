@@ -136,6 +136,13 @@ export function ratePhrase(lang: Lang, rate: number): string {
   return `${pct} percent a year`;
 }
 
+export function outOf100(lang: Lang, score: number): string {
+  const n = num(score, 0);
+  if (lang === "th") return `${n} จาก 100`;
+  if (lang === "zh") return `100 分里的 ${n} 分`;
+  return `${n} out of 100`;
+}
+
 export function coveragePhrase(lang: Lang, have: number, of: number): string {
   if (lang === "th") return `${have} จาก ${of} ${t(lang, "coverageLine")}`;
   if (lang === "zh") return `${of} 项里的 ${have} 项`;

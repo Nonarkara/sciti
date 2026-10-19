@@ -1,5 +1,5 @@
 import type { Baseline, Lang, Lens, ScoreRow } from "./types";
-import { coveragePhrase, day, namesFor, num, partSentence, placeName, regions, t, topParts, tr } from "./text";
+import { coveragePhrase, day, namesFor, num, outOf100, partSentence, placeName, regions, t, topParts, tr } from "./text";
 
 function latest(baseline: Baseline, indicatorId: string, placeId: string) {
   const rows = baseline.observations.filter((item) => item.indicatorId === indicatorId && item.placeId === placeId);
@@ -46,7 +46,7 @@ export function Profile({
       ) : null}
       {row && row.score != null ? (
         <p>
-          {row.rank}. {coveragePhrase(lang, row.coverage.have, row.coverage.of)}. {num(row.score, 0)} out of 100.
+          {row.rank}. {coveragePhrase(lang, row.coverage.have, row.coverage.of)}. {outOf100(lang, row.score)}.
         </p>
       ) : null}
       {row ? (

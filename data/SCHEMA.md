@@ -26,7 +26,7 @@ The built-in job keeps a figure the file does not mention. If the file repeats t
 | `note` | One sentence on how the figure was read. It becomes the method text for a new indicator. |
 | `area` | One of `environment`, `economy`, `mobility`, `energy`, `people`, `living`, `governance`, or `other`. |
 | `direction` | `higher` or `lower`. Default is `higher`. |
-| `name_en`, `name_th`, `name_zh` | Names for a new indicator. |
+| `name_en`, `name_th`, `name_zh` | Names for a new indicator. An empty Thai or Chinese name is shown in English. |
 
 JSON is either an array of those objects, or `{ "observations": [ ... ] }`.
 

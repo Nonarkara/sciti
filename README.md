@@ -36,7 +36,7 @@ That publish is GitHub Pages, at `https://nonarkara.github.io/sciti/`.
 
 This repo does not create a Cloudflare Worker and it does not attach a card to anything. GitHub Actions on a public repository is the compute. There is no spend cap to set because there is no paid meter in this pipeline.
 
-A weekly workflow, [.github/workflows/ingest.yml](.github/workflows/ingest.yml), refreshes the figures and commits them on `main`. That commit starts the deploy workflow. If you do not want a data refresh to republish the site, disable the ingest workflow.
+A weekly workflow, [.github/workflows/ingest.yml](.github/workflows/ingest.yml), refreshes the figures and commits them on `main`. A push made with the default Actions token does not start another workflow, so that commit does not publish the site by itself. The new figures reach GitHub Pages on the next push to `main` that is not made by that token. The deploy workflow can also be run by hand. This repo does not add a separate token to make the refresh publish on its own. Disable the ingest workflow if you do not want it to commit.
 
 ### Rollback
 
