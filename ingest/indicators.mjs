@@ -133,6 +133,30 @@ export const INDICATORS = [
     },
   },
   {
+    id: "governance.emergency_decree",
+    area: "governance",
+    status: "ok",
+    direction: "lower",
+    licence: "not stated",
+    unit: { en: "1 = designated in part", th: "1 = ถูกประกาศบางส่วน", zh: "1 = 部分地区被宣布" },
+    name: {
+      en: "Emergency decree on part of the province",
+      th: "ประกาศสถานการณ์ฉุกเฉินในบางส่วนของจังหวัด",
+      zh: "府内部分地区的紧急状态",
+    },
+    sourceName: {
+      en: "Cabinet of Thailand, extension 85",
+      th: "คณะรัฐมนตรี การขยายครั้งที่ 85",
+      zh: "泰国内阁，第 85 次延长",
+    },
+    sourceUrl: "https://www.thaigov.go.th/th/news/166390",
+    method: {
+      en: "1 if any district of the province is inside the serious-emergency area in force on 19 October 2569, otherwise 0, for every province. The Cabinet resolution of 14 July 2569 (extension 85) runs from 20 July through 19 October 2569. Narathiwat except Yi-ngo, Waeng and Sukhirin. Pattani except Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan. Yala except Betong, Yaha, Kabang and Krong Pinang. On 6 October 2569 the Cabinet resolved to continue that area from 20 October 2569 through 19 January 2570 and to add Raman to Yala's exceptions (https://www.thaipbs.or.th/news/content/559232). The 1 does not change on that date, because other districts in each of the three provinces stay designated. Songkhla is 0: the decree does not cover it. This is a legal map, not a count of incidents. Provincial crime is still missing. Deep South Watch does not publish a current series for all 77 provinces, and the Royal Thai Police tables that were found are national totals. Neither is stored as zero.",
+      th: "เป็น 1 ถ้าอำเภอใดในจังหวัดอยู่ในพื้นที่สถานการณ์ฉุกเฉินที่มีความร้ายแรงซึ่งยังมีผลในวันที่ 19 ตุลาคม 2569 ไม่เช่นนั้นเป็น 0 ครบทุกจังหวัด มติคณะรัฐมนตรีวันที่ 14 กรกฎาคม 2569 (ครั้งที่ 85) มีผลตั้งแต่วันที่ 20 กรกฎาคมถึง 19 ตุลาคม 2569 นราธิวาสยกเว้นยี่งอ แว้ง และสุคิริน ปัตตานียกเว้นยะหริ่ง ปะนาเระ มายอ ไม้แก่น ทุ่งยางแดง กะพ้อ และแม่ลาน ยะลายกเว้นเบตง ยะหา กาบัง และกรงปินัง วันที่ 6 ตุลาคม 2569 คณะรัฐมนตรีมีมติต่อพื้นที่นี้ออกไปตั้งแต่วันที่ 20 ตุลาคม 2569 ถึง 19 มกราคม 2570 และเพิ่มรามันในข้อยกเว้นของยะลา (https://www.thaipbs.or.th/news/content/559232) ค่า 1 ไม่เปลี่ยนในวันนั้น เพราะแต่ละจังหวัดในสามจังหวัดยังมีอำเภออื่นที่ถูกประกาศอยู่ สงขลาเป็น 0 เพราะประกาศนี้ไม่ครอบคลุมสงขลา นี่คือแผนที่กฎหมาย ไม่ใช่จำนวนเหตุการณ์ อาชญากรรมรายจังหวัดยังขาด ศูนย์เฝ้าระวังสถานการณ์ภาคใต้ไม่ได้เผยแพร่ชุดข้อมูลปัจจุบันครบ 77 จังหวัด และตารางของสำนักงานตำรวจแห่งชาติที่พบเป็นยอดทั้งประเทศ ทั้งสองอย่างไม่ได้ถูกเก็บเป็นศูนย์",
+      zh: "如果该府有任何一个县处在佛历 2569 年 10 月 19 日仍有效的严重紧急状态区域内，记为 1，否则记为 0，77 个府都有值。2569 年 7 月 14 日的内阁决议（第 85 次延长）覆盖 7 月 20 日至 10 月 19 日。那拉提瓦除外县为伊戈、瓦英、素奇林。北大年除外县为亚灵、巴纳雷、玛腰、迈干、通央登、卡坡、湄兰。也拉除外县为勿洞、亚哈、甲邦、格龙披南。2569 年 10 月 6 日，内阁决议把同一区域从 2569 年 10 月 20 日续到 2570 年 1 月 19 日，并把拉曼加入也拉的除外县（https://www.thaipbs.or.th/news/content/559232）。到那一天，1 不会改，因为三省各自仍有其他县被划入。宋卡是 0：这项宣布不包括宋卡。这是法律地图，不是事件计数。分府犯罪仍然缺失。深南观察没有公布覆盖全部 77 府的当前序列，找得到的皇家警察表是全国合计。两者都不会被存成零。",
+    },
+  },
+  {
     id: "governance.datasets",
     area: "governance",
     status: "ok",
@@ -206,6 +230,14 @@ if (priceIndicator) {
 for (const id of ["governance.crime", "living.density", "economy.wages"]) {
   const item = INDICATORS.find((indicator) => indicator.id === id);
   if (item) item.direction = "lower";
+}
+const crimeIndicator = INDICATORS.find((indicator) => indicator.id === "governance.crime");
+if (crimeIndicator) {
+  crimeIndicator.method = {
+    en: "Not in the file. Royal Thai Police tables that were found are national totals. Deep South Watch publishes incident summaries for the southern border, not a current figure for all 77 provinces. Road deaths are not used as a stand-in, and a blank is not stored as zero. The emergency-decree line is a separate indicator.",
+    th: "ยังไม่อยู่ในไฟล์ ตารางของสำนักงานตำรวจแห่งชาติที่พบเป็นยอดทั้งประเทศ ศูนย์เฝ้าระวังสถานการณ์ภาคใต้เผยแพร่สรุปเหตุการณ์ชายแดนใต้ ไม่ใช่ตัวเลขปัจจุบันครบ 77 จังหวัด ไม่ได้ใช้ผู้เสียชีวิตบนถนนมาแทน และช่องว่างไม่ได้ถูกเก็บเป็นศูนย์ บรรทัดประกาศสถานการณ์ฉุกเฉินเป็นตัวชี้วัดคนละตัว",
+    zh: "还不在文件里。找得到的皇家警察表是全国合计。深南观察公布的是南部边境的事件摘要，不是覆盖全部 77 府的当前数字。不用道路死亡来代替，空着也不会存成零。紧急状态是另一个指标。",
+  };
 }
 
 export const AREAS = [

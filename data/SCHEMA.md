@@ -70,6 +70,7 @@ These ids are already named on the site. Send the same id and the row fills that
 | `people.internet_households` | Households with internet. Not a broadband speed. | no |
 | `mobility.road_deaths` | Road deaths per 100,000 people. | no |
 | `energy.electricity` | Electricity use. | no |
+| `governance.emergency_decree` | `1` if any district is under the serious emergency decree, otherwise `0`, for every province. Not a crime count. The built-in table fills this. Do not send a partial list. | no |
 
 `data/incoming/sciti_incoming.csv` is the cited file: 3,400 rows, 77 provinces. `data/research/` holds the city list, the indicator catalog, the depa table, and the notes on sources, coverage and lenses.
 
@@ -79,7 +80,7 @@ These are still empty. A blank is not stored as zero.
 | --- | --- |
 | `living.beds` | Hospital beds by province |
 | `living.density` | Density. Population is in the file. Province area is not. |
-| `governance.crime` | Provincial crime |
+| `governance.crime` | Provincial crime. The decree line above is not this. |
 | `economy.permits` | Construction permits |
 | `economy.wages` | Average wages. The minimum wage is a different series. |
 | `people.graduates` | Graduates. Enrolment is a different series. |

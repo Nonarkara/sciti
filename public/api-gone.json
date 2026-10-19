@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "error": "The city API served the old composite. The provincial file is /data/baseline.json and the table is /data/baseline.csv."
+}

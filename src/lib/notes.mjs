@@ -16,6 +16,26 @@ export const PLACE_NOTES = {
     th: "กาญจนบุรีเป็นเขตเศรษฐกิจพิเศษชายแดนระยะที่ 2 นำเข้าที่สังขละบุรีในไฟล์ศุลกากรปี 2024 น่าจะรวมก๊าซทางท่อ ดังนั้นยอดจังหวัดไม่ใช่สินค้าที่ข้ามด่านทั้งหมด",
     zh: "北碧是第二期边境经济特区。2024 年海关文件里桑卡拉武里的进口很可能包括管道天然气，所以府合计并不全是过关的货物。",
   },
+  "th-90": {
+    en: "Songkhla is not under the emergency decree. Four districts, Chana, Thepha, Na Thawi and Saba Yoi, were internal-security areas under the 2008 Internal Security Act through 30 September 2569, the window reported from the 30 September 2568 Cabinet extension (https://isranews.org/article/south-news/other-news/146422-sungaikolok.html). A renewal after 30 September 2569 is not in this file, so the province is not scored as a current security zone. Provincial crime is still missing, including for those districts.",
+    th: "สงขลาไม่อยู่ใต้ประกาศสถานการณ์ฉุกเฉิน สี่อำเภอ คือจะนะ เทพา นาทวี และสะบ้าย้อย เป็นพื้นที่ความมั่นคงตามพระราชบัญญัติการรักษาความมั่นคงภายในราชอาณาจักร พ.ศ. 2551 จนถึงวันที่ 30 กันยายน 2569 ตามที่รายงานจากมติคณะรัฐมนตรีวันที่ 30 กันยายน 2568 (https://isranews.org/article/south-news/other-news/146422-sungaikolok.html) ยังไม่พบการขยายหลังวันนั้นในไฟล์นี้ จึงไม่ได้ให้คะแนนจังหวัดเป็นเขตความมั่นคงที่ยังมีผล อาชญากรรมรายจังหวัดยังขาด รวมถึงสี่อำเภอนั้น",
+    zh: "宋卡不在紧急状态宣布之内。乍那、特帕、那他威、沙拜依四个县，曾按佛历 2551 年《国内安全法》列为内部安全区，到佛历 2569 年 9 月 30 日为止。这个窗口来自佛历 2568 年 9 月 30 日内阁延长的报道（https://isranews.org/article/south-news/other-news/146422-sungaikolok.html）。这份文件里没有之后的延长，所以没有把该府按现行安全区计分。分府犯罪仍然缺失，包括那四个县。",
+  },
+  "th-94": {
+    en: "Part of Pattani is under the emergency decree through 19 October 2569, and the Cabinet resolution of 6 October 2569 continues it to 19 January 2570. Excepted districts: Yaring, Panare, Mayo, Mai Kaen, Thung Yang Daeng, Kapho and Mae Lan. This is not a count of violent incidents. Provincial crime is not in the file. Quiet retirement and families move Pattani down because of the designation.",
+    th: "ปัตตานีบางส่วนอยู่ใต้ประกาศสถานการณ์ฉุกเฉินถึงวันที่ 19 ตุลาคม 2569 และมติคณะรัฐมนตรีวันที่ 6 ตุลาคม 2569 ให้ต่อถึงวันที่ 19 มกราคม 2570 อำเภอยกเว้นคือยะหริ่ง ปะนาเระ มายอ ไม้แก่น ทุ่งยางแดง กะพ้อ และแม่ลาน นี่ไม่ใช่จำนวนเหตุรุนแรง อาชญากรรมรายจังหวัดยังไม่อยู่ในไฟล์ เลนส์เกษียณแบบสงบและครอบครัวดันปัตตานีลงเพราะการประกาศนี้",
+    zh: "北大年的部分地区处于紧急状态，至佛历 2569 年 10 月 19 日，2569 年 10 月 6 日的内阁决议把它续到 2570 年 1 月 19 日。除外县：亚灵、巴纳雷、玛腰、迈干、通央登、卡坡、湄兰。这不是暴力事件的计数。分府犯罪不在文件里。安静退休和家庭两个镜头因为这项划定把北大年下移。",
+  },
+  "th-95": {
+    en: "Part of Yala is under the emergency decree through 19 October 2569 (Cabinet, 14 July 2569): the province except Betong, Yaha, Kabang and Krong Pinang. From 20 October 2569 the Cabinet resolution of 6 October 2569 continues the decree and also excepts Raman. This is not a count of violent incidents. Provincial crime is not in the file. Quiet retirement and families move Yala down because of the designation.",
+    th: "ยะลาบางส่วนอยู่ใต้ประกาศสถานการณ์ฉุกเฉินถึงวันที่ 19 ตุลาคม 2569 (คณะรัฐมนตรี 14 กรกฎาคม 2569) คือทั้งจังหวัดยกเว้นเบตง ยะหา กาบัง และกรงปินัง ตั้งแต่วันที่ 20 ตุลาคม 2569 มติวันที่ 6 ตุลาคม 2569 ให้ต่อประกาศ และยกเว้นรามันเพิ่ม นี่ไม่ใช่จำนวนเหตุรุนแรง อาชญากรรมรายจังหวัดยังไม่อยู่ในไฟล์ เลนส์เกษียณแบบสงบและครอบครัวดันยะลาลงเพราะการประกาศนี้",
+    zh: "也拉的部分地区处于紧急状态，至佛历 2569 年 10 月 19 日（内阁，2569 年 7 月 14 日）：除勿洞、亚哈、甲邦、格龙披南以外的县。从 2569 年 10 月 20 日起，10 月 6 日的内阁决议延续这项宣布，并把拉曼也列为除外。这不是暴力事件的计数。分府犯罪不在文件里。安静退休和家庭两个镜头因为这项划定把也拉下移。",
+  },
+  "th-96": {
+    en: "Part of Narathiwat is under the emergency decree through 19 October 2569, continued by the 6 October 2569 Cabinet resolution to 19 January 2570. Excepted districts: Yi-ngo, Waeng and Sukhirin. Su-ngai Kolok is inside the decree in this window. This is not a count of violent incidents. Provincial crime is not in the file. Quiet retirement and families move Narathiwat down because of the designation.",
+    th: "นราธิวาสบางส่วนอยู่ใต้ประกาศสถานการณ์ฉุกเฉินถึงวันที่ 19 ตุลาคม 2569 และมติคณะรัฐมนตรีวันที่ 6 ตุลาคม 2569 ให้ต่อถึงวันที่ 19 มกราคม 2570 อำเภอยกเว้นคือยี่งอ แว้ง และสุคิริน สุไหงโก-ลกอยู่ในประกาศในช่วงนี้ นี่ไม่ใช่จำนวนเหตุรุนแรง อาชญากรรมรายจังหวัดยังไม่อยู่ในไฟล์ เลนส์เกษียณแบบสงบและครอบครัวดันนราธิวาสลงเพราะการประกาศนี้",
+    zh: "那拉提瓦的部分地区处于紧急状态，至佛历 2569 年 10 月 19 日，2569 年 10 月 6 日的内阁决议把它续到 2570 年 1 月 19 日。除外县：伊戈、瓦英、素奇林。素艾哥乐在这一窗口内仍被划入。这不是暴力事件的计数。分府犯罪不在文件里。安静退休和家庭两个镜头因为这项划定把那拉提瓦下移。",
+  },
 };
 
 export function placeNote(placeId) {

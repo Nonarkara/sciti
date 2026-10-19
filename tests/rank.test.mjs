@@ -244,6 +244,41 @@ test("the cited incoming file is accepted in full", async () => {
   assert.ok(blankBorder);
 });
 
+test("the emergency decree marks the deep south and is not a crime count", async () => {
+  const { decreeObservations } = await import("../ingest/sources/security.mjs");
+  const text = await readFile(new URL("../data/incoming/sciti_incoming.csv", import.meta.url), "utf8");
+  const incoming = acceptRows(rowsFromCsv(text)).accepted;
+  const placeIds = [...new Set(incoming.map((row) => row.placeId))].sort();
+  const decree = decreeObservations(placeIds);
+  assert.equal(decree.length, 77);
+  assert.equal(decree.find((row) => row.placeId === "th-95").value, 1);
+  assert.equal(decree.find((row) => row.placeId === "th-94").value, 1);
+  assert.equal(decree.find((row) => row.placeId === "th-96").value, 1);
+  assert.equal(decree.find((row) => row.placeId === "th-90").value, 0);
+  assert.equal(decree.find((row) => row.placeId === "th-10").value, 0);
+  assert.equal(decree.filter((row) => row.value === 1).length, 3);
+  const observations = incoming.concat(decree);
+  assert.equal(observations.some((row) => row.indicatorId === "governance.crime"), false);
+  for (const lensId of ["quiet", "families"]) {
+    const lens = LENSES.find((item) => item.id === lensId);
+    const scored = scoreLens({ placeIds, observations, components: lens.components, rankGate: lens.rankGate });
+    if (lensId === "families") assert.equal(scored.notInFile.includes("governance.crime"), true);
+    if (lensId === "quiet") assert.equal(scored.notInFile.includes("living.density"), true);
+    assert.equal(scored.contextOnly, false);
+    const yala = scored.rows.find((row) => row.placeId === "th-95");
+    const pattani = scored.rows.find((row) => row.placeId === "th-94");
+    const nst = scored.rows.find((row) => row.placeId === "th-80");
+    const part = yala.parts.find((item) => item.id === "governance.emergency_decree");
+    assert.equal(part.state, "flag-used");
+    assert.equal(part.value, 1);
+    assert.ok(part.oriented < 10);
+    assert.ok(yala.rank > 10);
+    assert.ok(pattani.rank > 10);
+    assert.ok(nst.rank < yala.rank);
+    assert.ok(nst.score > yala.score);
+  }
+});
+
 test("a province with no border checkpoint is not scored as zero trade", () => {
   const talent = LENSES.find((lens) => lens.id === "talent");
   const observations = [

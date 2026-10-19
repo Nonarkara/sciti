@@ -4,9 +4,11 @@ Which cities? sciti lines up figures that Thai offices have already published, f
 
 The question on the first page is the product. A lens is a weighting you can read and move. Growth, quiet retirement, and talent at the border publish an order from the cited file. Families, logistics, remote work and tourism stay marked proposed. They publish an order only from the figures that are actually in the file, and the page says what is still missing.
 
+Quiet retirement and families also carry a legal line, not a crime rate. Provincial crime is still missing. Parts of Yala, Pattani and Narathiwat are under the emergency decree through 19 October 2569, so those three are marked and moved down on those two lenses. Songkhla is not under that decree.
+
 ## What a number is
 
-Every figure has a source link, a publisher and a date. The ingest reads public files, retries, and on failure keeps the last good copy and marks it stale. It does not invent a zero. The cited file in `data/incoming/sciti_incoming.csv` fills investment, border trade, students, doctors, visitors, receipts, electricity, gross provincial product for 2021–2023, and the Treasury land appraisal. Hospital beds, provincial crime, construction permits, average wages, graduates, market sale prices, gross provincial product for 2024, urban green space, transit use, broadband speed and governance quality stay empty. The appraisal is not a market price. A province is called undervalued for its fundamentals only when its lens mark sits at least 5 points above the appraisal's percentile.
+Every figure has a source link, a publisher and a date. The ingest reads public files, retries, and on failure keeps the last good copy and marks it stale. It does not invent a zero. The cited file in `data/incoming/sciti_incoming.csv` fills investment, border trade, students, doctors, visitors, receipts, electricity, gross provincial product for 2021–2023, and the Treasury land appraisal. The emergency-decree line is filled by `ingest/sources/security.mjs` from the Cabinet resolution of 14 July 2569, for all 77 provinces. Hospital beds, provincial crime, construction permits, average wages, graduates, market sale prices, gross provincial product for 2024, urban green space, transit use, broadband speed and governance quality stay empty. The appraisal is not a market price. A province is called undervalued for its fundamentals only when its lens mark sits at least 5 points above the appraisal's percentile.
 
 The map boundaries are [geoBoundaries](https://www.geoboundaries.org/) ADM1 for Thailand, built from OpenStreetMap, © OpenStreetMap contributors, under the ODbL.
 
@@ -60,25 +62,55 @@ On `https://nonarkara.github.io/sciti/`:
 
 Then look at `https://sciti.nonarkara.org` separately. Until its origin is this build, it will keep serving the previous site. Do not treat a green GitHub Pages deploy as a green custom domain.
 
-### Custom domain, when you choose to cut over
+### Custom domain
 
-Do not cut over as part of merging this branch. The two hosts are not the same site.
+`https://sciti.nonarkara.org` is the Cloudflare Pages project `smart-city-thailand-index`. Today that project is built from [github.com/Nonarkara/smart-city-thailand-index](https://github.com/Nonarkara/smart-city-thailand-index): `public/CNAME` is `sciti.nonarkara.org`, and `scripts/cdpt.sh` deploys with wrangler to that project after its own tests. This repository does not deploy that hostname. Merging here publishes GitHub Pages only. Do not add a `CNAME` file here. A `CNAME` would also attach the hostname to GitHub Pages, and this project's Pages base path is `/sciti/`.
 
-What is true today, checked on 19 Oct 2026:
+The live project is not only static. It has Pages Functions at `functions/api/cities.ts` and `functions/api/[[catchall]].ts`. Those functions read a generated city index and return the old composite scores. It also has a Supabase client and a visitor log. None of that is in this build.
 
-- GitHub Pages for this repo is the `gh-pages` branch, from `/`, with no custom domain attached. The Pages API reports `cname: null` and `https://nonarkara.github.io/sciti/`. The HTML there loads `/sciti/assets/…`. `last-modified` on that index was 11 Jul 2026. Pushing `main` is what replaces it, and only after this pull request is merged.
-- `https://sciti.nonarkara.org` answers with `server: cloudflare`. The DNS is on Cloudflare (`liz.ns.cloudflare.com`, `jaxson.ns.cloudflare.com`) and the address is Cloudflare's anycast range. The HTML cache header `public, max-age=0, must-revalidate` is the usual Cloudflare Pages pattern. The page loads `/static/index-….js`, Leaflet from `unpkg.com`, and fonts from `fonts.googleapis.com`. The bundle names pages (`AsusPage`, `GeminiChat`, `ScitiBingoPage`) that are not in this repository's history. There is no `wrangler.toml`, no `_headers`, and no `CNAME` here. This repo's deploy workflow cannot be what is serving that hostname.
-- The edge sends this content security policy: `default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'`. The live page needs `unpkg` and Google Fonts. This build does not. Jost, Prompt and the Noto Sans SC subset are files in the site.
+`scripts/deploy-cf.sh` is the cutover script for a later day. It is not run by CI. It reads `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` from the environment and does not contain a secret. It runs the tests, lint, and a root build (`GITHUB_ACTIONS` unset, so the base path is `/`), then:
 
-A safe cutover, in this order:
+```bash
+npx wrangler pages deploy dist --project-name smart-city-thailand-index --branch preview-v2
+```
 
-1. Merge only when you mean to publish GitHub Pages. Confirm `https://nonarkara.github.io/sciti/` in English, Thai and Chinese, including `/city/phuket`, `/bingo`, a missing path, and that scripts load from `/sciti/assets/`.
-2. Leave the custom domain where it is while you do that. Do not add a `CNAME` to this repo. A `CNAME` would attach the hostname to GitHub Pages, and the project site's base path is `/sciti/`, so the apex domain would request assets at the wrong path.
-3. Build a root copy for the domain with the base path `/`. That is `npm run build` without `GITHUB_ACTIONS=true`. Open `dist/index.html` and confirm the script and the stylesheet are `/assets/…`, and that the file does not mention `fonts.googleapis.com` or `unpkg.com`.
-4. On Cloudflare, deploy that `dist` as a preview first (the Pages project that already owns the hostname, or a new project if the current one is a manual upload). Open the preview URL, not the public hostname. Check the map, the three languages, `/city/phuket`, `/bingo`, and a missing path.
-5. Keep the current content security policy in place for the promotion. This build only needs `'self'`, so the old policy does not block it. Tightening the policy before the promotion would break the site that is live now, because that site still loads `unpkg` and Google Fonts.
-6. Promote the preview. Then confirm the public hostname no longer requests `unpkg` or `fonts.googleapis.com`. After that, the policy can drop those two hosts: `script-src 'self'; style-src 'self'; font-src 'self'`. `img-src` can stay `'self' data:` unless a later page needs an outside image.
-7. Rollback is the previous Cloudflare deployment. In the Pages project, roll the production deployment back to the one that was live before the promotion. Do not delete that deployment. DNS does not have to move. If the hostname was pointed somewhere else instead, put the DNS record back. Rolling back GitHub Pages is a separate act, described above, and it does not restore this hostname.
+It uploads `dist` only, so the preview has no Pages Functions. It then checks the preview URL: the new script is served as JavaScript, `/bingo` is a 302, `/city/phuket` redirects to `/place/th-83`, an unknown path is a 404, and `/api/cities` does not return `compositeScore`. It runs `tools/slop-lint.mjs` against the preview. It stops there. It does not deploy branch `main`, which is what would replace production.
+
+`public/_redirects` is the map of the old site. It was written from the live sitemap (118 `/city/` pages, plus `/about`, `/rankings`, `/methodology`, `/story`, `/why`, `/showcase`, `/creative-economy`, `/partners`, `/map`, `/program`, `/knowledge`, `/discover`, `/invest`, `/compare`, `/references`, `/audit`) and from the routes that answer 200 because the old shell catches them (`/bingo`, `/asus`, `/canvas/:id`, `/kimi`, `/data/cities.json`, `/downloads/SCITI-2026-cities-dataset.csv`, `/api/*`). Award and chat addresses go to About. Rankings, the story and the map go to the chooser. Methodology and references go to Methods. Each known city and canvas slug goes to its province. `/api/*` returns `api-gone.json` with status 404. This app's own routes are rewritten to `index.html`. Anything else is `404.html`.
+
+Promote only after the preview has been read in English, Thai and Chinese:
+
+```bash
+npx wrangler pages deploy dist --project-name smart-city-thailand-index --branch main --commit-dirty=true
+```
+
+The new deployment carries `public/_headers`. That policy is `'self'` plus `'unsafe-inline'` for the small path-restore script. It does not allow `unpkg` or Google Fonts. The deployment that is live now keeps the old policy until this one is promoted. Promoting does not change DNS. The hostname already points at the project.
+
+Rollback is the previous Cloudflare deployment. In the project `smart-city-thailand-index`, open Deployments and roll production back to the deployment that was live before the promotion. Do not delete it. Rolling back GitHub Pages does not restore this hostname.
+
+Caps, from Cloudflare's Pages limits (updated 5 Sep 2026) and Pages Functions pricing (updated 8 Sep 2026). This plan stays on static Pages:
+
+- Static requests and bandwidth are not billed.
+- Free plan: 500 builds a month, one at a time, 20 minutes each, 20,000 files, 25 MiB a file, 100 custom domains, 2,000 static redirects and 100 dynamic ones.
+- Pages Functions are billed as Workers. The free Workers allowance is 100,000 requests a day. This upload does not include a Function, a Worker, KV, D1, Durable Objects, R2, or paid image resizing. Do not turn those on to keep the old city API.
+
+### Proposed note for the other repository
+
+Do not push this. It is the text for a later pull request on `Nonarkara/smart-city-thailand-index`, after the preview above has been promoted.
+
+Title: The live site now ships from Nonarkara/sciti
+
+```markdown
+# This repository is no longer the live site
+
+https://sciti.nonarkara.org is built from https://github.com/Nonarkara/sciti and deployed to the Cloudflare Pages project `smart-city-thailand-index`.
+
+This repository is the previous site. It is not the place to change the public pages. The `cea-submission/` award pack, the bingo page, the city composite scores, the Gemini chat and the visitor log are not part of the new site.
+
+`scripts/cdpt.sh` still knows how to deploy this tree to the same Pages project. Do not run it. A deploy from here would replace the new site with this one. Leave the last production deployment in the Cloudflare dashboard so it can be rolled back to.
+
+The new site's old-address map lives in `sciti/public/_redirects`.
+```
 
 ## Colour
 

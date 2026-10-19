@@ -1,0 +1,19 @@
+# Headers for the static Cloudflare Pages upload.
+# This build does not load unpkg or fonts.googleapis.com.
+# The inline script in index.html is the GitHub Pages path restore, so script-src keeps 'unsafe-inline'.
+# The deployment that is live today keeps its own headers until this upload is promoted.
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+
+/api-gone.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+
+/data/*
+  X-Content-Type-Options: nosniff

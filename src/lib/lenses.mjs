@@ -345,6 +345,27 @@ const beds = raw(
   },
 );
 
+function decree(weight) {
+  return {
+    id: "governance.emergency_decree",
+    kind: "flag",
+    indicatorId: "governance.emergency_decree",
+    direction: "lower",
+    weight,
+    decisive: true,
+    name: {
+      en: "Emergency decree on part of the province",
+      th: "ประกาศสถานการณ์ฉุกเฉินในบางส่วนของจังหวัด",
+      zh: "府内部分地区的紧急状态",
+    },
+    note: {
+      en: "1 if the Cabinet announcement still covers any district, otherwise 0, for every province. Lower is better. A 0 is not a crime rate and it is not a claim that the province is safe. Provincial crime is a different line and it is still missing. Yala, Pattani and Narathiwat are 1. Songkhla is 0, because this decree does not cover it.",
+      th: "เป็น 1 ถ้าประกาศของคณะรัฐมนตรียังครอบคลุมอำเภอใด ไม่เช่นนั้นเป็น 0 ครบทุกจังหวัด ค่าน้อยกว่าดีกว่า ค่า 0 ไม่ใช่อัตราอาชญากรรม และไม่ใช่ข้ออ้างว่าจังหวัดปลอดภัย อาชญากรรมรายจังหวัดเป็นบรรทัดคนละบรรทัดและยังขาด ยะลา ปัตตานี และนราธิวาสเป็น 1 สงขลาเป็น 0 เพราะประกาศนี้ไม่ครอบคลุมสงขลา",
+      zh: "如果内阁宣布仍覆盖任何一个县，记为 1，否则记为 0，每个府都有值。越低越好。0 不是犯罪率，也不是在说这个府安全。分府犯罪是另一行，仍然缺失。也拉、北大年、那拉提瓦是 1。宋卡是 0，因为这项宣布不包括宋卡。",
+    },
+  };
+}
+
 const crime = raw(
   "governance.crime",
   15,
@@ -387,11 +408,11 @@ export const LENSES = [
       zh: "哪里空气更干净、医生更近、道路死亡更少、官方地价更低，并且在密度公布之后没那么挤？",
     },
     caveat: {
-      en: "The order uses 2025 bad-air days, doctors per 10,000 people, road deaths per 100,000, and the Treasury appraisal. Sixteen provinces have no PM2.5 station and stay blank. The doctor series may leave out private hospitals. There is no provincial crime series, so this is without that safety data. Density and hospital beds are named and missing. The appraisal is not a market price.",
-      th: "ลำดับใช้วันที่อากาศแย่ปี 2025 แพทย์ต่อหมื่นคน ผู้เสียชีวิตบนถนนต่อแสนคน และราคาประเมินของกรมธนารักษ์ สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างไว้ ชุดข้อมูลแพทย์อาจไม่รวมโรงพยาบาลเอกชน ไม่มีชุดอาชญากรรมรายจังหวัด ดังนั้นลำดับนี้ไม่มีข้อมูลความปลอดภัยแบบนั้น ความหนาแน่นและเตียงผู้ป่วยถูกตั้งชื่อไว้และยังขาด ราคาประเมินไม่ใช่ราคาตลาด",
-      zh: "名次用的是 2025 年的超标天数、每万人医生数、每十万人道路死亡，以及国库厅评估价。十六个府没有 PM2.5 站点，保持空白。医生序列可能不包括私立医院。没有分府犯罪序列，所以这个名次没有那种安全数据。密度和医院床位有名字，但还缺。评估价不是市场价。",
+      en: "Security data missing. The order uses 2025 bad-air days, doctors per 10,000 people, road deaths per 100,000, the Treasury appraisal, and whether any district is under the emergency decree. Parts of Yala, Pattani and Narathiwat are designated through 19 October 2569, so those three provinces are marked and moved down. That designation is not a count of violent incidents. Songkhla is not under the decree. Four of its districts, Chana, Thepha, Na Thawi and Saba Yoi, were internal-security areas through 30 September 2569, and a later extension is not in this file, so Songkhla is not scored as a security zone. Sixteen provinces have no PM2.5 station and stay blank. The doctor series may leave out private hospitals. Provincial crime, density and hospital beds are named and missing. The appraisal is not a market price.",
+      th: "ข้อมูลความปลอดภัยยังขาด ลำดับใช้วันที่อากาศแย่ปี 2025 แพทย์ต่อหมื่นคน ผู้เสียชีวิตบนถนนต่อแสนคน ราคาประเมินของกรมธนารักษ์ และว่ามีอำเภอใดอยู่ใต้ประกาศสถานการณ์ฉุกเฉินหรือไม่ ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศถึงวันที่ 19 ตุลาคม 2569 ดังนั้นสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง การประกาศไม่ใช่จำนวนเหตุรุนแรง สงขลาไม่อยู่ใต้ประกาศนี้ สี่อำเภอ คือจะนะ เทพา นาทวี และสะบ้าย้อย เป็นพื้นที่ความมั่นคงถึงวันที่ 30 กันยายน 2569 และยังไม่มีการขยายหลังวันนั้นในไฟล์นี้ จึงไม่ได้ให้คะแนนสงขลาเป็นเขตความมั่นคง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างไว้ ชุดข้อมูลแพทย์อาจไม่รวมโรงพยาบาลเอกชน อาชญากรรมรายจังหวัด ความหนาแน่น และเตียงผู้ป่วยถูกตั้งชื่อไว้และยังขาด ราคาประเมินไม่ใช่ราคาตลาด",
+      zh: "安全数据缺失。名次用的是 2025 年超标天数、每万人医生数、每十万人道路死亡、国库厅评估价，以及是否有县处于紧急状态。也拉、北大年、那拉提瓦的部分地区被划入，直至佛历 2569 年 10 月 19 日，所以这三个府被标出并下移。这项划定不是暴力事件的计数。宋卡不在这项宣布里。它的四个县——乍那、特帕、那他威、沙拜依——曾是内部安全区，到佛历 2569 年 9 月 30 日为止，这份文件里没有之后的延长，所以宋卡不按安全区计分。十六个府没有 PM2.5 站点，保持空白。医生序列可能不包括私立医院。分府犯罪、密度和医院床位有名字，但还缺。评估价不是市场价。",
     },
-    components: [badAir(20, true), doctors(20, true), deaths(20, true), land(20, true), density],
+    components: [badAir(20, true), doctors(20, true), deaths(20, true), land(20, true), decree(40), density],
   },
   {
     id: "talent",
@@ -421,11 +442,11 @@ export const LENSES = [
       zh: "已经公布的医生、空气、道路、互联网、在校生、官方地价和失业数字，会把一个家庭指向哪里？",
     },
     caveat: {
-      en: "Proposed. Those seven figures are in the file and they do order the map. School quality, childcare, provincial crime and hospital beds are not, so this is not a complete answer for a family. The doctor series may leave out private hospitals. The appraisal is not a market price.",
-      th: "ข้อเสนอ ตัวเลขเจ็ดชุดนั้นอยู่ในไฟล์และจัดลำดับแผนที่ได้ คุณภาพโรงเรียน สถานเลี้ยงเด็ก อาชญากรรมรายจังหวัด และเตียงผู้ป่วยยังไม่มี ดังนั้นนี่ไม่ใช่คำตอบครบสำหรับครอบครัว ชุดข้อมูลแพทย์อาจไม่รวมโรงพยาบาลเอกชน ราคาประเมินไม่ใช่ราคาตลาด",
-      zh: "这是提议。那七项数字在文件里，也能给地图排序。学校质量、托幼、分府犯罪和医院床位没有，所以这不是给一个家庭的完整答案。医生序列可能不包括私立医院。评估价不是市场价。",
+      en: "Proposed. Security data missing. The figures that are in the file do order the map, including the emergency-decree line: parts of Yala, Pattani and Narathiwat are designated through 19 October 2569, and those three are marked and moved down. That is not a crime count. Songkhla is not under the decree. Four districts, Chana, Thepha, Na Thawi and Saba Yoi, were internal-security areas through 30 September 2569, and no later extension is in this file. School quality, childcare, provincial crime and hospital beds are still missing, so this is not a complete answer for a family. The doctor series may leave out private hospitals. The appraisal is not a market price.",
+      th: "ข้อเสนอ ข้อมูลความปลอดภัยยังขาด ตัวเลขที่อยู่ในไฟล์จัดลำดับแผนที่ได้ รวมบรรทัดประกาศสถานการณ์ฉุกเฉิน ยะลา ปัตตานี และนราธิวาสบางส่วนถูกประกาศถึงวันที่ 19 ตุลาคม 2569 และสามจังหวัดนี้ถูกทำเครื่องหมายและถูกดันลง นั่นไม่ใช่จำนวนคดี สงขลาไม่อยู่ใต้ประกาศนี้ สี่อำเภอ จะนะ เทพา นาทวี และสะบ้าย้อย เป็นพื้นที่ความมั่นคงถึงวันที่ 30 กันยายน 2569 และไม่มีการขยายหลังวันนั้นในไฟล์นี้ คุณภาพโรงเรียน สถานเลี้ยงเด็ก อาชญากรรมรายจังหวัด และเตียงผู้ป่วยยังขาด ดังนั้นนี่ไม่ใช่คำตอบครบสำหรับครอบครัว ชุดข้อมูลแพทย์อาจไม่รวมโรงพยาบาลเอกชน ราคาประเมินไม่ใช่ราคาตลาด",
+      zh: "这是提议。安全数据缺失。文件里已有的数字会给地图排序，其中包括紧急状态这一行：也拉、北大年、那拉提瓦的部分地区被划入，直至佛历 2569 年 10 月 19 日，这三个府被标出并下移。这不是犯罪计数。宋卡不在这项宣布里。乍那、特帕、那他威、沙拜依四个县曾是内部安全区，到佛历 2569 年 9 月 30 日为止，文件里没有之后的延长。学校质量、托幼、分府犯罪和医院床位仍然缺失，所以这不是给一个家庭的完整答案。医生序列可能不包括私立医院。评估价不是市场价。",
     },
-    components: [doctors(15, true), badAir(15, true), deaths(15, true), internet(15), students(10, true), land(15, true), unemployment, schools, beds, crime],
+    components: [doctors(15, true), badAir(15, true), deaths(15, true), internet(15), students(10, true), land(15, true), unemployment, decree(40), schools, beds, crime],
   },
   {
     id: "logistics",
@@ -455,9 +476,9 @@ export const LENSES = [
       zh: "家庭互联网、更干净的空气、更低的官方评估价、新公司、外国游客和医生，在哪里碰在一起？",
     },
     caveat: {
-      en: "Proposed. Those figures are in the file. Household internet is not a measured broadband speed, and the Treasury appraisal is not a rent. Coworking counts and market rents are not in the file, so this does not answer a nomad's actual bill.",
-      th: "ข้อเสนอ ตัวเลขเหล่านั้นอยู่ในไฟล์ อินเทอร์เน็ตในครัวเรือนไม่ใช่ความเร็วบรอดแบนด์ที่วัดได้ และราคาประเมินของกรมธนารักษ์ไม่ใช่ค่าเช่า จำนวนโคเวิร์กกิงและค่าเช่าตลาดยังไม่อยู่ในไฟล์ ดังนั้นนี่ไม่ได้ตอบบิลจริงของคนทำงานนอกสถานที่",
-      zh: "这是提议。那些数字在文件里。家庭互联网不是测得的宽带速率，国库厅评估价也不是租金。联合办公的数量和市场租金还不在文件里，所以这回答不了一个远程工作者的实际账单。",
+      en: "Proposed. Those figures are in the file. Household internet is not a measured broadband speed, and the Treasury appraisal is not a rent. Coworking counts and market rents are not in the file, so this does not answer a nomad's actual bill. This lens does not include the emergency decree or provincial crime. Yala can rank high here while quiet retirement moves it down.",
+      th: "ข้อเสนอ ตัวเลขเหล่านั้นอยู่ในไฟล์ อินเทอร์เน็ตในครัวเรือนไม่ใช่ความเร็วบรอดแบนด์ที่วัดได้ และราคาประเมินของกรมธนารักษ์ไม่ใช่ค่าเช่า จำนวนโคเวิร์กกิงและค่าเช่าตลาดยังไม่อยู่ในไฟล์ ดังนั้นนี่ไม่ได้ตอบบิลจริงของคนทำงานนอกสถานที่ เลนส์นี้ไม่มีประกาศสถานการณ์ฉุกเฉินหรืออาชญากรรมรายจังหวัด ยะลาอาจอยู่อันดับสูงที่นี่ ในขณะที่เลนส์เกษียณแบบสงบดันลง",
+      zh: "这是提议。那些数字在文件里。家庭互联网不是测得的宽带速率，国库厅评估价也不是租金。联合办公的数量和市场租金还不在文件里，所以这回答不了一个远程工作者的实际账单。这个镜头不包括紧急状态，也不包括分府犯罪。也拉在这里可以排得高，而安静退休会把它下移。",
     },
     components: [internet(25), badAir(20, true), land(20, true), { ...newFirms, weight: 15 }, visitorsForeign(10), doctors(10, true)],
   },
@@ -472,9 +493,9 @@ export const LENSES = [
       zh: "收入、外国游客、酒店入住率、森林和更干净的空气，出现在哪一份已公布的文件里？",
     },
     caveat: {
-      en: "Proposed. Receipts per person, foreign visitors, occupancy, forest cover and bad-air days are published for the provinces that have them, and they do order the map. Seasonality and airport seats are not in the file. Forest cover is not a coastline. Sixteen provinces have no PM2.5 station and stay blank on that line.",
-      th: "ข้อเสนอ รายได้ต่อคน ผู้มาเยือนชาวต่างชาติ อัตราเข้าพัก พื้นที่ป่า และวันที่อากาศแย่ ถูกเผยแพร่สำหรับจังหวัดที่มี และจัดลำดับแผนที่ได้ ฤดูกาลและที่นั่งบนเครื่องบินยังไม่อยู่ในไฟล์ พื้นที่ป่าไม่ใช่ชายฝั่ง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างในบรรทัดนั้น",
-      zh: "这是提议。人均收入、外国游客、入住率、森林覆盖和超标天数，对有这些数字的府已经公布，也能给地图排序。淡旺季和机场座位还不在文件里。森林覆盖不是海岸线。十六个府没有 PM2.5 站点，那一行保持空白。",
+      en: "Proposed. Receipts per person, foreign visitors, occupancy, forest cover and bad-air days are published for the provinces that have them, and they do order the map. Seasonality and airport seats are not in the file. Forest cover is not a coastline. Sixteen provinces have no PM2.5 station and stay blank on that line. This lens does not include the emergency decree. Yala can rank high on visitors and forest while quiet retirement moves it down.",
+      th: "ข้อเสนอ รายได้ต่อคน ผู้มาเยือนชาวต่างชาติ อัตราเข้าพัก พื้นที่ป่า และวันที่อากาศแย่ ถูกเผยแพร่สำหรับจังหวัดที่มี และจัดลำดับแผนที่ได้ ฤดูกาลและที่นั่งบนเครื่องบินยังไม่อยู่ในไฟล์ พื้นที่ป่าไม่ใช่ชายฝั่ง สิบหกจังหวัดไม่มีสถานี PM2.5 และว่างในบรรทัดนั้น เลนส์นี้ไม่มีประกาศสถานการณ์ฉุกเฉิน ยะลาอาจอยู่อันดับสูงจากผู้มาเยือนและป่า ในขณะที่เลนส์เกษียณแบบสงบดันลง",
+      zh: "这是提议。人均收入、外国游客、入住率、森林覆盖和超标天数，对有这些数字的府已经公布，也能给地图排序。淡旺季和机场座位还不在文件里。森林覆盖不是海岸线。十六个府没有 PM2.5 站点，那一行保持空白。这个镜头不包括紧急状态。也拉可以因游客和森林排得高，而安静退休会把它下移。",
     },
     components: [{ ...tourismPerPerson, weight: 25 }, visitorsForeign(25), occupancy, forest, badAir(15, true)],
   },

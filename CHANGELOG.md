@@ -10,4 +10,5 @@ The site is a chooser. It asks which cities, and it answers with published figur
 - A file in `data/incoming` with a source, a publisher, a date and a licence fills the baseline on the next ingest.
 - The cited file adds investment, border trade, students, doctors, visitors, receipts, electricity, output for 2021–2023, and the Treasury appraisal. Lenses rank on those figures. A missing figure is still not a zero.
 - The appraisal is compared with the lens mark and labelled only as an official valuation. It is not a market price.
+- Quiet retirement and families mark Yala, Pattani and Narathiwat where the emergency decree still covers part of the province, and move them down. That line is the Cabinet map, not a crime count. Provincial crime stays empty. Songkhla is not scored as a security zone.
 - The public pages are in English, Thai and Chinese.

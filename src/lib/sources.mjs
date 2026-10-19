@@ -146,6 +146,18 @@ export const SOURCES = [
     licence: { en: "Official.", th: "ทางการ", zh: "官方。" },
   },
   {
+    id: "emergency-decree",
+    publisher: { en: "Cabinet of Thailand", th: "คณะรัฐมนตรี", zh: "泰国内阁" },
+    dataset: {
+      en: "Serious-emergency extension 85, in force 20 July through 19 October 2569",
+      th: "การขยายสถานการณ์ฉุกเฉินที่มีความร้ายแรง ครั้งที่ 85 มีผล 20 กรกฎาคมถึง 19 ตุลาคม 2569",
+      zh: "严重紧急状态第 85 次延长，佛历 2569 年 7 月 20 日至 10 月 19 日有效",
+    },
+    usedFor: { en: "The decree line on quiet retirement and families", th: "บรรทัดประกาศฉุกเฉินในเลนส์เกษียณแบบสงบและครอบครัว", zh: "安静退休和家庭镜头上的紧急状态一行" },
+    url: "https://www.thaigov.go.th/th/news/166390",
+    licence: { en: "not stated", th: "ไม่ได้ระบุ", zh: "未标明" },
+  },
+  {
     id: "wikidata",
     publisher: { en: "Wikidata", th: "วิกิสนเทศ", zh: "维基数据" },
     dataset: { en: "Province and municipality names and coordinates", th: "ชื่อและพิกัดของจังหวัดและเทศบาล", zh: "府和市镇的名称与坐标" },
@@ -180,6 +192,11 @@ export const RECORD_NOTES = [
     en: "The minimum wage is the statutory daily rate as of January 2568, not an average wage.",
     th: "ค่าจ้างขั้นต่ำคืออัตรารายวันตามกฎหมาย ณ มกราคม 2568 ไม่ใช่ค่าจ้างเฉลี่ย",
     zh: "最低工资是截至佛历 2568 年 1 月的法定日工资，不是平均工资。",
+  },
+  {
+    en: "Security data missing. There is no provincial crime series in the file. Parts of Yala, Pattani and Narathiwat are emergency-decree areas through 19 October 2569, and quiet retirement and families mark those three and move them down. Songkhla is not under that decree. Four of its districts were internal-security areas through 30 September 2569, and a later extension is not in this file, so Songkhla is not scored as a security zone. The decree line is not a count of incidents.",
+    th: "ข้อมูลความปลอดภัยยังขาด ไม่มีชุดอาชญากรรมรายจังหวัดในไฟล์ ยะลา ปัตตานี และนราธิวาสบางส่วนเป็นพื้นที่ประกาศสถานการณ์ฉุกเฉินถึงวันที่ 19 ตุลาคม 2569 และเลนส์เกษียณแบบสงบกับครอบครัวทำเครื่องหมายสามจังหวัดนี้แล้วดันลง สงขลาไม่อยู่ใต้ประกาศนั้น สี่อำเภอเคยเป็นพื้นที่ความมั่นคงถึงวันที่ 30 กันยายน 2569 และยังไม่มีการขยายหลังวันนั้นในไฟล์นี้ จึงไม่ได้ให้คะแนนสงขลาเป็นเขตความมั่นคง บรรทัดประกาศไม่ใช่จำนวนเหตุการณ์",
+    zh: "安全数据缺失。文件里没有分府犯罪序列。也拉、北大年、那拉提瓦的部分地区是紧急状态区，至佛历 2569 年 10 月 19 日，安静退休和家庭两个镜头标出这三府并下移。宋卡不在该项宣布里。它的四个县曾是内部安全区，到佛历 2569 年 9 月 30 日为止，这份文件里没有之后的延长，所以宋卡不按安全区计分。紧急状态这一行不是事件计数。",
   },
   {
     en: "The land figure is the Treasury Department's official appraisal, a median in baht per square wah. It is not a market price. Where the lens mark sits at least 5 points above that appraisal's percentile, the page says the province is undervalued for its fundamentals. There is no reputation series to compare.",

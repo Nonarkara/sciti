@@ -14,6 +14,7 @@ import { loadVehicles } from "./sources/vehicles.mjs";
 import { loadGpp } from "./sources/gpp.mjs";
 import { loadCatalog } from "./sources/catalog.mjs";
 import { checkGaps } from "./sources/gaps.mjs";
+import { decreeObservations } from "./sources/security.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const lastGoodPath = path.join(root, "data/last-good/baseline.json");
@@ -99,6 +100,11 @@ async function main() {
 
   const catalog = await trySource("governance.datasets", ["governance.datasets"], () => loadCatalog(places));
   observations = commit(observations, ["governance.datasets"], catalog, runs);
+
+  const security = await trySource("governance.emergency_decree", ["governance.emergency_decree"], async () => ({
+    observations: decreeObservations(places.map((place) => place.code.toLowerCase())),
+  }));
+  observations = commit(observations, ["governance.emergency_decree"], security, runs);
 
   const gaps = await checkGaps().catch((err) => [{ id: "gaps", error: String(err.message || err) }]);
 
