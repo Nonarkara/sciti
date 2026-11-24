@@ -30,6 +30,8 @@ The public pages are English, Thai and Chinese. Thai is set in Prompt, English i
 
 ## How this goes live
 
+The editorial site in this repository is published at [nonarkara.github.io/sciti/](https://nonarkara.github.io/sciti/). [sciti.nonarkara.org](https://sciti.nonarkara.org/) serves the Smart City Thailand Index from [Nonarkara/smart-city-thailand-index](https://github.com/Nonarkara/smart-city-thailand-index). Non decides any changes to the domain, DNS or repository homepage.
+
 Pushing `main` runs [.github/workflows/deploy.yml](.github/workflows/deploy.yml). The job builds with `GITHUB_ACTIONS=true`, which sets the Vite base to `/sciti/`, and publishes the `dist` folder to the `gh-pages` branch with [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages). `force_orphan` is false, so that branch keeps history.
 
 That publish is GitHub Pages, at `https://nonarkara.github.io/sciti/`.
