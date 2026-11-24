@@ -103,7 +103,7 @@ if (dynamic > 100) throw new Error(`${dynamic} dynamic rules, cap is 100`);
 if (plain > 2000) throw new Error(`${plain} static rules, cap is 2,000`);
 console.log(`wrote ${plain} static and ${dynamic} dynamic rules (${plain + dynamic} total)`);
 
-const origin = "https://sciti.nonarkara.org";
+const origin = "https://nonarkara.github.io/sciti";
 const paths = ["/", "/about", "/methods", "/compare", "/coverage"];
 for (const place of baseline.places) paths.push(`/place/${place.id}`);
 for (const indicator of baseline.indicators) paths.push(`/indicator/${indicator.id}`);

@@ -89,10 +89,10 @@ test("the cloudflare redirect file keeps the old addresses", () => {
   assert.equal(resolveRedirect(rules, "/api/cities").status, 404);
   assert.equal(rules.some((rule) => rule.from === "/sitemap.xml"), false);
   const sitemapXml = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
-  assert.match(sitemapXml, /<loc>https:\/\/sciti\.nonarkara\.org\/<\/loc>/);
-  assert.match(sitemapXml, /<loc>https:\/\/sciti\.nonarkara\.org\/place\/th-10<\/loc>/);
-  assert.match(sitemapXml, /<loc>https:\/\/sciti\.nonarkara\.org\/indicator\/env\.pm25<\/loc>/);
-  assert.match(sitemapXml, /<loc>https:\/\/sciti\.nonarkara\.org\/methods\/industry<\/loc>/);
+  assert.match(sitemapXml, /<loc>https:\/\/nonarkara\.github\.io\/sciti\/<\/loc>/);
+  assert.match(sitemapXml, /<loc>https:\/\/nonarkara\.github\.io\/sciti\/place\/th-10<\/loc>/);
+  assert.match(sitemapXml, /<loc>https:\/\/nonarkara\.github\.io\/sciti\/indicator\/env\.pm25<\/loc>/);
+  assert.match(sitemapXml, /<loc>https:\/\/nonarkara\.github\.io\/sciti\/methods\/industry<\/loc>/);
   assert.doesNotMatch(sitemapXml, /sitemap\.xml/);
   assert.equal(resolveRedirect(rules, "/place/th-10").status, 200);
   assert.equal(resolveRedirect(rules, "/city/phuket/").status, 200);
